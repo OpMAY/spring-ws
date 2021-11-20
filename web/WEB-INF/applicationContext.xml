@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--공동 개발자1-->
+    <bean id="LocalSource1" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url"
+                  value="jdbc:mysql://127.0.0.1:3306/mvs_total?serverTimezone=UTC&amp;allowMultiQueries=true&amp;autoReconnect=true"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+        <!--Connection Pool의 Connection이 뒤졋는지 살았는지 체크-->
+        <property name="validationQuery" value="select 1"/>
+        <property name="initialSize" value="4"/>
+        <property name="maxTotal" value="4"/>
+        <property name="maxIdle" value="4"/>
+        <property name="minIdle" value="4"/>
+    </bean>
+
+    <!--공동 개발자2-->
+    <bean id="LocalSource2" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url"
+                  value="jdbc:mysql://127.0.0.1:3306/mvs_total?serverTimezone=UTC&amp;allowMultiQueries=true&amp;autoReconnect=true"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+        <!--Connection Pool의 Connection이 뒤졋는지 살았는지 체크-->
+        <property name="validationQuery" value="select 1"/>
+        <property name="initialSize" value="4"/>
+        <property name="maxTotal" value="4"/>
+        <property name="maxIdle" value="4"/>
+        <property name="minIdle" value="4"/>
+    </bean>
+
+    <!--배포 전용 설정-->
+    <bean id="DeploySource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url"
+                  value="jdbc:mysql://127.0.0.1:3306/mvs_total?serverTimezone=UTC&amp;allowMultiQueries=true&amp;autoReconnect=true"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+        <!--Connection Pool의 Connection이 뒤졋는지 살았는지 체크-->
+        <property name="validationQuery" value="select 1"/>
+
+        <property name="initialSize" value="10"/>
+        <property name="maxTotal" value="30"/>
+        <property name="maxIdle" value="30"/>
+        <property name="minIdle" value="5"/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="LocalSource1"/>
+        <property name="configLocation" value="classpath:/mybatis-config.xml"/>
+        <property name="mapperLocations" value="classpath:/sqls/*.xml"/>
+    </bean>
+
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+        <constructor-arg ref="sqlSessionFactory"></constructor-arg>
+    </bean>
+</beans>

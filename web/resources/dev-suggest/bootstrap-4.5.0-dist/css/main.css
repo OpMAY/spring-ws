@@ -1,0 +1,350 @@
+﻿/*------------------------------------------------------------------------------------------------------------------------*/
+/* 00. 공통 */
+/*------------------------------------------------------------------------------------------------------------------------*/
+
+@import url(https://cdn.rawgit.com/theeluwin/NotoSansKR-Hestia/master/stylesheets/NotoSansKR-Hestia.css);
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+KR');
+
+/*html, h1, h2, h3, h4, h5, h6, p, a, span, label, button, div, span, checkbox, radio {font-family: 'Noto Sans Korean', sans-serif !important;}*/
+html, h1, h2, h3, h4, h5, h6, p, a, span, label, button, div, span, checkbox, radio {font-family: 'Noto Sans kr', sans-serif !important;}
+
+/* border outline x */
+* {outline-style:none !important;}
+
+/* a tag */
+a {text-decoration: none; cursor:pointer; color:#606060;}
+a:link {text-decoration: none; cursor:pointer; color:#606060;}
+a:visited {text-decoration: none; cursor:pointer; color:#606060;}
+a:active {text-decoration: none; cursor:pointer; color:#606060;}
+a:hover {text-decoration: none; cursor:pointer; color:#606060;}
+
+/* font */
+.font12 {font-size:12px !important;}
+.font13 {font-size:13px !important;}
+.font14 {font-size:14px !important;}
+.font20 {font-size:20px !important;}
+.w300 {font-weight:300;}
+.w400 {font-weight:400;}
+.w500 {font-weight:500;}
+.w600 {font-weight:600;}
+
+/* color */
+.infocolor {color:#33b5e5;}
+.infobackground  {background:#197a9a;}
+.whitecolor {color:#fff;}
+.graycolor {color:#738598}
+.redcolor {color:#c7004c;}
+.maincolor {color:#33b5e5 !important;}
+.mainbgcolor {background:#33b5e5 !important;}
+.ui-datepicker {z-index:99999 !important;}
+.mdl-checkbox__ripple-container .mdl-ripple {background:#33b5e5 !important;}
+
+/* radius */
+.radius100 {border-radius:100%;}
+
+/* header */
+header .marketing-alert {background:#197a9a;}
+
+/* nav-topmenu */
+.nav-topmenu ul.nav li {border-left:1px solid #efefef; font-size:13px;}
+.nav-topmenu ul.nav li:first-child{border-left:none;}
+.nav-topmenu ul.nav li a{display:inline;}
+
+/* search-box */
+.search-box .search-box-row img {width:250px; padding-top:20px;}
+
+/* nav-category */
+.nav-category li a:hover {text-decoration:underline; color:#33b5e5!important;}
+
+/* float-scroll-menu */
+#float-scroll-menu { position:absolute; width:150px; right:100px; top:200px; z-index:1000;}
+#float-scroll-menu .row .col {background:#efefef;}
+#float-scroll-menu .row .col .card {border-radius:0px;}
+#float-scroll-menu .row .col .card .marketing-float-image {width:100%; height:150px; background:#efefef;}
+#float-scroll-menu-home { position:absolute; width:150px; right:100px; top:200px; z-index:1000;}
+#float-scroll-menu-home .row .col {background:#efefef;}
+#float-scroll-menu-home .row .col .card {border-radius:0px;}
+#float-scroll-menu-home .row .col .card .marketing-float-image {width:100%; height:150px; background:#efefef;}
+#float-scroll-menu-home .row .col .card h6 {font-size:13px; color:#5d5d5d;}
+#float-scroll-menu-home .row .col .card .fa-chevron-circle-up {cursor:pointer; font-size:30px; color:#197a9a;}
+#float-condition-search { position:absolute; width:250px; left:70px; top:200px; z-index:1000;}
+#float-condition-search .row .col {background:#efefef;}
+#float-condition-search .row .col .card {border-radius:0px;}
+#float-condition-search .row .col .card .marketing-float-image {width:100%; height:350px !important; background:#efefef;}
+#float-condition-search .row .col .card h6 {font-size:13px; color:#5d5d5d;}
+#float-condition-search .row .col .card .fa-chevron-circle-up {cursor:pointer; font-size:30px; color:#5d5d5d;}
+#float-condition-search input[type=text] {font-size:13px;}
+#float-condition-search .slider-range-text {border:0; color:#197a9a; font-weight:bold; display:inline}
+
+/* footer */
+footer .container .footer-menu {border-top:1px solid #5d5d5d; border-bottom:1px solid #dcdcdc;}
+footer .container ul.nav li {font-size:14px;}
+footer .copyright p {font-size:13px; color:#5d5d5d; line-height:30px;}
+.facebook {width:25px;}
+.instagram {width:27px;}
+.kakaostory {width:27px;}
+.naver {width:27px;}
+.twitter {width:28px;}
+
+/* workshop-card */
+.workshop-card {cursor:pointer;}
+.semipro-card {cursor:pointer;}
+.resell-card {cursor:pointer;}
+
+/* float-condition-search */
+#float-condition-search .card-body {cursor:pointer;}
+#float-condition-search .product-tag button {border-radius:50px; font-weight:500;}
+
+.mdl-badge[data-badge].ybadge:after {background:#33b5e5 !important;}
+.mdl-badge[data-badge].zbadge:after {background:#197a9a !important;}
+.mdl-badge[data-badge].hbadge:after {background:#33b5e5 !important;}
+.mdl-badge[data-badge].rbadge:after {background:#CC0000 !important;}
+.mdl-badge[data-badge].pbadge:after {background:#e91e63 !important;}
+
+/* datepicker */
+.ui-icon .ui-icon-circle-triangle {color:black !important;}
+
+.main_search { position: absolute; right: 180px; top: 42px; width: 180px; }
+.search_text { width: 180px; height: 26px; padding: 0 50px 0 20px; border: 1px solid #f3f2f3; border-radius: 18px; background-color: #f3f2f4; color: #666; line-height: 16px; outline: none; }
+.btn_search { position: absolute; right: 10px; top: 3px; font-size:14px; top:8px; color:#33b5e5; }
+@media (max-width: 1700px)
+{
+    .main_search { display:none; }
+    #float-scroll-menu-home {display:none}
+    #float-condition-search {display:none}
+    .nav-category .container-fluid .row {padding-right:0px !important;}
+}
+
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+/* 01. index */
+/*------------------------------------------------------------------------------------------------------------------------*/
+
+/* carousel */
+.carousel .floating-menu {width:100%; height:70px; z-index:3;}
+.carousel .floating-menu .row .col {color:#fff; cursor:pointer;}
+.carousel .floating-menu .row .col h6 {font-weight:300;}
+.carousel .floating-menu .row .col:first-child {border-left:none; color:#fff;}
+
+/* first-list-category */
+.first-list-category {background:#f9f9f9;}
+.first-list-category .list-title {font-weight:400; font-size:20px; color:black;}
+
+/* second-list-category */
+.second-list-category {background:#ffffff;}
+.second-list-category .list-title {font-weight:400; font-size:20px; color:black;}
+
+/* thrid-list-category */
+.third-list-category {background:#f9f9f9;}
+.third-list-category .list-title {font-weight:400; font-size:20px;}
+.third-list-category .list-title .third-list-category-more {border-radius:0px; font-size:14px; font-weight:500;}
+
+/* thrid-list-category */
+.fourth-list-category {background:#ffffff;}
+.fourth-list-category .list-title {font-weight:400; font-size:20px;}
+.fourth-list-category .list-title .fourth-list-category-more {border-radius:0px; font-size:14px; font-weight:500;}
+
+/* fifth-list-category */
+.fifth-list-category {background:#f9f9f9;}
+.fifth-list-category .list-title {font-weight:400; font-size:20px;}
+.fifth-list-category .list-title .fifth-list-category-more {border-radius:0px; font-size:14px; font-weight:500;}
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+/* 02. signin */
+/*------------------------------------------------------------------------------------------------------------------------*/
+
+/* login */
+.login {background:#f8f8f8;}
+.login .row .card { border-radius:0px; box-shadow:1px 1px 3px #dcdcdc; height:350px;}
+.login .row .card .card-body .card-title {font-weight:400;}
+.login .row .card .card-body .card-subtitle {font-weight:400; font-size:14px;}
+.login .row .card .card-body .nav .nav-item a.nav-link {font-size:13px; font-weight:500;}
+.login .row .card .card-body span {font-size:13px;}
+.login .row .card .card-body button {font-size:10px;}
+.login .row .card .card-body input[type=text] {font-size:13px; border-radius:0px;}
+.login .row .card .card-body .login-btn {font-size:14px; font-weight:500; width:100%; height:100%; border-radius:0px;}
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+/* 03. admin_signin */
+/*------------------------------------------------------------------------------------------------------------------------*/
+
+/* admin-login */
+.admin-login {background:#f8f8f8;}
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+/* 04. signup */
+/*------------------------------------------------------------------------------------------------------------------------*/
+
+/* sign-up */
+.sign-up {background:#f8f8f8;}
+.sign-up .container .row .card {box-shadow:1px 1px 3px #dcdcdc;}
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+/* 05. sign-up-detail */
+/*------------------------------------------------------------------------------------------------------------------------*/
+
+/* sign-up-detail */
+.sign-up-detail {background:#f8f8f8;}
+.sign-up-detail .container .row .card {box-shadow:1px 1px 3px #dcdcdc;}
+.sign-up-detail .sign-up-title {background:#f8f8f8; box-shadow:0px 0px 0px #f8f8f8;}
+.sign-up-detail .dropdown .dropdown-toggle {border:1px solid #d2d2d2; color:#fff;}
+.sign-up-detail .agree-text {width:100%; border:0px; resize:none;}
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+/* 06. workshop */
+/*------------------------------------------------------------------------------------------------------------------------*/
+
+/* workshop */
+.carousel.workshop-carousel {border-bottom:3px solid #197a9a; box-shadow:2px 2px 5px #A4A4A4;}
+.workshop-list {background:#fff; }
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+/* 07. semipro */
+/*------------------------------------------------------------------------------------------------------------------------*/
+
+/* semipro */
+.carousel.semipro-carousel {border-bottom:3px solid #197a9a; box-shadow:2px 2px 5px #A4A4A4;}
+.semipro-list {background:#fff; }
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+/* 08. new-workshop */
+/*------------------------------------------------------------------------------------------------------------------------*/
+
+/* new-workshop */
+.carousel.new-workshop-carousel {border-bottom:3px solid #197a9a; box-shadow:2px 2px 5px #A4A4A4;}
+.new-workshop-list {background:#fff; }
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+/* 09. bestlist */
+/*------------------------------------------------------------------------------------------------------------------------*/
+
+/* bestlist */
+.carousel.bestlist-carousel {border-bottom:3px solid #197a9a; box-shadow:2px 2px 5px #A4A4A4;}
+.bestlist-list {background:#fff; }
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+/* 10. reselllist */
+/*------------------------------------------------------------------------------------------------------------------------*/
+
+/* reselllist */
+.carousel.reselllist-carousel {border-bottom:3px solid #197a9a; box-shadow:2px 2px 5px #A4A4A4;}
+.reselllist-list {background:#fff; }
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+/* 11. workshopdetail */
+/*------------------------------------------------------------------------------------------------------------------------*/
+
+/* workshop-detail */
+.workshop-detail {background:#f8f8f8;}
+.workshop-detail .breadcrumb {background:#f8f8f8;}
+
+/* workshop-content */
+.workshop-content .rounded-circle {width:150px;height:150px;}
+
+/* workshop-condition */
+.workshop-condition .rounded-circle {width:150px;height:150px;}
+
+/* workshop-resell */
+.workshop-resell .rounded-circle {width:150px;height:150px;}
+
+/* recent-page */
+.recent-page {background:#f9f9f9; border-top:1px dotted #baa99b;}
+.recent-page .list-title {font-weight:400; font-size:20px; color:black;}
+.recent-page .list-title .first-list-category-more {border-radius:0px; font-size:14px; font-weight:500;}
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+/* 12. semiprodetail */
+/*------------------------------------------------------------------------------------------------------------------------*/
+
+/* semipro-detail */
+.semipro-detail {background:#f8f8f8;}
+.semipro-detail .breadcrumb {background:#f8f8f8;}
+.semipro-detail .main-title button.btn-light {border:1px solid #dcdcdc; background:#fff; border-radius:30px;}
+.semipro-detail .main-title .fa-star {margin-right:2px; color:#fcd307;}
+.semipro-detail .main-title .fa-star.like-btn {border:1px solid #dcdcdc; border-radius:100%;color:#fcd307;background:#fff;}
+
+/* semipro-content */
+.semipro-content .rounded-circle {width:150px;height:150px;}
+.semipro-content .sub-btn .col{border-right:1px solid #dcdcdc;}
+.semipro-content .sub-btn .col:last-child{border-right:0px;}
+.semipro-content .sub-btn .col strong {font-size:11px;color:#5d5d5d}
+.semipro-content .tag-btn button {border:1px solid #dcdcdc; background:#fff; }
+
+/* semipro-condition */
+.semipro-condition .rounded-circle {width:150px;height:150px;}
+.semipro-condition .sub-btn .col{border-right:1px solid #dcdcdc;}
+.semipro-condition .sub-btn .col:last-child{border-right:0px;}
+.semipro-condition .sub-btn .col strong {font-size:11px;color:#5d5d5d}
+.semipro-condition .tag-btn button {border:1px solid #dcdcdc; background:#fff; }
+
+/* semipro-resell */
+.semipro-resell .rounded-circle {width:150px;height:150px;}
+.semipro-resell .sub-btn .col{border-right:1px solid #dcdcdc;}
+.semipro-resell .sub-btn .col:last-child{border-right:0px;}
+.semipro-resell .sub-btn .col strong {font-size:11px;color:#5d5d5d}
+.semipro-resell .tag-btn button {border:1px solid #dcdcdc; background:#fff; }
+
+/* semipro-comment */
+.semipro-comment .btn.btn-light {border:1px solid #dcdcdc; background:#fff;}
+.semipro-comment .profile-img {width:40px; height:40px; border-radius:100%;}
+.semipro-comment .like-star {padding-right:2px; color:#ffcd60;}
+.semipro-comment .thumb-img {width:100px; height:100px;}
+.semipro-comment .rounded-circle {width:150px;height:150px;}
+.semipro-comment .sub-btn .col{border-right:1px solid #dcdcdc;}
+.semipro-comment .sub-btn .col:last-child{border-right:0px;}
+.semipro-comment .sub-btn .col strong {font-size:11px;color:#5d5d5d}
+.semipro-comment .tag-btn button {border:1px solid #dcdcdc; background:#fff; }
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+/* 13. reselldetail */
+/*------------------------------------------------------------------------------------------------------------------------*/
+
+/* resell-detail */
+.resell-detail {background:#f8f8f8;}
+.resell-detail .breadcrumb {background:#f8f8f8;}
+.resell-detail sub-menu {border-right:1px solid #dcdcdc;}
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+/* 14. mypage */
+/*------------------------------------------------------------------------------------------------------------------------*/
+
+.mypage-favoritelist .card {border:0; background:#f8f8f8; padding:5px; border-radius:0px;}
+.mypage-favoritelist .card .card-img-top {border-radius:0px; height:200px;}
+.mypage-favoritelist .card .card-body {position:relative; background:#fff; font-size:14px; font-weight:500; box-shadow:2px 2px 3px #dcdcdc;}
+.mypage-favoritelist .card .card-body .card-text {font-weight:400; font-size:14px; color:#747474;}
+.mypage-favoritelist .card .card-body .card-bottom {font-weight:400; font-size:12px; color:#747474;}
+.mypage-favoritelist .card .card-body .fa-map-marker-alt {color:#197a9a;}
+.mypage-favoritelist .card .card-body .card-body .card-bottom .fa-heart {color:#197a9a;}
+.mypage-favoritelist .card .card-body .card-body .card-bottom .fa-check {color:#197a9a;}
+.mypage-favoritelist .fas.fa-heart {color:#DF0101; padding-right:2px;}
+.mypage-favoritelist .fas.fa-star {color:#ffb228; padding-right:2px;}
+.mypage-favoritelist .card .card-body span.float-right {font-size:11px; font-weight:500;}
+.mypage-contents .customer-image {border-radius:100%;}
+.mypage-contents .sub-btn-border {border-right:1px solid #dcdcdc;}
+.mypage-contents .panel-group .home-btn {background:#197a9a;}
+.mypage-contents .panel-group .sub-btn {background:#3b3b53;}
+.mypage-contents .panel-group .home-btn a {color:#fff;}
+.mypage-contents .panel-group .sub-btn a {color:#fff;}
+.mypage-contents .panel-collapse {background:#43425d; color:#fff;}
+.mypage-contents .panel-collapse a {color:#fff;}
+.message-alert img {border-radius:100%;}
+.recent-order .notice-card .card-body {background:#f8f8f8;}
+.recent-order .notice-card .card-body h6 {color:#5d5d5d;}
+.chatting .card .card-body {border-left:2px solid #ff5959;}
+.mypage-invoicelist .order-add {cursor:pointer;}
+.page-item.active .page-link {background:#33b5e5 !important;}
+
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+/* 15. admin */
+/*------------------------------------------------------------------------------------------------------------------------*/
+.left-menu {background:#3b3b53;}
+.left-menu .card.title-menu {background:#fff;}
+.left-menu .card {background:#3b3b53;}
+
+.fc-left h2{font-size:16px !important; font-weight:500!important;}
+.fc-time {color:#fff;}
+.fc-title {color:#fff;}
+.fc-prev-button {background:#606060 !important; border:1px solid #dcdcdc!important; outline-style:none !important; outline:none !important;}
+.fc-next-button {background:#606060 !important; border:1px solid #dcdcdc!important; outline-style:none !important; outline:none !important;}
+.fc-today-button {background:#222 !important; border:1px solid #dcdcdc!important; color:#2C3E50!important; font-size:12px; display:none!important;}

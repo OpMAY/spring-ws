@@ -1,0 +1,167 @@
+#Spring Project v a.2
+
+##프로젝트 개발 일정 (0000-00-00 ~ 0000-00-00)
+  
+##Github 프로젝트 소스코드 관리 규칙
+
+`Feature` 는 실제로 협업에서 개발자 한명이 Task를 나누어 개발에 들어가는 Module Branch입니다.
+
+`Feature` 는 `Develop` Branch로 머지됩니다.
+
+`Develop` 은 `Feature` 들이모여 이뤄집니다.
+
+`Develop` 에서 어느정도 개발이 완료되어 배포할 때에 `Master` Branch로 머지되고 자체 내부 개발자들의 테스트를 거쳐 `Deploy` Branch로 머지됩니다.
+
+`Master` Branch는 협업자들이 모여서 내부 테스트를 하는 구간이며 테스트를 통과할 시에 `Deploy` Branch로 머지됩니다.
+
+`Deploy` Branch는 배포버전을 위한 코드이며 QA를 진행함과 동시에 Bugfix를 진행합니다.
+해당 Release는 QA 또는 기능적 분기에 따라 TAG를 만들어 배포버전을 관리합니다.
+
+`Hotfix` Branch는 배포버전(`Deploy`)에서 문제가 발생하였을 경우 수정하는 Branch이며 `Master` 에서 분기하여 `Develop` 과 `Master` Branch에 머지됩니다.
+
+주의사항
+
+1. `Feature` Branch는 해당하는 Commit들을 하나로 합쳐서 `Develop` Branch에 머지합니다.
+2. `Hotfix` Branch가 생성되는 경우 `Feature` Branch들은 `Develop` Branch에 머지가 불가능합니다.
+3. `Develop` Branch에서 `Master` Branch로는 PM 또는 개발 관리자 본인만 가능하다. 단, 판단하에 기본의 개발자들도 머지가 가능합니다.
+4. `Master` Branch에서 `Deploy` Branch로는 PM 또는 개발 관리자 본인만 가능하다. 단, 판단하에 기본의 개발자들도 머지가 가능합니다.
+5. `Deploy` Branch가 다른 Branch에 의해 머지가 되었다면 해당 배포 버전의 TAG를 완성합니다.
+6. `Feature` 와 `Hotfix` 는 이름이 안겹치게 다음과 같이 명명합니다. `feature/name` `hotfix/name`
+##
+# 주석 명세
+
+---
+
+주석은 필수가 아닌 선택사항입니다.
+
+하지만 여러명에서 개발을 할 때 의사소통의 부재가 있을 수 있으니 가능하면 주석으로 다른 개발자에게 설명하도록 합니다.
+
+이에 그 사용성과 효용성을 고려할 때 어려운 기능단위 코드나 클래스 단위 코드에서 남겨주도록 합니다.
+
+또한 자신이 개발한 코드를 해당 프로젝트에서 다른 개발자들이 많이 사용할 수 있는 가능성이 있는 경우 꼭 작성하도록 합니다.
+
+## Javascript
+
+다음은 Javascript의 주석 처리입니다.
+
+Description은 간단한 함수의 기능을 설명합니다.
+
+Prerequisite은 선행 조건. 사용시, 우선시 되야할 조건이나 Parameter의 상태 및 web의 상태 명시
+
+Parameter는 안적어도 무방합니다.
+
+Return은 안적어도 무방합니다.
+
+Date는 최초 작성 날짜로서 안적어도 무방합니다.
+
+Updated Date는 필수 작성 요소입니다.(다른 사람과 의사소통 할 때 반드시 사용 되어야 할 필수적인 요소입니다) 또한 어떤것을 변경 했는지 간단하게 적습니다.
+
+Version은 +1씩 올립니다.
+
+따라서 Description, Prerequisite, Updated Date, Version은 필수적으로 사용해야 합니다.
+
+```jsx
+/**
+ * Description : GPS로 현재 위치 찾아서 setMap() 해주는 함수
+ * Prerequisite : Browser가 GPS를 지원 해야합니다.
+ * Parameter : Non (Not Exist)
+ * Return : Non
+ * Date : 2020-10-12
+ * Updated Date : 2020-10-16 position object 변경
+ * Updated Date : 2020-10-20 error 처리 변경
+ * Version : 2
+ * */
+function getLocation() {
+    if (navigator.geolocation) { // GPS를 지원하면 //해당 주석은 로직상 분기를 가질 때 사용합니다. 사용 안해도 무방합니다.
+        navigator.geolocation.getCurrentPosition(function (position) {
+            /* alert(position.coords.latitude + ' ' + position.coords.longitude);*/ //해당 주석은 생성 및 남겨 놓으셔도 무방합니다. 사용 안해도 무방합니다.
+            setMap(position.coords.latitude, position.coords.longitude, null);
+        }, function (error) {
+            console.error(error);
+        }, {
+            enableHighAccuracy: false,
+            maximumAge: 0,
+            timeout: Infinity
+        });
+    } else {
+        alert('GPS를 지원하지 않습니다');
+    }
+}
+```
+
+## Java
+
+Description, Updated date, Version은 필수적으로 작성 해야 합니다.
+
+```java
+/**
+ * @param : req (설명)
+ * @return : Non (설명)
+ * Description : Login API를 이용하여 로그인 했을 때 결과를 받는 함수
+ * Date : 2020-10-10
+ * Updated date : 2020-10-12 Kakao Login 추가
+ * Updated date : 2020-10-13 Naver Login 추가
+ * Version : 3
+ * */
+public void apiLoginInit(HttpServletRequest req) throws NoSuchAlgorithmException {
+}
+```
+
+# URL 설정
+
+---
+
+## URL 설정 규칙
+
+서버의 URL은 기본적으로 Contoller를 거치는 View들은 .do를 붙입니다.
+
+Spring + JSP 의 특징을 모두 가져가기 위한 조치이니 불편하더라도 URL에 .do를 사용하여 개발을 합니다. (단, App Server REST API는 제외)
+
+> Ex ) http:localhost:8080/home.do
+Ex ) `App Server` http:localhost:8080/api/testapi
+> 
+
+또한 Ajax는 Controller를 거치지만 View가 미동하는 특수한 경우입니다. 사용을 자제하되 해야될 부분은 /ajax/ajaxname.do를 붙여서 사용하도록 합니다.
+
+ajax의 낮은 보안성을 높여주기위한 조치이니 감수해주시길 바랍니다.
+
+> Ex) http:localhost:8080/ajax/ajaxname.do
+> 
+
+관리자 페이지의 경우 높은 보안성이 요구되는 특수한 경우입니다.
+
+따라서 관리자 페이지는 .admin으로 붙여서 진행을 하도록 합니다.
+
+> Ex) http://localhost:8080/admin/dashboard.do
+> 
+
+### URL 계층
+
+페이지의 계층 별로 URL의 설정을 다르게 합니다. 
+
+아래는 예제 샘플입니다.
+
+- /services/service.do
+- /services/service/detail.do
+- /user/profile.do
+- /user/update.do
+- /user/boards/board.do
+- /user/boards/write.do
+- /user/boards.do
+- /auth/signin.do
+- /auth/signup.do
+- /home.do
+
+## 언어 관련 설정
+
+언어 패키징 작업시 URL 디렉토리에 ko(korean),en(english) 등를 붙여 해당 [Message.properties](http://message.properties)를 불러와 언어 패키징을 진행하도록 합니다.
+
+> Ex) http://localhost:8080/ko/auth/login.do, http://localhost:8080/en/home.do
+> 
+
+## 테스트 관련 설정
+
+테스트 관련된 URL은 뒤에 .test를 붙여서 테스트 라는걸 표현한다.
+
+> Ex) http://localhost:8080/map.test (map.do → X)
+>
