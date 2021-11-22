@@ -8,8 +8,9 @@ function sample() {
         cache: false, //캐시 여부
         contentType: "application/json", //요청 컨텐트 타입 "application/x-www-form-urlencoded; charset=UTF-8"
         dataType: "json", //응답 데이터 형식 명시하지 않을 경우 자동으로 추측
-        beforeSend: function () {
+        beforeSend: function (xhr) {
             // XHR Header를 포함해서 HTTP Request를 하기전에 호출됩니다.
+            xhr.setRequestHeader('ajax', true);
             console.log('sample before');
         },
         success: function (data, status, xhr) {

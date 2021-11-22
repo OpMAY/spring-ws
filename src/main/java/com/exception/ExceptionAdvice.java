@@ -24,7 +24,7 @@ public class ExceptionAdvice {
      * JSON 파싱, 역파싱 관련 Exception 발생시
      */
     @ExceptionHandler(JSONException.class)
-    protected ModelAndView handleJSONException(HttpServletRequest request,JSONException e) {
+    protected ModelAndView handleJSONException(HttpServletRequest request, JSONException e) {
         e.printStackTrace();
         log.info("handleJSONException");
         modelAndView = new ModelAndView("error/error");
@@ -35,7 +35,7 @@ public class ExceptionAdvice {
      * Schedule Exception 발생시
      */
     @ExceptionHandler(InterruptedException.class)
-    protected void handleInterruptedException(HttpServletRequest request,InterruptedException e) {
+    protected void handleInterruptedException(HttpServletRequest request, InterruptedException e) {
         e.printStackTrace();
     }
 
@@ -43,10 +43,14 @@ public class ExceptionAdvice {
      * 잘못된 Handler URI를 사용 했을때 NoHandlerFoundException 발생
      */
     @ExceptionHandler(NoHandlerFoundException.class)
-    protected ModelAndView handleNoHandlerFoundException(HttpServletRequest request,NoHandlerFoundException e) {
+    protected ModelAndView handleNoHandlerFoundException(HttpServletRequest request, NoHandlerFoundException e) {
         if (!e.getMessage().contains("/favicon.ico")) {
             e.printStackTrace();
             log.info("handleNoHandlerFoundException");
+        }
+        /*TODO Ajax Logic Error Controlling*/
+        if (isAjaxRequest(request)) {
+        } else {
         }
         modelAndView = new ModelAndView("error/error");
         return modelAndView;
@@ -56,7 +60,7 @@ public class ExceptionAdvice {
      * Session JWTToken의 권한이 부족 및 없을 때 GrantAccessDeniedException 발생
      */
     @ExceptionHandler(GrantAccessDeniedException.class)
-    protected ModelAndView handleGrantAccessDeniedException(HttpServletRequest request,GrantAccessDeniedException e) {
+    protected ModelAndView handleGrantAccessDeniedException(HttpServletRequest request, GrantAccessDeniedException e) {
         e.printStackTrace();
         log.info("handleGrantAccessDeniedException");
         modelAndView = new ModelAndView("error/error");
@@ -69,7 +73,7 @@ public class ExceptionAdvice {
      * 주로 @RequestBody, @RequestPart 어노테이션에서 발생
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ModelAndView handleMethodArgumentNotValidException(HttpServletRequest request,MethodArgumentNotValidException e) {
+    protected ModelAndView handleMethodArgumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException e) {
         e.printStackTrace();
         log.info("handleMethodArgumentNotValidException");
         modelAndView = new ModelAndView("error/error");
@@ -81,7 +85,7 @@ public class ExceptionAdvice {
      * ref https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-ann-modelattrib-method-args
      */
     @ExceptionHandler(BindException.class)
-    protected ModelAndView handleBindException(HttpServletRequest request,BindException e) {
+    protected ModelAndView handleBindException(HttpServletRequest request, BindException e) {
         e.printStackTrace();
         log.info("handleBindException");
         modelAndView = new ModelAndView("error/error");
@@ -93,7 +97,7 @@ public class ExceptionAdvice {
      * 주로 @RequestParam enum으로 binding 못했을 경우 발생
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    protected ModelAndView handleMethodArgumentTypeMismatchException(HttpServletRequest request,MethodArgumentTypeMismatchException e) {
+    protected ModelAndView handleMethodArgumentTypeMismatchException(HttpServletRequest request, MethodArgumentTypeMismatchException e) {
         e.printStackTrace();
         log.info("handleMethodArgumentTypeMismatchException");
         modelAndView = new ModelAndView("error/error");
@@ -104,7 +108,7 @@ public class ExceptionAdvice {
      * 지원하지 않은 HTTP method 호출 할 경우 발생
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    protected ModelAndView handleHttpRequestMethodNotSupportedException(HttpServletRequest request,HttpRequestMethodNotSupportedException e) {
+    protected ModelAndView handleHttpRequestMethodNotSupportedException(HttpServletRequest request, HttpRequestMethodNotSupportedException e) {
         e.printStackTrace();
         log.info("handleHttpRequestMethodNotSupportedException");
         modelAndView = new ModelAndView("error/error");
@@ -115,7 +119,7 @@ public class ExceptionAdvice {
      * Authentication 객체가 필요한 권한을 보유하지 않은 경우 발생합
      */
     @ExceptionHandler(AccessDeniedException.class)
-    protected ModelAndView handleAccessDeniedException(HttpServletRequest request,AccessDeniedException e) {
+    protected ModelAndView handleAccessDeniedException(HttpServletRequest request, AccessDeniedException e) {
         e.printStackTrace();
         log.info("handleAccessDeniedException");
         modelAndView = new ModelAndView("error/error");
@@ -123,7 +127,7 @@ public class ExceptionAdvice {
     }
 
     @ExceptionHandler(NullPointerException.class)
-    protected ModelAndView handleNullPointerException(HttpServletRequest request,Exception e) {
+    protected ModelAndView handleNullPointerException(HttpServletRequest request, Exception e) {
         e.printStackTrace();
         log.info("NullPointerException");
         modelAndView = new ModelAndView("error/error");
@@ -131,7 +135,7 @@ public class ExceptionAdvice {
     }
 
     @ExceptionHandler(Exception.class)
-    protected ModelAndView handleException(HttpServletRequest request,Exception e) {
+    protected ModelAndView handleException(HttpServletRequest request, Exception e) {
         e.printStackTrace();
         log.info("Global General Exception");
         modelAndView = new ModelAndView("error/error");
