@@ -1,6 +1,5 @@
 package com.controller;
 
-import com.aws.CDNService;
 import com.exception.GrantAccessDeniedException;
 import com.exception.enums.BusinessExceptionType;
 import com.model.TestModel;
@@ -30,7 +29,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.html.FormView;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,6 +67,8 @@ public class HomeController {
         HomeController();
         log.info("log4j2 test");
         homeService.sqlRollbackTest();
+        log.info("jsonTypeHandleTest");
+        homeService.jsonTypeHandleTest();
         return VIEW;
     }
 

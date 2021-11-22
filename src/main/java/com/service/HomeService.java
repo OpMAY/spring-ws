@@ -1,8 +1,6 @@
 package com.service;
 
-import com.aws.CDNService;
 import com.dao.TestDao;
-import com.exception.GrantAccessDeniedException;
 import com.model.Test;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +48,9 @@ public class HomeService {
         log.info(accessKey);
         log.info(secretKey);
         log.info(bucketName);
+    }
+
+    public void jsonTypeHandleTest() {
+        testDao.jsonTypeHandleTest(1);
     }
 }

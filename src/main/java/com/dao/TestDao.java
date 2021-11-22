@@ -2,7 +2,6 @@ package com.dao;
 
 import com.mapper.TestMapper;
 import com.model.Test;
-import jdk.nashorn.internal.objects.annotations.Constructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +27,10 @@ public class TestDao {
     public ArrayList<Test> selectTest() throws SQLException {
         TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
         return testMapper.selectTest();
+    }
+
+    public void jsonTypeHandleTest(int no) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        log.info(testMapper.jsonTypeHandleTest(no));
     }
 }

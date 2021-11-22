@@ -74,6 +74,13 @@
             <version>2.10.3</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-mapper-asl -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.13</version>
+        </dependency>
+
         <!--Encoding & Decoding-->
         <!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
         <dependency>

@@ -10,5 +10,10 @@
     </settings>
     <typeAliases>
         <typeAlias alias="Test" type="com.model.Test"/>
+        <typeAlias alias="User" type="com.model.User"/>
+        <typeAlias alias="UserContainer" type="com.model.UserContainer"/>
     </typeAliases>
+    <typeHandlers>
+        <typeHandler javaType="java.util.Map" handler="com.middleware.TypeHandler"/>
+    </typeHandlers>
 </configuration>
