@@ -60,7 +60,7 @@ Version은 +1씩 올립니다.
 
 따라서 Description, Prerequisite, Updated Date, Version은 필수적으로 사용해야 합니다.
 
-```jsx
+```
 /**
  * Description : GPS로 현재 위치 찾아서 setMap() 해주는 함수
  * Prerequisite : Browser가 GPS를 지원 해야합니다.
@@ -93,7 +93,7 @@ function getLocation() {
 
 Description, Updated date, Version은 필수적으로 작성 해야 합니다.
 
-```java
+```
 /**
  * @param : req (설명)
  * @return : Non (설명)
@@ -304,4 +304,85 @@ ajax의 낮은 보안성을 높여주기위한 조치이니 감수해주시길 �
     <!--Scheduling Module Driven-->
     <task:annotation-driven/>
 </beans>
+```
+##aws.properties
+```
+AWSModel.accessKey=testproperties
+AWSModel.secretKey=testproperties
+AWSModel.bucketName=testproperties
+```
+##log4j.xml
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+    <!-- console log -->
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%d{yyyy-MM-dd HH:mm:ss}] %-5p: %c - %m%n"/>
+        </layout>
+    </appender>
+
+    <!-- 3rdparty Loggers -->
+    <logger name="org.springframework.core">
+        <level value="info"/>
+    </logger>
+    <logger name="org.springframework.beans">
+        <level value="info"/>
+    </logger>
+    <logger name="org.springframework.context">
+        <level value="info"/>
+    </logger>
+    <logger name="org.springframework.web">
+        <level value="debug"/>
+    </logger>
+    <logger name="com.mapper">
+        <level value="debug"/>
+    </logger>
+    <logger name="org.mybatis.spring.SqlSessionUtils">
+        <level value="info"/>
+    </logger>
+    <logger name="org.springframework.jdbc">
+        <level value="info"/>
+    </logger>
+    <logger name="org.mybatis.spring.transaction.SpringManagedTransaction">
+        <level value="info"/>
+    </logger>
+    <logger name="org.springframework.web.servlet.DispatcherServlet">
+        <level value="info"/>
+    </logger>
+    <logger name="org.springframework.web.servlet.view.InternalResourceView">
+        <level value="info"></level>
+    </logger>
+    <logger name="com.interceptor.BaseInterceptor">
+        <level value="info"></level>
+    </logger>
+    <logger name="org.springframework.web.servlet.view.JstlView">
+        <level value="info"></level>
+    </logger>
+    <logger name="com.filter.GeneralFilter">
+        <level value="info"></level>
+    </logger>
+    <!-- Root Logger -->
+    <root>
+        <priority value="debug"/>
+        <appender-ref ref="console"/>
+    </root>
+</log4j:configuration>
+```
+##path.properties
+```
+filepath=C:/Users/zlzld/OneDrive/Desktop/projects/webapplication/out/artifacts/webapplication_war_exploded/file/
+domain=http://localhost:8080/
+resources=http://localhost:8080/resources/
+```
+##sns.properties
+```
+google.client_id=googleclientid
+google.client_secret=googleclientsecret
+kakao.client_id=kakaoclientsecret
+kakao.pay_key=kakaopaykey
+naver.client_id=naverclientid
+naver.client_secret=naverclientsecret
 ```
