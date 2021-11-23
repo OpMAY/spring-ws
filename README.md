@@ -165,3 +165,143 @@ ajax의 낮은 보안성을 높여주기위한 조치이니 감수해주시길 �
 
 > Ex) http://localhost:8080/map.test (map.do → X)
 >
+>
+##applicationContext.xml
+```<?xml version="1.0" encoding="UTF-8"?>
+  <beans xmlns="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+  
+      <!--공동 개발자1-->
+      <bean id="LocalSource1" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+          <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+          <property name="url"
+                    value="jdbc:mysql://127.0.0.1:3306/test?serverTimezone=UTC&amp;allowMultiQueries=true&amp;autoReconnect=true"/>
+          <property name="username" value="test"/>
+          <property name="password" value="test"/>
+          <!--Connection Pool의 Connection이 뒤졋는지 살았는지 체크-->
+          <property name="validationQuery" value="select 1"/>
+          <property name="initialSize" value="4"/>
+          <property name="maxTotal" value="4"/>
+          <property name="maxIdle" value="4"/>
+          <property name="minIdle" value="4"/>
+      </bean>
+  
+      <!--공동 개발자2-->
+      <bean id="LocalSource2" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+          <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+          <property name="url"
+                    value="jdbc:mysql://127.0.0.1:3306/test?serverTimezone=UTC&amp;allowMultiQueries=true&amp;autoReconnect=true"/>
+          <property name="username" value="test"/>
+          <property name="password" value="test"/>
+          <!--Connection Pool의 Connection이 뒤졋는지 살았는지 체크-->
+          <property name="validationQuery" value="select 1"/>
+          <property name="initialSize" value="4"/>
+          <property name="maxTotal" value="4"/>
+          <property name="maxIdle" value="4"/>
+          <property name="minIdle" value="4"/>
+      </bean>
+  
+      <!--배포 전용 설정-->
+      <bean id="DeploySource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+          <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+          <property name="url"
+                    value="jdbc:mysql://127.0.0.1:3306/test?serverTimezone=UTC&amp;allowMultiQueries=true&amp;autoReconnect=true"/>
+          <property name="username" value="test"/>
+          <property name="password" value="test"/>
+          <!--Connection Pool의 Connection이 뒤졋는지 살았는지 체크-->
+          <property name="validationQuery" value="select 1"/>
+  
+          <property name="initialSize" value="10"/>
+          <property name="maxTotal" value="30"/>
+          <property name="maxIdle" value="30"/>
+          <property name="minIdle" value="5"/>
+      </bean>
+  
+      <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+          <property name="dataSource" ref="LocalSource1"/>
+          <property name="configLocation" value="classpath:/mybatis-config.xml"/>
+          <property name="mapperLocations" value="classpath:/sqls/*.xml"/>
+      </bean>
+  
+      <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+          <constructor-arg ref="sqlSessionFactory"></constructor-arg>
+      </bean>
+  
+      <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+          <constructor-arg ref="LocalSource1"/>
+      </bean>
+  </beans>
+```
+##Dispatcher-servlet.xml
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <!-- Annotation Uses-->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <!-- @ResponseBody로 String 처리할때 한글처리 -->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- Base Back java -->
+    <context:component-scan base-package="com">
+        <context:include-filter type="annotation" expression="org.springframework.context.annotation.Configuration"/>
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--URI Mapping-->
+    <bean id="handlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
+    <mvc:resources mapping="/resources/**" location="/resources/"/>
+    <mvc:resources mapping="/favicon.ico" location="/favicon.ico"/>
+    <mvc:resources mapping="/robots.txt" location="/"/>
+    <mvc:resources mapping="/sitemap.xml" location="/"/>
+
+    <!--View Resolver-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="order" value="1"/>
+        <property name="prefix" value="/WEB-INF/view/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+
+    <!--BeanNameView Resolver (View가 없을 때의 Resolver)-->
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+        <property name="order" value="0"/>
+    </bean>
+
+    <!--Download-->
+    <bean id="download" class="com.util.FileDownload"/>
+
+    <!--Upload-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="20000000"/> <!-- 파일들 전체 20Mb 제한 -->
+        <property name="maxUploadSizePerFile" value="5000000"/> <!--파일당 5Mb 제한-->
+        <property name="defaultEncoding" value="utf-8"/>
+    </bean>
+
+    <!--Interceptors-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!--모든 경로에 Intercept 설정-->
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/resources/**"/>
+            <bean class="com.interceptor.BaseInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!--Scheduling Module Driven-->
+    <task:annotation-driven/>
+</beans>
+```
