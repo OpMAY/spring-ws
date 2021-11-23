@@ -4,24 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import lombok.extern.log4j.Log4j;
-import org.apache.ibatis.javassist.expr.Cast;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 @Log4j
 public class JsonArrayObjectTypeHandler<T> extends BaseTypeHandler<T> {
