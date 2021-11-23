@@ -8,11 +8,10 @@ import lombok.Setter;
 import java.util.ArrayList;
 
 @Data
-@Setter
 @Getter
+@Setter
 @JsonAutoDetect
-public class UserContainer {
+public class ArrayTest {
     private int no;
-    private UserTest usertest;
     private ArrayList<UserTest> userTests;
 }

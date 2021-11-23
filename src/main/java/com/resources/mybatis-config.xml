@@ -11,7 +11,8 @@
     <typeAliases>
         <typeAlias alias="Test" type="com.model.Test"/>
         <typeAlias alias="User" type="com.model.User"/>
-        <typeAlias alias="UserTest" type="com.model.UserTest"/>
         <typeAlias alias="UserContainer" type="com.model.UserContainer"/>
+        <typeAlias alias="UserTest" type="com.model.UserTest"/>
+        <typeAlias alias="ArrayTest" type="com.model.ArrayTest"/>
     </typeAliases>
 </configuration>

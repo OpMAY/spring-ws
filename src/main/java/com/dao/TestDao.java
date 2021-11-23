@@ -1,7 +1,7 @@
 package com.dao;
 
 import com.mapper.TestMapper;
-import com.model.Test;
+import com.model.*;
 import lombok.extern.log4j.Log4j;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +12,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 @Repository
-@Scope("prototype")
 @Log4j
 public class TestDao {
-    private static int i = 0;
-
-    public TestDao() {
-        log.info("Prototype Test : " + i);
-    }
-
     @Autowired
     private SqlSession sqlSession;
 
@@ -31,6 +24,21 @@ public class TestDao {
 
     public void jsonTypeHandleTest(int no) {
         TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
-        log.info(testMapper.jsonTypeHandleTest(no).getUser().getEmail());
+        log.info(testMapper.jsonTypeHandleTest(no).getUsertest().getEmail());
+    }
+
+    public void insertJsonTypeHandleTest(UserContainer userContainer) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        testMapper.insertJsonTypeHandleTest(userContainer);
+    }
+
+    public void insertJsonArrayTypeHandleTest(ArrayTest arrayTest) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        testMapper.insertJsonArrayTypeHandleTest(arrayTest);
+    }
+
+    public void jsonArrayTypeHandleTest(int no) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        log.info(testMapper.jsonArrayTypeHandleTest(no).getUserTests().get(0));
     }
 }

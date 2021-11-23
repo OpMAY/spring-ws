@@ -1,20 +1,30 @@
 package com.middleware;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import lombok.extern.log4j.Log4j;
+import org.apache.ibatis.javassist.expr.Cast;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 @Log4j
-public class JsonObjectTypeHandler<T> extends BaseTypeHandler<T> {
+public class JsonArrayObjectTypeHandler<T> extends BaseTypeHandler<T> {
 
     @Override
     public void setNonNullParameter(PreparedStatement preparedStatement, int i, T t, JdbcType jdbcType) throws SQLException {
@@ -41,12 +51,24 @@ public class JsonObjectTypeHandler<T> extends BaseTypeHandler<T> {
 
     private T convertToObject(String jsonString) {
         try {
-            JSONObject jsonObject = new JSONObject(jsonString);
-            Class<?> findClass = Class.forName(jsonObject.getString("package_path"));
-            log.info(findClass.getClass());
-            return (T) new ObjectMapper().readValue(jsonString, findClass);
-        } catch (IOException | ClassNotFoundException e) {
+            JSONArray jsonArray = new JSONArray(jsonString);
+            Class<?> findClass = null;
+            if (jsonArray.length() != 0) {
+                findClass = Class.forName(jsonArray.getJSONObject(0).getString("package_path"));
+                ArrayList arrayList = new ArrayList();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    arrayList.add((T) new ObjectMapper().readValue(jsonArray.getJSONObject(i).toString(), findClass));
+                }
+                return (T) arrayList;
+            } else {
+                return null;
+            }
+        } catch (ClassNotFoundException e) {
             log.error("JSONTypeHandler failed to convert jsonString to list, JSON String : " + jsonString, e);
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
         }
         return null;
     }

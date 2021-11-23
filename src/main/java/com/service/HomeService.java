@@ -1,7 +1,7 @@
 package com.service;
 
 import com.dao.TestDao;
-import com.model.Test;
+import com.model.*;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,6 +51,40 @@ public class HomeService {
     }
 
     public void jsonTypeHandleTest() {
-        testDao.jsonTypeHandleTest(1);
+        testDao.jsonTypeHandleTest(2);
+    }
+
+    public void insertJsonTypeHandleTest() {
+        UserTest userTest = new UserTest();
+        userTest.setPackage_path("com.model.UserTest");
+        userTest.setEmail("zlzldntlr@naver.com");
+        userTest.setAccess_token("token");
+        userTest.setGrant("normal");
+        userTest.setId("zlzldntlr");
+        userTest.setName("김우식");
+        UserContainer userContainer = new UserContainer();
+        userContainer.setUsertest(userTest);
+        testDao.insertJsonTypeHandleTest(userContainer);
+    }
+
+    public void insertJsonArrayTypeHandleTest() {
+        ArrayTest arrayTest = new ArrayTest();
+        ArrayList<UserTest> userTests = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            UserTest userTest = new UserTest();
+            userTest.setPackage_path("com.model.UserTest");
+            userTest.setEmail("zlzldntlr@naver.com");
+            userTest.setAccess_token("token");
+            userTest.setGrant("normal");
+            userTest.setId("zlzldntlr");
+            userTest.setName("김우식");
+            userTests.add(userTest);
+        }
+        arrayTest.setUserTests(userTests);
+        testDao.insertJsonArrayTypeHandleTest(arrayTest);
+    }
+
+    public void jsonArrayTypeHandleTest() {
+        testDao.jsonArrayTypeHandleTest(1);
     }
 }

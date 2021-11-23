@@ -68,7 +68,11 @@ public class HomeController {
         log.info("log4j2 test");
         homeService.sqlRollbackTest();
         log.info("jsonTypeHandleTest");
-        homeService.jsonTypeHandleTest();
+        //homeService.insertJsonTypeHandleTest();
+        //homeService.jsonTypeHandleTest();
+        //homeService.insertJsonArrayTypeHandleTest();
+        homeService.jsonArrayTypeHandleTest();
+        //homeService.insertJsonArrayRecursiveTypeHandleTest();
         return VIEW;
     }
 

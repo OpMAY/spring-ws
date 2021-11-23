@@ -3,14 +3,40 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mapper.TestMapper">
-    <resultMap id="ex" type="UserContainer">
-        <result property="user" column="user" typeHandler="com.middleware.JsonObjectTypeHandler" />
+    <resultMap id="test" type="com.model.UserContainer">
+        <result column="no" property="no"/>
+        <result column="usertest" property="usertest" javaType="com.model.UserTest"
+                typeHandler="com.middleware.JsonObjectTypeHandler"/>
+    </resultMap>
+    <resultMap id="arraytest" type="com.model.ArrayTest">
+        <result column="no" property="no"/>
+        <result column="usertest" property="userTests"
+                typeHandler="com.middleware.JsonArrayObjectTypeHandler"/>
     </resultMap>
     <select id="selectTest" resultType="Test">
         select *
         from test;
     </select>
-    <select id="jsonTypeHandleTest" parameterType="int" resultMap="ex">
-        select * from user where no=#{no};
+    <!--JSON String을 Object로 바꿀 때-->
+    <select id="jsonTypeHandleTest" resultType="UserContainer" parameterType="int" resultMap="test">
+        select *
+        from user
+        where no = #{no};
     </select>
+    <!--JSON String을 ObjectArray로 바꿀 때-->
+    <select id="jsonArrayTypeHandleTest" resultType="ArrayTest" parameterType="int" resultMap="arraytest">
+        select *
+        from arraytest
+        where no = #{no};
+    </select>
+    <!--Object를 JSON으로 집어넣을때-->
+    <insert id="insertJsonTypeHandleTest" useGeneratedKeys="true" keyProperty="no" parameterType="UserContainer">
+        insert into user(usertest)
+        values (#{usertest, typeHandler=com.middleware.JsonObjectTypeHandler});
+    </insert>
+    <!--JSONArrayObject를 JSON으로 집어넣을때-->
+    <insert id="insertJsonArrayTypeHandleTest" useGeneratedKeys="true" keyProperty="no" parameterType="ArrayTest">
+        insert into arraytest(usertest)
+        values (#{userTests,typeHandler=com.middleware.JsonArrayObjectTypeHandler});
+    </insert>
 </mapper>
