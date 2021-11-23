@@ -101,3 +101,5 @@ target
 src/main/java/com/resources/log4j.xml
 .idea
 *.iml
+web/WEB-INF/applicationContext.xml
+web/WEB-INF/dispatcher-servlet.xml
