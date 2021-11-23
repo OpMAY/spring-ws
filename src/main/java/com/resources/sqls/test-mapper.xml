@@ -3,11 +3,14 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mapper.TestMapper">
+    <resultMap id="ex" type="UserContainer">
+        <result property="user" column="user" typeHandler="com.middleware.JsonObjectTypeHandler" />
+    </resultMap>
     <select id="selectTest" resultType="Test">
         select *
         from test;
     </select>
-    <select id="jsonTypeHandleTest" resultType="UserContainer" parameterType="int">
+    <select id="jsonTypeHandleTest" parameterType="int" resultMap="ex">
         select * from user where no=#{no};
     </select>
 </mapper>

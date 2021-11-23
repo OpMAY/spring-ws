@@ -31,6 +31,6 @@ public class TestDao {
 
     public void jsonTypeHandleTest(int no) {
         TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
-        log.info(testMapper.jsonTypeHandleTest(no));
+        log.info(testMapper.jsonTypeHandleTest(no).getUser().getEmail());
     }
 }

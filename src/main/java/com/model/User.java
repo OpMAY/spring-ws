@@ -1,12 +1,14 @@
 package com.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
+import org.json.JSONPropertyIgnore;
 
 @RequiredArgsConstructor
 @Data
+@AllArgsConstructor
+@JsonIgnoreProperties
+@NoArgsConstructor
 public class User {
     private int no;
     @NonNull
@@ -16,6 +18,6 @@ public class User {
     @NonNull
     private String name;
 
-    private String grant="general";
-    private String access_token="setting the password";
+    private String grant = "general";
+    private String access_token = "setting the password";
 }
