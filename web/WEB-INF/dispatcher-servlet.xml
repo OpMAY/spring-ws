@@ -27,10 +27,10 @@
 
     <!--URI Mapping-->
     <bean id="handlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
-    <mvc:resources mapping="/resources/**" location="/resources/"/>
-    <mvc:resources mapping="/favicon.ico" location="/favicon.ico"/>
-    <mvc:resources mapping="/robots.txt" location="/"/>
-    <mvc:resources mapping="/sitemap.xml" location="/"/>
+    <mvc:resources mapping="/resources/**" cache-period="0" location="/resources/"/>
+    <mvc:resources mapping="/favicon.ico" cache-period="0" location="/resources/assets/meta/favicon.ico"/>
+    <mvc:resources mapping="/robots.txt" cache-period="0" location="/"/>
+    <mvc:resources mapping="/sitemap.xml" cache-period="0" location="/"/>
 
     <!--View Resolver-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

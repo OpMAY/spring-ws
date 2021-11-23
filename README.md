@@ -166,6 +166,7 @@ ajax의 낮은 보안성을 높여주기위한 조치이니 감수해주시길 �
 > Ex) http://localhost:8080/map.test (map.do → X)
 >
 >
+#Project Setting
 ##applicationContext.xml
 ```<?xml version="1.0" encoding="UTF-8"?>
   <beans xmlns="http://www.springframework.org/schema/beans"
@@ -386,3 +387,5 @@ kakao.pay_key=kakaopaykey
 naver.client_id=naverclientid
 naver.client_secret=naverclientsecret
 ```
+##library
+web/WEB-INF/lib/cos.jar, web/WEB-INF/lib/javax.mail.jar import 필수

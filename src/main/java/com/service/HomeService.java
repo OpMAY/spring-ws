@@ -63,7 +63,6 @@ public class HomeService {
             Test test = new Test();
             test.setNo(2);
             test.setTestcol("string");
-            Thread.sleep(100000);
             testDao.insertTest(test);
             test = new Test();
             test.setNo(1);
