@@ -11,6 +11,22 @@ import java.util.Date;
 @Component
 @EnableScheduling
 public class Schedule {
+    private static final long SCHEDULE_VARIABLE = 1000000;
+    private static final long SCHEDULE_VARIABLE_TEST1 = 10000;
+    private static final long SCHEDULE_VARIABLE_TEST2 = 10000;
+    private static final long SCHEDULE_VARIABLE_TEST3 = 10000;
+    private static final long SCHEDULE_VARIABLE_TEST4 = 10000;
+
+    @Scheduled(fixedDelay = SCHEDULE_VARIABLE)
+    public void ScheduleTest1() {
+        /** System Scheduling or Database Scheduling Develop here*/
+    }
+
+    @Scheduled(fixedDelay = SCHEDULE_VARIABLE_TEST1)
+    public void ScheduleTest2() {
+        /** System Scheduling or Database Scheduling Develop here*/
+    }
+
     @Scheduled(cron = "*/600 * * * * *")
     public void Schedule() throws InterruptedException {
         /* System Scheduling or Database Scheduling Develop here*/

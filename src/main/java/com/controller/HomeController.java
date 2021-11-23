@@ -4,25 +4,17 @@ import com.exception.GrantAccessDeniedException;
 import com.exception.enums.BusinessExceptionType;
 import com.model.TestModel;
 import com.model.UploadForm;
-import com.model.User;
 import com.model.sns.LoginAPI;
-import com.response.DefaultRes;
-import com.response.Message;
-import com.response.ResMessage;
-import com.response.StatusCode;
 import com.service.HomeService;
 import com.service.OtherHomeService;
 import com.util.Constant;
 import com.util.FileUploadUtility;
 import lombok.*;
 import lombok.extern.log4j.Log4j;
-import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -71,7 +63,7 @@ public class HomeController {
         //homeService.insertJsonTypeHandleTest();
         //homeService.jsonTypeHandleTest();
         //homeService.insertJsonArrayTypeHandleTest();
-        homeService.jsonArrayTypeHandleTest();
+        //homeService.jsonArrayTypeHandleTest();
         //homeService.insertJsonArrayRecursiveTypeHandleTest();
         return VIEW;
     }
@@ -367,24 +359,6 @@ public class HomeController {
         HomeController();
         loginAPI.apiLoginInit(req);
         return VIEW;
-    }
-
-    /**
-     * Ajax Test
-     */
-    @CrossOrigin(origins = {"http://localhost:8080", "https://[domain]", "http://[domain]"})
-    @ResponseBody
-    @RequestMapping(value = "/ajax.do", method = RequestMethod.GET)
-    public ResponseEntity<String> ajax() throws JSONException {
-        HomeController();
-        Message message = new Message();
-        message.put("test", new User("zlzldntlr@naver.com", "zlzldntlr", "김우식"));
-        message.put("test1", "object string test");
-        return new ResponseEntity(
-                DefaultRes.res(
-                        StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap("ajax")
-                ), HttpStatus.OK
-        );
     }
 
     /**

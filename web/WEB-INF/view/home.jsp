@@ -73,6 +73,7 @@
 <script>
     $(document).ready(function () {
         sample();
+        //errorSample();
         moveToScroll({move_id: 'scroll', top: 400, speed: 400, isClass: false});
         setMousewheel({
             id: 'scroll', isClass: false, prevent: true, onMouseWheel: function (e, delta) {

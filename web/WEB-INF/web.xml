@@ -9,6 +9,17 @@
         <session-timeout>9999</session-timeout>
     </session-config>
 
+    <!--SSL Accept Https Protocol Only-->
+    <!--<security-constraint>
+        <web-resource-collection>
+            <web-resource-name>HTTP</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>-->
+
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>/WEB-INF/applicationContext.xml</param-value>
