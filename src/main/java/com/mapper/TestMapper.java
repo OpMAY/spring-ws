@@ -15,4 +15,6 @@ public interface TestMapper {
     void insertJsonArrayTypeHandleTest(ArrayTest arrayTest);
 
     ArrayTest jsonArrayTypeHandleTest(@Param("no") int no);
+
+    void insertTest(Test test);
 }

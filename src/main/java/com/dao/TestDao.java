@@ -14,8 +14,11 @@ import java.util.ArrayList;
 @Repository
 @Log4j
 public class TestDao {
-    @Autowired
     private SqlSession sqlSession;
+
+    public void setSession(SqlSession sqlSession) {
+        this.sqlSession = sqlSession;
+    }
 
     public ArrayList<Test> selectTest() throws SQLException {
         TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
@@ -40,5 +43,10 @@ public class TestDao {
     public void jsonArrayTypeHandleTest(int no) {
         TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
         log.info(testMapper.jsonArrayTypeHandleTest(no).getUserTests().get(0));
+    }
+
+    public void insertTest(Test test) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        testMapper.insertTest(test);
     }
 }

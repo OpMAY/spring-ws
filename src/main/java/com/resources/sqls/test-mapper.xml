@@ -13,6 +13,9 @@
         <result column="usertest" property="userTests"
                 typeHandler="com.middleware.JsonArrayObjectTypeHandler"/>
     </resultMap>
+    <insert id="insertTest" useGeneratedKeys="true" parameterType="Test" keyProperty="no">
+        insert into test(no, testcol) values (#{no},#{testcol});
+    </insert>
     <select id="selectTest" resultType="Test">
         select *
         from test;

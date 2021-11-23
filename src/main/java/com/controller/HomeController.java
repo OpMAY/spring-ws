@@ -58,7 +58,8 @@ public class HomeController {
     public ModelAndView homeGet() {
         HomeController();
         log.info("log4j2 test");
-        homeService.sqlRollbackTest();
+        //homeService.sqlRollbackTest();
+        homeService.sqlRollbackTest("test");
         log.info("jsonTypeHandleTest");
         //homeService.insertJsonTypeHandleTest();
         //homeService.jsonTypeHandleTest();
