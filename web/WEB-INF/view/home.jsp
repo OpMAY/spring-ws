@@ -16,10 +16,13 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
           integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-
+    <!--Datepicker CSS-->
+    <link rel="stylesheet" href="../../resources/datepicker/bootstrap-datepicker.css">
+    <!--Search CSS-->
+    <link rel="stylesheet" href="../../resources/css/search.css">
     <title>Home</title>
 </head>
-<body>
+<body style="margin-top: 10vh; margin-bottom: 10vh;">
 <h1>Home</h1>
 <h1>File Upload</h1>
 <form action="/upload.do" enctype="multipart/form-data" method="post">
@@ -63,7 +66,6 @@
 </form>
 <script>
     document.getElementById('input-uploadmax').addEventListener('change', (event) => {
-        console.log(event.currentTarget.files.length);
         if (event.currentTarget.files.length === 0) {
             console.log('업로드 제한 0개');
         } else if (event.currentTarget.files.length >= 1 && event.currentTarget.files.length <= 4) {
@@ -103,6 +105,7 @@
 <%--TODO Inspection Test--%>
 <h4>Inspection Test</h4>
 <form action="#" type="get">
+    <h6>input을 클릭하면 inpsection 실행</h6>
     <input id="email" type="text" placeholder="email을 입력해주세요"/>
 </form>
 <script>
@@ -123,7 +126,48 @@
 </script>
 <%--TODO Insepection Test End--%>
 
+<%--TODO Datepicker--%>
+<h4>Datepicker Test</h4>
+<form action="#" type="get">
+    <h6>input을 클릭하면 datepicker 실행</h6>
+    <input id="datepicker" type="text" placeholder="날짜를 선택해주세요."/>
+</form>
+<%--TODO Datepicker End--%>
 
+<%--TODO Search--%>
+<h4>Search</h4>
+<div class="search-container">
+    <input id="search" onkeypress="productSearch(this);" type="text">
+    <div class="suggest-container" id="suggest-container">
+        <ul class="list-group list-group-flush suggest-list">
+            <a href="#" class="list-group-item list-group-item-action suggest-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1 title">list group item test string</h5>
+                    <small class="date">3 days ago</small>
+                </div>
+                <p class="mb-1 desc">Some placeholder content in a paragraph.</p>
+                <small class="sub-desc">And some small print.</small>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action suggest-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1 title">Test the title string</h5>
+                    <small class="date">3 days ago</small>
+                </div>
+                <p class="mb-1 desc">Some placeholder content in a paragraph.</p>
+                <small class="sub-desc">And some small print.</small>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action suggest-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1 title">first class test string</h5>
+                    <small class="date">3 days ago</small>
+                </div>
+                <p class="mb-1 desc">Some placeholder content in a paragraph.</p>
+                <small class="sub-desc">And some small print.</small>
+            </a>
+        </ul>
+    </div>
+</div>
+<%--TODO Search End--%>
 <!-- Optional JavaScript; choose one of the two! -->
 
 <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
@@ -136,9 +180,13 @@
         integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
         crossorigin="anonymous"></script>
 <script src="../../resources/js/ajax.js"></script>
-<script src="../../resources/js/scroll.js"></script>
 <script src="../../resources/js/mousewheel.js"></script>
 <script src="../../resources/js/inspection.js"></script>
+<script src="../../resources/js/cookie.js"></script>
+<script src="../../resources/js/common.js"></script>
+<script src="../../resources/datepicker/bootstrap-datepicker.js"></script>
+<script src="../../resources/datepicker/bootstrap-datepicker.ko.min.js"></script>
+<script src="../../resources/js/search.js"></script>
 <!-- Option 2: Separate Popper and Bootstrap JS -->
 <!--
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -159,6 +207,60 @@
             }
         });
     });
+
+    <%--TODO Datepicker--%>
+    $('#datepicker').datepicker('destroy');
+    $('#datepicker').datepicker({
+        autoclose: true,
+        todayHighlight: true,
+        language: "ko",
+        orientation: "bottom auto"
+    });
+    <%--TODO Datepicker End--%>
+
+    /*TODO Search*/
+    const search = new Search({search_id: 'search', result_id: 'suggest-container'});
+    search.init({value: '', placeholder: 'placeholder change test'});
+
+    function productSearch() {
+        if (event.keyCode === 13) {
+            console.log('search');
+            var data = [
+                {
+                    href: '#',
+                    title: 'test1',
+                    date: '2021-11-24',
+                    desc: '설명',
+                    sub_desc: '부가 설명',
+                },
+                {
+                    href: '#',
+                    title: 'test1',
+                    date: '2021-11-24',
+                    desc: '설명',
+                    sub_desc: '부가 설명',
+                },
+                {
+                    href: '#',
+                    title: 'test1',
+                    date: '2021-11-24',
+                    desc: '설명',
+                    sub_desc: '부가 설명',
+                },
+                {
+                    href: '#',
+                    title: 'test1',
+                    date: '2021-11-24',
+                    desc: '설명',
+                    sub_desc: '부가 설명',
+                },
+            ]
+            search.setData(data);
+            search.openList();
+        }
+    }
+
+    /*TODO Search End*/
 </script>
 </body>
 </html>

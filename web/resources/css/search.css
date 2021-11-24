@@ -1,0 +1,11 @@
+.search-container {
+    position: relative;
+}
+
+.suggest-container {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    width: 200px;
+    height: auto;
+}
