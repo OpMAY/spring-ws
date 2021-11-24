@@ -9,6 +9,7 @@ import com.service.HomeService;
 import com.service.OtherHomeService;
 import com.util.Constant;
 import com.util.FileUploadUtility;
+import com.util.Folder;
 import lombok.*;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,12 @@ public class HomeController {
      */
     public void HomeController() {
         VIEW = new ModelAndView("home");
+    }
+
+    @RequestMapping(value = "/directory.do", method = RequestMethod.GET)
+    public ModelAndView directoryTest() {
+        log.info(Folder.getFileType(new File("C:/Users/zlzld/OneDrive/Desktop/projects/sustable/spring-master/out/artifacts/webapplication_Web_exploded/files/test.txt")));
+        return VIEW;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
