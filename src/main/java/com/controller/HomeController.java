@@ -239,9 +239,9 @@ public class HomeController {
                 log.info("File originalName:" + file.getOriginalFilename());
                 log.info("File Size:" + file.getSize());
                 log.info("File ContentType:" + file.getContentType());
+                String savedName = fileUploadUtility.uploadFile("cdn_path", file.getOriginalFilename(), file.getBytes(), Constant.LOCAL_SAVE);
+                names.add(savedName);
             }
-            String savedName = fileUploadUtility.uploadFile("cdn_path", file.getOriginalFilename(), file.getBytes(), Constant.LOCAL_SAVE);
-            names.add(savedName);
         }
         log.info(names);
         VIEW.addObject("savedNames", names);
@@ -266,9 +266,9 @@ public class HomeController {
                 log.info("File originalName:" + file.getOriginalFilename());
                 log.info("File Size:" + file.getSize());
                 log.info("File ContentType:" + file.getContentType());
+                String savedName = fileUploadUtility.uploadFile("cdn_path", file.getOriginalFilename(), file.getBytes(), Constant.LOCAL_SAVE);
+                names.add(savedName);
             }
-            String savedName = fileUploadUtility.uploadFile("cdn_path", file.getOriginalFilename(), file.getBytes(), Constant.LOCAL_SAVE);
-            names.add(savedName);
         }
         log.info(names);
         VIEW.addObject("savedNames", names);

@@ -7,7 +7,7 @@ var setCookie = function ({name, value, day = 1 * 60 * 60 * 24 * 1000}) {
         date.setTime(date.getTime() + day * 60 * 60 * 24 * 1000);
         document.cookie = name + '=' + value + ';expires=' + date.toUTCString() + ';path=/';
     } else {
-        console.log('setCookie is valid data');
+        throw new Error(`${name} or ${value} cookie is empty data`);
     }
 };
 
@@ -19,7 +19,7 @@ var getCookie = function (name) {
         var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
         return value ? value[2] : null;
     } else {
-        console.log('getCookie key is not exist key(' + name + ')');
+        throw new Error(`cookie key is not exist key(${name}`);
     }
 };
 
@@ -31,6 +31,6 @@ var deleteCookie = function (name) {
         var date = new Date();
         document.cookie = name + "= " + "; expires=" + date.toUTCString() + "; path=/";
     } else {
-        console.log('deleteCookie key is not exist key(' + name + ')');
+        throw new Error(`deleteCookie key is not exist key ${name}`);
     }
 };

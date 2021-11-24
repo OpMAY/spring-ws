@@ -28,14 +28,14 @@
     <input type="file" name="file">
     <button type="submit">업로드</button>
 </form>
-
+<br/>
 <form action="/uploads.do" enctype="multipart/form-data" method="post">
     <input type="text" placeholder="id" name="id">
     <input type="text" placeholder="password" name="password">
     <input type="file" multiple="multiple" name="files">
-    <button type="submit">업로드</button>
+    <button type="submit">멀티플업로드</button>
 </form>
-
+<br/>
 <form action="/uploadsOther.do" enctype="multipart/form-data" method="post">
     <input type="text" placeholder="id" name="id">
     <input type="text" placeholder="password" name="password">
@@ -44,12 +44,86 @@
     <input type="file" name="file-3">
     <button type="submit">업로드</button>
 </form>
+<br/>
 <form action="/" method="post">
     <button type="submit">POST HOME</button>
 </form>
+<br/>
 <div id="scroll" style="overflow: scroll; width: 200px;max-width: 100px;">
     asdsadasdasdsadasdasdsadasdasdsadasdasdsadasdasdsadasdasdsadasdasdsadasdasdsadasdasdsadasdasdsadasdasdsadasdasdsadasdasdsadasdasdsadasdasdsadasdasdsadasdasdsadasd
 </div>
+<br/>
+
+<!--TODO File Upload Max Size Limit-->
+<h4>4개 제한 통으로 업로드</h4>
+<form action="/" method="get">
+    <input id="input-uploadmax" type="file" multiple="multiple" name="files" accept="image/jpg, image/jpeg, image/png">
+    <div id="input-uploadmax-preview" style="display: flex;">
+    </div>
+</form>
+<script>
+    document.getElementById('input-uploadmax').addEventListener('change', (event) => {
+        console.log(event.currentTarget.files.length);
+        if (event.currentTarget.files.length === 0) {
+            console.log('업로드 제한 0개');
+        } else if (event.currentTarget.files.length >= 1 && event.currentTarget.files.length <= 4) {
+            console.log('업로드 가능');
+            previewImages(event.currentTarget);
+        } else {
+            console.log('업로드 제한');
+        }
+    });
+
+    function previewImages(target) {
+        document.getElementById('input-uploadmax-preview').innerHTML = '';
+        if (target.files) {
+            [].forEach.call(target.files, readAndPreview);
+        }
+
+        function readAndPreview(file) {
+            // Make sure `file.name` matches our extensions criteria
+            if (!/\.(jpe?g|png|gif)$/i.test(file.name)) {
+                return alert(file.name + " is not an image");
+            } // else...
+            var reader = new FileReader();
+            reader.addEventListener("load", function () {
+                var preview = document.getElementById('input-uploadmax-preview');
+                var div = document.createElement('div');
+                div.style.width = '100px';
+                div.style.height = '100px';
+                div.style.backgroundImage = 'url(\'' + this.result + '\')';
+                preview.appendChild(div);
+            });
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+<!--TODO File Upload Max Size Limit End-->
+
+<%--TODO Inspection Test--%>
+<h4>Inspection Test</h4>
+<form action="#" type="get">
+    <input id="email" type="text" placeholder="email을 입력해주세요"/>
+</form>
+<script>
+    document.getElementById('email').addEventListener('click', event => {
+        inspection({
+            id_type: 'id', id: 'email', value: document.getElementById('email').value, type: 'email',
+            empty: function () {
+                console.log('empty');
+            },
+            success: function () {
+                console.log('success');
+            },
+            failed: function () {
+                console.log('failed');
+            }
+        })
+    });
+</script>
+<%--TODO Insepection Test End--%>
+
+
 <!-- Optional JavaScript; choose one of the two! -->
 
 <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
@@ -64,6 +138,7 @@
 <script src="../../resources/js/ajax.js"></script>
 <script src="../../resources/js/scroll.js"></script>
 <script src="../../resources/js/mousewheel.js"></script>
+<script src="../../resources/js/inspection.js"></script>
 <!-- Option 2: Separate Popper and Bootstrap JS -->
 <!--
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -72,8 +147,11 @@
 -->
 <script>
     $(document).ready(function () {
+        /*TODO Ajax Sample*/
         sample();
         //errorSample();
+        /*TODO Ajax Sample End*/
+
         moveToScroll({move_id: 'scroll', top: 400, speed: 400, isClass: false});
         setMousewheel({
             id: 'scroll', isClass: false, prevent: true, onMouseWheel: function (e, delta) {
