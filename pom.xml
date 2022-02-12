@@ -251,21 +251,13 @@
             <version>LATEST</version>
         </dependency>
 
-        <!--External Library-->
+        <!-- https://mvnrepository.com/artifact/com.sun.mail/javax.mail -->
         <dependency>
-            <groupId>com.mvsolutions</groupId>
-            <artifactId>cos</artifactId>
-            <version>0.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/web/WEB-INF/lib/cos.jar</systemPath>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
         </dependency>
-        <dependency>
-            <groupId>com.mvsolutions</groupId>
-            <artifactId>mail</artifactId>
-            <version>0.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/web/WEB-INF/lib/javax.mail.jar</systemPath>
-        </dependency>
+
     </dependencies>
 
     <!--Amazon CDN Maven-->
