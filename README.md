@@ -1,7 +1,8 @@
 #Spring Project v a.2
 
 ##프로젝트 개발 일정 (0000-00-00 ~ 0000-00-00)
-  
+##Github Action Test
+자동화 빌드 시스템 구축
 ##Github 프로젝트 소스코드 관리 규칙
 
 `Feature` 는 실제로 협업에서 개발자 한명이 Task를 나누어 개발에 들어가는 Module Branch입니다.
