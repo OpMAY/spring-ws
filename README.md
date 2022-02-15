@@ -1,7 +1,7 @@
 #Spring Project v a.2
 
 ##프로젝트 개발 일정 (0000-00-00 ~ 0000-00-00)
-##Github Action Test Test
+##Github Action Test
 자동화 빌드 시스템 구축
 ##Github 프로젝트 소스코드 관리 규칙
 
