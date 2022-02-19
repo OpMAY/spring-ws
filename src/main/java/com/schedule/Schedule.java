@@ -30,9 +30,9 @@ public class Schedule {
     @Scheduled(cron = "*/600 * * * * *")
     public void Schedule() throws InterruptedException {
         /* System Scheduling or Database Scheduling Develop here*/
-        log.info("================Task has been stared===============");
-        log.info("Task execute 600 seconds" + new Date());
-        log.info("================Task has been ended===============");
+//        log.info("================Task has been stared===============");
+//        log.info("Task execute 600 seconds" + new Date());
+//        log.info("================Task has been ended===============");
     }
 
     //@Scheduled(cron = "*/30 * * * * *")
