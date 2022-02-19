@@ -5,6 +5,7 @@ import com.response.DefaultRes;
 import com.response.Message;
 import com.response.ResMessage;
 import com.response.StatusCode;
+import com.util.EncryptionService;
 import lombok.extern.log4j.Log4j;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,8 +49,6 @@ public class RestAjaxController {
     public ResponseEntity<String> properties() throws JSONException {
         Message message = new Message();
         message.put("access", aws_access);
-        message.put("secret", aws_secret);
-        message.put("aws_bucket", aws_bucket);
         return new ResponseEntity(
                 DefaultRes.res(
                         StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap("ajax")
