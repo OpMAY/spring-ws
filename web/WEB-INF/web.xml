@@ -19,6 +19,10 @@
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
     </security-constraint>-->
+    <context-param>
+        <param-name>contextInitializerClasses</param-name>
+        <param-value>com.config.PropertyConfig</param-value>
+    </context-param>
 
     <context-param>
         <param-name>contextConfigLocation</param-name>

@@ -17,20 +17,15 @@ import java.util.Map;
 
 @Service
 @Log4j
-@PropertySource("classpath:sns.properties")
 public class NaverAPI {
 
-    @Value("${naver.client_id}")
     private String client_id;
-    @Value("${naver.client_secret}")
     private String client_secret;
 
     private Naver naver;
 
     @PostConstruct
     public void NaverAPI() {
-        log.info(client_id);
-        log.info(client_secret);
         this.naver = new Naver(client_id, client_secret);
     }
 

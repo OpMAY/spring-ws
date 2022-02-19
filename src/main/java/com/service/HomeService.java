@@ -18,14 +18,13 @@ import java.util.ArrayList;
 
 @Service
 @Log4j
-@PropertySource("classpath:aws.properties")
 public class HomeService {
 
-    @Value("${AWSModel.accessKey}")
+    @Value("${AWS.ACCESS}")
     private String accessKey;
-    @Value("${AWSModel.secretKey}")
+    @Value("${AWS.SECRET}")
     private String secretKey;
-    @Value("${AWSModel.bucketName}")
+    @Value("${AWS.BUCKET}")
     private String bucketName;
 
     @Autowired

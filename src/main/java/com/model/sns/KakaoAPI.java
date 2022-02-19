@@ -21,13 +21,10 @@ import java.util.HashMap;
 
 @Service
 @Log4j
-@PropertySource("classpath:sns.properties")
 public class KakaoAPI {
 
-    @Value("${kakao.client_id}")
     private String client_id;
 
-    @Value("${kakao.pay_key}")
     private String pay_key;
 
     private Kakao kakao;

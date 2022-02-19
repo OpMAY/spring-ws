@@ -29,13 +29,6 @@ import java.util.Map;
 
 @Controller
 @Log4j
-/*여러개 일때*/
-@PropertySources({
-        @PropertySource("classpath:aws.properties"),
-        @PropertySource("classpath:path.properties")
-})
-//한개일 때
-/*@PropertySource("classpath:aws.properties")*/
 public class HomeController {
     private ModelAndView VIEW;
 
@@ -150,14 +143,14 @@ public class HomeController {
     /**
      * CDNService TEST aws.properties setting value get
      *
-     * @PropertySource("classpath:aws.properties") public class HomeController {}
+     * @PropertySource("classpath:key.properties") public class HomeController {}
      */
 
-    @Value("${AWSModel.accessKey}")
+    @Value("${AWS.ACCESS}")
     private String accessKey;
-    @Value("${AWSModel.secretKey}")
+    @Value("${AWS.SECRET}")
     private String secretKey;
-    @Value("${AWSModel.bucketName}")
+    @Value("${AWS.BUCKET}")
     private String bucketName;
 
     @RequestMapping(value = "/test/cdn.do", method = RequestMethod.GET)

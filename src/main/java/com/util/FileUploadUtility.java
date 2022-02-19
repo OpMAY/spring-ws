@@ -19,18 +19,14 @@ import java.util.UUID;
 
 @Log4j
 @Service
-@PropertySources({
-        @PropertySource("classpath:aws.properties"),
-        @PropertySource("classpath:path.properties")
-})
 public class FileUploadUtility {
-    @Value("${filepath}")
+    @Value("${PATH}")
     private String upload_path;
-    @Value("${AWSModel.accessKey}")
+    @Value("${AWS.ACCESS}")
     private String accessKey;
-    @Value("${AWSModel.secretKey}")
+    @Value("${AWS.SECRET}")
     private String secretKey;
-    @Value("${AWSModel.bucketName}")
+    @Value("${AWS.BUCKET}")
     private String bucketName;
 
     /**

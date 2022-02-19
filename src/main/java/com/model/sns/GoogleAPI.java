@@ -20,12 +20,8 @@ import java.util.HashMap;
 
 @Service
 @Log4j
-@PropertySource("classpath:sns.properties")
 public class GoogleAPI {
-    @Value("${google.client_id}")
     private String client_id;
-
-    @Value("${google.client_secret}")
     private String client_secret;
 
     @PostConstruct
