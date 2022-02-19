@@ -90,7 +90,6 @@ public class HomeService {
         try {
             testDao.setSession(sqlSession);
             UserTest userTest = new UserTest();
-            userTest.setPackage_path("com.model.UserTest");
             userTest.setEmail("zlzldntlr@naver.com");
             userTest.setAccess_token("token");
             userTest.setGrant("normal");
@@ -114,7 +113,6 @@ public class HomeService {
             ArrayList<UserTest> userTests = new ArrayList<>();
             for (int i = 0; i < 3; i++) {
                 UserTest userTest = new UserTest();
-                userTest.setPackage_path("com.model.UserTest");
                 userTest.setEmail("zlzldntlr@naver.com");
                 userTest.setAccess_token("token");
                 userTest.setGrant("normal");

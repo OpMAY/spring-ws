@@ -42,7 +42,7 @@ public class TestDao {
 
     public void jsonArrayTypeHandleTest(int no) {
         TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
-        log.info(testMapper.jsonArrayTypeHandleTest(no).getUserTests().get(0));
+        log.info(testMapper.jsonArrayTypeHandleTest(no).getUserTests().get(0).getEmail());
     }
 
     public void insertTest(Test test) {

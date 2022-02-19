@@ -11,7 +11,6 @@ import lombok.Setter;
 @JsonAutoDetect
 public class UserTest {
     private int no;
-    private String package_path = "com.model.UserTest";
     private String email;
     private String id;
     private String name;

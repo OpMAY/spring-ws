@@ -3,6 +3,7 @@ package com.middleware;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import lombok.extern.log4j.Log4j;
+import org.apache.ibatis.javassist.expr.Cast;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.json.JSONObject;
@@ -16,6 +17,13 @@ import java.sql.SQLException;
 @Log4j
 public class JsonObjectTypeHandler<T> extends BaseTypeHandler<T> {
 
+    private Class<T> type;
+
+    public JsonObjectTypeHandler(Class<T> type) {
+        if (type == null) throw new IllegalArgumentException("Type argument cannot be null");
+        this.type = type;
+    }
+
     @Override
     public void setNonNullParameter(PreparedStatement preparedStatement, int i, T t, JdbcType jdbcType) throws SQLException {
         preparedStatement.setString(i, new Gson().toJson(t));
@@ -23,31 +31,29 @@ public class JsonObjectTypeHandler<T> extends BaseTypeHandler<T> {
 
     @Override
     public T getNullableResult(ResultSet resultSet, String s) throws SQLException {
-        log.info("getNullableResult +s: " + s + resultSet.getString(s));
+        //log.info("getNullableResult +s: " + s + resultSet.getString(s));
         return convertToObject(resultSet.getString(s));
     }
 
     @Override
     public T getNullableResult(ResultSet resultSet, int i) throws SQLException {
-        log.info("getNullableResult +i: " + i + resultSet.getString(i));
+        //log.info("getNullableResult +i: " + i + resultSet.getString(i));
         return convertToObject(resultSet.getString(i));
     }
 
     @Override
     public T getNullableResult(CallableStatement callableStatement, int i) throws SQLException {
-        log.info("getNullableResult +CallableStatement: " + i + callableStatement.getString(i));
+        //log.info("getNullableResult +CallableStatement: " + i + callableStatement.getString(i));
         return convertToObject(callableStatement.getString(i));
     }
 
     private T convertToObject(String jsonString) {
         try {
-            JSONObject jsonObject = new JSONObject(jsonString);
-            Class<?> findClass = Class.forName(jsonObject.getString("package_path"));
-            log.info(findClass.getClass());
+            Class<?> findClass = type;
             return (T) new ObjectMapper().readValue(jsonString, findClass);
-        } catch (IOException | ClassNotFoundException e) {
-            log.error("JSONTypeHandler failed to convert jsonString to list, JSON String : " + jsonString, e);
+        } catch (Exception e) {
+            log.error("JSONTypeHandler failed to casting jsonString to Object, JSON String : " + jsonString, e);
         }
-        return null;
+        return (type.cast(new Object()));
     }
 }

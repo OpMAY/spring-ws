@@ -5,9 +5,11 @@ import com.response.DefaultRes;
 import com.response.Message;
 import com.response.ResMessage;
 import com.response.StatusCode;
+import com.service.HomeService;
 import com.util.EncryptionService;
 import lombok.extern.log4j.Log4j;
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +51,21 @@ public class RestAjaxController {
     public ResponseEntity<String> properties() throws JSONException {
         Message message = new Message();
         message.put("access", aws_access);
+        return new ResponseEntity(
+                DefaultRes.res(
+                        StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap("ajax")
+                ), HttpStatus.OK
+        );
+    }
+
+    @Autowired
+    private HomeService homeService;
+    @ResponseBody
+    @RequestMapping(value = "/test/typehandler.do", method = RequestMethod.GET)
+    public ResponseEntity<String> typeHandler() throws JSONException {
+        Message message = new Message();
+        homeService.jsonArrayTypeHandleTest();
+        homeService.jsonTypeHandleTest();
         return new ResponseEntity(
                 DefaultRes.res(
                         StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap("ajax")

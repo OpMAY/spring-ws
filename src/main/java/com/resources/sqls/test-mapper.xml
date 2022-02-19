@@ -10,7 +10,7 @@
     </resultMap>
     <resultMap id="arraytest" type="com.model.ArrayTest">
         <result column="no" property="no"/>
-        <result column="usertest" property="userTests"
+        <result column="usertest" property="userTests" javaType="com.model.UserTest"
                 typeHandler="com.middleware.JsonArrayObjectTypeHandler"/>
     </resultMap>
     <insert id="insertTest" useGeneratedKeys="true" parameterType="Test" keyProperty="no">

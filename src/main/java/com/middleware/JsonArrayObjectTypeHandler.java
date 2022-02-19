@@ -18,6 +18,13 @@ import java.util.ArrayList;
 @Log4j
 public class JsonArrayObjectTypeHandler<T> extends BaseTypeHandler<T> {
 
+    private Class<T> type;
+
+    public JsonArrayObjectTypeHandler(Class<T> type) {
+        if (type == null) throw new IllegalArgumentException("Type argument cannot be null");
+        this.type = type;
+    }
+
     @Override
     public void setNonNullParameter(PreparedStatement preparedStatement, int i, T t, JdbcType jdbcType) throws SQLException {
         preparedStatement.setString(i, new Gson().toJson(t));
@@ -25,43 +32,39 @@ public class JsonArrayObjectTypeHandler<T> extends BaseTypeHandler<T> {
 
     @Override
     public T getNullableResult(ResultSet resultSet, String s) throws SQLException {
-        log.info("getNullableResult +s: " + s + resultSet.getString(s));
+        //log.info("getNullableResult +s: " + s + resultSet.getString(s));
         return convertToObject(resultSet.getString(s));
     }
 
     @Override
     public T getNullableResult(ResultSet resultSet, int i) throws SQLException {
-        log.info("getNullableResult +i: " + i + resultSet.getString(i));
+        //log.info("getNullableResult +i: " + i + resultSet.getString(i));
         return convertToObject(resultSet.getString(i));
     }
 
     @Override
     public T getNullableResult(CallableStatement callableStatement, int i) throws SQLException {
-        log.info("getNullableResult +CallableStatement: " + i + callableStatement.getString(i));
+        //log.info("getNullableResult +CallableStatement: " + i + callableStatement.getString(i));
         return convertToObject(callableStatement.getString(i));
     }
 
     private T convertToObject(String jsonString) {
         try {
             JSONArray jsonArray = new JSONArray(jsonString);
-            Class<?> findClass = null;
+            Class<?> findClass = type;
             if (jsonArray.length() != 0) {
-                findClass = Class.forName(jsonArray.getJSONObject(0).getString("package_path"));
-                ArrayList arrayList = new ArrayList();
+                ArrayList arrayList = new ArrayList<>();
                 for (int i = 0; i < jsonArray.length(); i++) {
                     arrayList.add((T) new ObjectMapper().readValue(jsonArray.getJSONObject(i).toString(), findClass));
                 }
                 return (T) arrayList;
             } else {
-                return null;
+                return (T) new ArrayList<T>();
             }
-        } catch (ClassNotFoundException e) {
-            log.error("JSONTypeHandler failed to convert jsonString to list, JSON String : " + jsonString, e);
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+            log.error("JsonArrayObjectTypeHandler failed to casting jsonString to List<Object>, JSON String : " + jsonString, e);
         }
-        return null;
+        return (T) new ArrayList<T>();
     }
 }
