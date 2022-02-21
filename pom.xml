@@ -11,7 +11,7 @@
         <java-version>1.8</java-version> <!--Java SDK Version-->
         <mybatis-version>3.5.5</mybatis-version>
         <org.springframework-version>5.2.6.RELEASE</org.springframework-version> <!--Spring Version-->
-        <org.aspectj-version>1.6.10</org.aspectj-version> <!--Spring AOP Version-->
+        <org.aspectj-version>1.9.7</org.aspectj-version> <!--Spring AOP Version-->
         <mybatis-spring-version>2.0.5</mybatis-spring-version> <!--Mybatis Version-->
         <mysql-connector-version>8.0.19</mysql-connector-version> <!--Connector Version-->
         <aws-sdk-version>1.11.327</aws-sdk-version> <!--AWS Version-->
@@ -62,7 +62,12 @@
         <!--Spring AOP 설정-->
         <dependency>
             <groupId>org.aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${org.aspectj-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjtools</artifactId>
             <version>${org.aspectj-version}</version>
         </dependency>
 
