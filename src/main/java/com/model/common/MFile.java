@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 public class MFile {
 
-    private String package_path = "com.model.MFile";
     private String url;
     private String name;
     private long size;

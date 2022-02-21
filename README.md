@@ -13,6 +13,16 @@
  - 이제 package_path를 사용하지 않아도 자동으로 Class Casting이 완료됩니다.
  JSON 및 JSONArray는 자동으로 Class Casting이 완료됩니다. (Ref : `mapper.xml`, `Middleware Package`)
 
+####3.FileUploadUtility
+ - File Upload Utility 에 전략패턴을 적용하였습니다.
+ - `FileUploadUtility` 클래스의 생성자에 있는 `@Qualifier`에서 파일업로드 전략을 변경할 수 있습니다.
+
+####4. DB Rollback System
+ - 메소드에 `@Transactional`을 붙이면 로직 중간에 에러 발생시 자동으로 DB가 롤백됩니다.
+ - 기본적으로 **Unchecked Exception** 만 롤백됩니다.
+ - Checked Exception 발생시에도 롤백을 하고싶다면 어노테이션에 속성에서 설정해야합니다.
+ - 기본적으로 `@Transactional`메소드가 다른 `@Transactional`메소드를 내부 호출하면 호출된 메소드의 DB Transaction 은 호출한 메소드에 귀속됩니다.
+
 ##Database Init
 ```
 CREATE DATABASE  IF NOT EXISTS `flowtest` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
@@ -80,32 +90,6 @@ LOCK TABLES `arraytest` WRITE;
 /*!40000 ALTER TABLE `arraytest` DISABLE KEYS */;
 INSERT INTO `arraytest` VALUES (1,'[{\"no\":0,\"email\":\"zlzldntlr@naver.com\",\"id\":\"zlzldntlr\",\"name\":\"김우식\",\"grant\":\"normal\",\"access_token\":\"token\"},{\"no\":0,\"email\":\"zlzldntlr@naver.com\",\"id\":\"zlzldntlr\",\"name\":\"김우식\",\"grant\":\"normal\",\"access_token\":\"token\"},{\"no\":0,\"email\":\"zlzldntlr@naver.com\",\"id\":\"zlzldntlr\",\"name\":\"김우식\",\"grant\":\"normal\",\"access_token\":\"token\"}]');
 /*!40000 ALTER TABLE `arraytest` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `shedlock`
---
-
-DROP TABLE IF EXISTS `shedlock`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `shedlock` (
-  `name` varchar(64) NOT NULL COMMENT '스케줄잠금이름',
-  `lock_until` timestamp(3) NULL DEFAULT NULL COMMENT '잠금기간',
-  `locked_at` timestamp(3) NULL DEFAULT NULL COMMENT '잠금일시',
-  `locked_by` varchar(255) DEFAULT NULL COMMENT '잠금신청자',
-  PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `shedlock`
---
-
-LOCK TABLES `shedlock` WRITE;
-/*!40000 ALTER TABLE `shedlock` DISABLE KEYS */;
-INSERT INTO `shedlock` VALUES ('OftenShedLockJob','2021-08-29 19:18:03.025','2021-08-29 19:18:00.016','LAPTOP-TJQ3AASD'),('testShedLockJob','2021-08-23 03:47:03.028','2021-08-23 03:47:00.023','LAPTOP-TJQ3AASD');
-/*!40000 ALTER TABLE `shedlock` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

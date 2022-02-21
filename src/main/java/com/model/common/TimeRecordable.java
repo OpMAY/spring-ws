@@ -7,6 +7,6 @@ import java.time.LocalDateTime;
 @Getter
 public abstract class TimeRecordable {
 
-    public LocalDateTime reg_datetime;
-    public LocalDateTime updated_datetime;
+    private LocalDateTime reg_datetime;
+    private LocalDateTime updated_datetime;
 }
