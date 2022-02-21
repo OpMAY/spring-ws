@@ -1,7 +1,7 @@
 package com.model.sns;
 
 import com.google.gson.Gson;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +19,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 
 @Service
-@Log4j
+@Slf4j
 public class GoogleAPI {
     private String client_id;
     private String client_secret;

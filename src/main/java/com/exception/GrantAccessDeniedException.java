@@ -2,9 +2,9 @@ package com.exception;
 
 import com.exception.enums.BaseExceptionType;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
-@Log4j
+@Slf4j
 public class GrantAccessDeniedException extends RuntimeException {
     @Getter
     private BaseExceptionType exceptionType;

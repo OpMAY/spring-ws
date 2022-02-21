@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.util.EncryptionService;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -19,7 +19,7 @@ import org.springframework.core.io.support.EncodedResource;
 import org.springframework.core.io.support.ResourcePropertySource;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 
-@Log4j
+@Slf4j
 public class PropertyConfig implements ApplicationContextInitializer<ConfigurableWebApplicationContext> {
     public void initialize(ConfigurableWebApplicationContext ctx) {
         log.info("PropertyConfig : initializing");

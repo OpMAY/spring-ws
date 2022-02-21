@@ -1,13 +1,13 @@
 package com.schedule;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-@Log4j
+@Slf4j
 @Component
 @EnableScheduling
 public class Schedule {

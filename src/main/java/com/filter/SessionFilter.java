@@ -3,7 +3,7 @@ package com.filter;
 import com.amazonaws.services.s3.model.Encryption;
 import com.util.Constant;
 import com.util.EncryptionService;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +16,7 @@ import java.util.Objects;
 /**
  * Session Filter JWT 가볍게 검사 및 Version 검사하여 세션 자원 해제
  */
-@Log4j
+@Slf4j
 public class SessionFilter implements Filter {
     private String contextPath;
 

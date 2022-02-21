@@ -2,14 +2,14 @@ package com.response;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Data;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 
 import java.util.*;
 
 @Data
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-@Log4j
+@Slf4j
 public class Message {
     private Map<String, Object> map;
 

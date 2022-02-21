@@ -1,6 +1,6 @@
 package com.filter;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +22,7 @@ import java.util.List;
  * Filter Init -> Interceptor PostConstruct -> Filter doFilter(Pre Process) -> Interceptor preHandle ->
  * Interceptor postHandle -> Interceptor afterCompletion -> Filter(After Process)
  */
-@Log4j
+@Slf4j
 public class GeneralFilter implements Filter {
     private String contextPath;
     private List<String> excludedUrls;

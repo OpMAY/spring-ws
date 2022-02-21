@@ -1,7 +1,7 @@
 package com.util;
 
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -10,7 +10,7 @@ import java.util.Locale;
 /**
  * 형 변환에 관련된 클래스
  */
-@Log4j
+@Slf4j
 public class Format {
     /**
      * Example() 참조
