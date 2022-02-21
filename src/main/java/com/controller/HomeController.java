@@ -3,29 +3,20 @@ package com.controller;
 import com.exception.GrantAccessDeniedException;
 import com.exception.enums.BusinessExceptionType;
 import com.model.TestModel;
-import com.model.UploadForm;
 import com.model.sns.LoginAPI;
 import com.service.HomeService;
 import com.service.OtherHomeService;
-import com.util.Constant;
-import com.util.FileUploadUtility;
 import com.util.Folder;
 import lombok.*;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 @Log4j
@@ -34,9 +25,6 @@ public class HomeController {
 
     @Autowired
     private HomeService homeService;
-
-    @Autowired
-    private FileUploadUtility fileUploadUtility;
 
     @Autowired
     private OtherHomeService otherHomeService;
@@ -141,33 +129,6 @@ public class HomeController {
     }
 
     /**
-     * CDNService TEST aws.properties setting value get
-     *
-     * @PropertySource("classpath:key.properties") public class HomeController {}
-     */
-
-    @Value("${AWS.ACCESS}")
-    private String accessKey;
-    @Value("${AWS.SECRET}")
-    private String secretKey;
-    @Value("${AWS.BUCKET}")
-    private String bucketName;
-
-    @RequestMapping(value = "/test/cdn.do", method = RequestMethod.GET)
-    public ModelAndView cdnService() {
-        HomeController();
-        /**
-         * CDNService 외부 호출
-         * */
-        /*CDNService cdnService = new CDNService(accessKey, secretKey, bucketName);*/
-        /**
-         * CDNService Service 내부 호출
-         * */
-        homeService.cdnService();
-        return new ModelAndView("home");
-    }
-
-    /**
      * DAO Prototype Test
      */
     @RequestMapping(value = "/test/prototype.do", method = RequestMethod.GET)
@@ -192,80 +153,6 @@ public class HomeController {
         File file = new File(path + filename);
         log.info(file.getName());
         return new ModelAndView("download", "downloadFile", file);
-    }
-
-    /**
-     * File Upload Test Logic
-     */
-    /*Post File Upload*/
-    @RequestMapping(value = "/upload.do", method = RequestMethod.POST)
-    public ModelAndView upload(UploadForm uploadForm) throws Exception {
-        HomeController();
-        log.info(uploadForm);
-        if (uploadForm.getFile().getSize() != 0) {
-            log.info("originalName:" + uploadForm.getFile().getOriginalFilename());
-            log.info("size:" + uploadForm.getFile().getSize());
-            log.info("ContentType:" + uploadForm.getFile().getContentType());
-        }
-        String savedName = fileUploadUtility.uploadFile("cdn_path", uploadForm.getFile().getOriginalFilename(), uploadForm.getFile().getBytes(), Constant.LOCAL_SAVE);
-        VIEW.addObject("savedName", savedName);
-        return VIEW;
-    }
-
-    /**
-     * Files Upload Test Logic
-     * Type <input type="file" multiple="multiple"/>
-     * UploadForm -> private List<MultipartFile> files;
-     */
-    /*Post Files Upload*/
-    @RequestMapping(value = "/uploads.do", method = RequestMethod.POST)
-    public ModelAndView uploadsMultiple(UploadForm uploadForm) throws Exception {
-        HomeController();
-        ArrayList<String> names = new ArrayList<>();
-        HashMap<String, MultipartFile> hashMap = new HashMap<>();
-        for (int i = 0; i < uploadForm.getFiles().size(); i++) {
-            hashMap.put("files" + i, uploadForm.getFiles().get(i));
-        }
-        for (Map.Entry<String, MultipartFile> entry : hashMap.entrySet()) {
-            MultipartFile file = entry.getValue();
-            if (file.getSize() != 0) {
-                log.info("File originalName:" + file.getOriginalFilename());
-                log.info("File Size:" + file.getSize());
-                log.info("File ContentType:" + file.getContentType());
-                String savedName = fileUploadUtility.uploadFile("cdn_path", file.getOriginalFilename(), file.getBytes(), Constant.LOCAL_SAVE);
-                names.add(savedName);
-            }
-        }
-        log.info(names);
-        VIEW.addObject("savedNames", names);
-        return VIEW;
-    }
-
-    /**
-     * Files Upload Test Logic
-     * Type <input type="file" name="file-1"/>
-     * Type <input type="file" name="file-2"/>
-     * Type <input type="file" name="file-3"/>
-     * Upload
-     */
-    /*Post Files Upload*/
-    @RequestMapping(value = "/uploadsOther.do", method = RequestMethod.POST)
-    public ModelAndView uploads(@RequestParam Map<String, MultipartFile> fileMap, UploadForm uploadForm) throws Exception {
-        HomeController();
-        ArrayList<String> names = new ArrayList<>();
-        for (Map.Entry<String, MultipartFile> entry : fileMap.entrySet()) {
-            MultipartFile file = entry.getValue();
-            if (file.getSize() != 0) {
-                log.info("File originalName:" + file.getOriginalFilename());
-                log.info("File Size:" + file.getSize());
-                log.info("File ContentType:" + file.getContentType());
-                String savedName = fileUploadUtility.uploadFile("cdn_path", file.getOriginalFilename(), file.getBytes(), Constant.LOCAL_SAVE);
-                names.add(savedName);
-            }
-        }
-        log.info(names);
-        VIEW.addObject("savedNames", names);
-        return VIEW;
     }
 
     /**

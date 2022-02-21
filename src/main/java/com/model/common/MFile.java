@@ -1,0 +1,32 @@
+package com.model.common;
+
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
+@Getter
+@Setter
+public class MFile {
+
+    private String package_path = "com.model.MFile";
+    private String url;
+    private String name;
+    private long size;
+    private String type;
+
+    public MFile() {
+    }
+
+    public MFile(MultipartFile multipartFile) {
+        this.size = multipartFile.getSize();
+        this.name = multipartFile.getOriginalFilename();
+        this.type = multipartFile.getContentType();
+    }
+
+    public MFile(MultipartFile multipartFile, String url) {
+        this.size = multipartFile.getSize();
+        this.name = multipartFile.getOriginalFilename();
+        this.type = multipartFile.getContentType();
+        this.url = url;
+    }
+}

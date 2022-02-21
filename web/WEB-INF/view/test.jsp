@@ -20,6 +20,22 @@
         <button onclick="patchTest();">PATCH Test</button>
         <button onclick="deleteTest();">DELETE Test</button>
     </section>
+    <section>
+        <form action="/file.do" enctype="multipart/form-data" method="post">
+            <input type="file" name="file">
+            <button type="submit">단일업로드</button>
+        </form>
+        <form action="/files.do" enctype="multipart/form-data" method="post">
+            <input type="file" multiple="multiple" name="files">
+            <button type="submit">복수업로드1</button>
+        </form>
+        <form action="/filemap.do" enctype="multipart/form-data" method="post">
+            <input type="file" name="file1">
+            <input type="file" name="file2">
+            <input type="file" name="file3">
+            <button type="submit">복수업로드2</button>
+        </form>
+    </section>
 </main>
 
 <script>
