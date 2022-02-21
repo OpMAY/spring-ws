@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.api.lunarsoft.alarm.LunarAlarmAPI;
+import com.api.lunarsoft.alarm.custom.SignUp;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.model.User;
@@ -159,7 +160,7 @@ public class TestController {
     private LunarAlarmAPI lunarAlarmAPI;
     @GetMapping("lunarsoft.do")
     public ModelAndView lunarsoftAlarmTest() {
-        log.info(lunarAlarmAPI.getTestSample().toString());
+        //lunarAlarmAPI.signUpTest(new SignUp());
         return new ModelAndView("test");
     }
 }
