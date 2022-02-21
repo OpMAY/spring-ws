@@ -1,6 +1,6 @@
 package com.interceptor;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -8,7 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Log4j
+@Slf4j
 public class BaseInterceptor extends HandlerInterceptorAdapter {
     /**
      * Interceptor 사용할 경우

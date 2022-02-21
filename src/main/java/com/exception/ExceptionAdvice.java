@@ -1,6 +1,6 @@
 package com.exception;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.validation.BindException;
@@ -16,7 +16,7 @@ import java.nio.file.AccessDeniedException;
 
 @ComponentScan
 @ControllerAdvice
-@Log4j
+@Slf4j
 public class ExceptionAdvice {
 
     private ModelAndView modelAndView;

@@ -29,25 +29,25 @@ public class RequestLogger {
     }
 
     public void log(String message) {
-        log.info("[" + uuid + "][" + requestURL + "]" + message);
+        log.info("[{}][{}]{}", uuid, requestURL, message);
     }
 
     public void log(String prefix, ProceedingJoinPoint joinPoint) {
-        log.info("[" + uuid + "][" + requestURL + "]" + prefix + joinPoint.getThis().toString().split("@")[0] + "." + joinPoint.getSignature().getName());
+        log.info("[{}][{}]{}{}.{}", uuid, requestURL, prefix, joinPoint.getThis().toString().split("@")[0], joinPoint.getSignature().getName());
     }
 
     public void log(long time, String prefix, ProceedingJoinPoint joinPoint) {
-        log.info("[" + uuid + "][" + requestURL + "][" + time + "ms]" + prefix + joinPoint.getThis().toString().split("@")[0] + "." + joinPoint.getSignature().getName());
+        log.info("[{}][{}][{}]{}{}.{}", uuid, requestURL, time, prefix, joinPoint.getThis().toString().split("@")[0], joinPoint.getSignature().getName());
     }
 
     @PostConstruct
     public void init() {
         uuid = UUID.randomUUID().toString().substring(0, 8);
-        log.info("[" + uuid + "] request created");
+        log.info("[{}] request created", uuid);
     }
 
     @PreDestroy
     public void close() {
-        log.info("[" + uuid + "] request closed");
+        log.info("[{}] request closed", uuid);
     }
 }

@@ -2,7 +2,7 @@ package com.middleware;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.expr.Cast;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
@@ -14,7 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@Log4j
+@Slf4j
 public class JsonObjectTypeHandler<T> extends BaseTypeHandler<T> {
 
     private Class<T> type;

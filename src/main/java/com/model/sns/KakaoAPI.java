@@ -3,7 +3,7 @@ package com.model.sns;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +20,7 @@ import java.net.URL;
 import java.util.HashMap;
 
 @Service
-@Log4j
+@Slf4j
 public class KakaoAPI {
 
     private String client_id;
@@ -321,7 +321,7 @@ public class KakaoAPI {
                 kakaoPay.setTid(jsonObject.getString("tid"));
                 return kakaoPay;
             } else {
-                log.info(responseCode);
+                log.info("{}", responseCode);
                 log.info(result);
                 return null;
             }
@@ -480,7 +480,7 @@ public class KakaoAPI {
             if (responseCode == 200) {
                 log.info(result);
                 JSONObject jsonObject = new JSONObject(result);
-                log.info(jsonObject);
+                log.info("{}", jsonObject);
                 kakaoPay.setTid(jsonObject.getString("tid"));
                 kakaoPay.setAid(jsonObject.getString("cid"));
                 kakaoPay.setCid(jsonObject.getString("cid"));
@@ -492,7 +492,7 @@ public class KakaoAPI {
                 kakaoPay.setApproved_at(jsonObject.getString("approved_at"));
                 return kakaoPay;
             } else {
-                log.info(responseCode);
+                log.info("{}", responseCode);
                 log.info(result);
                 return null;
             }
@@ -634,7 +634,7 @@ public class KakaoAPI {
                 JSONObject jsonObject = new JSONObject(result);
                 return kakaoPay;
             } else {
-                log.info(responseCode);
+                log.info("{}", responseCode);
                 log.info(result);
                 return null;
             }

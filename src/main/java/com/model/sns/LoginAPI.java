@@ -2,14 +2,14 @@ package com.model.sns;
 
 import com.model.User;
 import com.service.HomeService;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 
-@Log4j
+@Slf4j
 @Service
 public class LoginAPI {
 
@@ -56,7 +56,6 @@ public class LoginAPI {
             log.info("User Information : " + userInfo);
             /** Login Success*/
             User user = new User((String) userInfo.get("email"), (String) userInfo.get("id"), (String) userInfo.get("nickname"));
-            log.info(user);
             /** Naver Logout*/
             /**System.out.println(new NaverAPI().naverLogout(access_Token));*/
         }
@@ -79,7 +78,6 @@ public class LoginAPI {
             }
             /** Login Success*/
             User user = new User((String) userInfo.get("email"), (String) userInfo.get("id"), (String) userInfo.get("nickname"));
-            log.info(user);
             /** Kakao Logout*/
             /**System.out.println(new KakaoAPI().kakaoLogout(access_Token));*/
         }
@@ -99,7 +97,6 @@ public class LoginAPI {
             }
             /** Login Success*/
             User user = new User((String) userInfo.get("email"), (String) userInfo.get("id"), (String) userInfo.get("name"));
-            log.info(user);
             /** Google Logout*/
             /**System.out.println(new GoogleAPI().googleLogout(userInfo.get("access_token").toString()));*/
         } else {

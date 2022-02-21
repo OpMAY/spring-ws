@@ -8,7 +8,7 @@ import com.service.HomeService;
 import com.service.OtherHomeService;
 import com.util.Folder;
 import lombok.*;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 
 @Controller
-@Log4j
+@Slf4j
 public class HomeController {
     private ModelAndView VIEW;
 
@@ -124,7 +124,6 @@ public class HomeController {
     public ModelAndView defaultValueModel() {
         HomeController();
         TestModel testModel = new TestModel();
-        log.info(testModel);
         return new ModelAndView("home");
     }
 

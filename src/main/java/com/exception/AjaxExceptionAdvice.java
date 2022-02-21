@@ -4,7 +4,7 @@ package com.exception;
 import com.response.DefaultRes;
 import com.response.ResMessage;
 import com.response.StatusCode;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ import java.io.FileNotFoundException;
 
 @ComponentScan
 @RestControllerAdvice(basePackages = "com.restcontroller")
-@Log4j
+@Slf4j
 public class AjaxExceptionAdvice {
 
     /**

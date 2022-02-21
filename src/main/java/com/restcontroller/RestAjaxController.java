@@ -7,7 +7,7 @@ import com.response.ResMessage;
 import com.response.StatusCode;
 import com.service.HomeService;
 import com.util.EncryptionService;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Log4j
+@Slf4j
 @RestController
 public class RestAjaxController {
     /**

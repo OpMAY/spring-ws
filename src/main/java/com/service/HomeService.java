@@ -2,7 +2,7 @@ package com.service;
 
 import com.dao.TestDao;
 import com.model.*;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 @Service
-@Log4j
+@Slf4j
 public class HomeService {
 
     @Value("${AWS.ACCESS}")

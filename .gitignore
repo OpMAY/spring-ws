@@ -98,6 +98,6 @@ fabric.properties
 out
 target
 classes
-src/main/java/com/resources/log4j.xml
+src/main/java/com/resources/log4j2.xml
 .idea
 *.iml
