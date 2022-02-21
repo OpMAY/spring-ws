@@ -2,6 +2,7 @@ package com.model.sns.kakao;
 
 import com.transfer.ProtocolBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -14,7 +15,8 @@ import java.util.HashMap;
 @Service
 @Slf4j
 public class KakaoAPI {
-    private final String KAKAO_CLIENT_ID = "282b5c2ab35c942a331f07c4bc13542d";
+    @Value("${KAKAO.CLIENT_ID}")
+    private String KAKAO_CLIENT_ID;
     private final String KAKAO_OAUTH_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
     private final String KAKAO_USER_INFO_REQUEST_URL = "https://kapi.kakao.com/v2/user/me";
     private final String KAKAO_LOGOUT_REQUEST_URL = "https://kapi.kakao.com/v1/user/logout";
@@ -100,8 +102,8 @@ public class KakaoAPI {
                     .setRequestMethod("POST")
                     .setRequestProperty(properties);
 
-           String id = protocolBuilder.openReader("UTF-8", true);
-           return id;
+            String id = protocolBuilder.openReader("UTF-8", true);
+            return id;
         } catch (ProtocolException e) {
             e.printStackTrace();
             return null;

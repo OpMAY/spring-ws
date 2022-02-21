@@ -3,6 +3,7 @@ package com.model.sns.google;
 import com.transfer.ProtocolBuilder;
 import com.util.ProtocolBuilderHelper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -16,8 +17,10 @@ import java.util.HashMap;
 @Service
 @Slf4j
 public class GoogleAPI {
-    private final String GOOGLE_CLIENT_ID = "982940656821-bl1slfkqi4psro9mdi18aaj0mjtoa1lr.apps.googleusercontent.com";
-    private final String GOOGLE_CLIENT_SECRET = "n7aGZwVmBVBmNNN3CJnTH6IM";
+    @Value("${GOOGLE.CLIENT_ID}")
+    private String GOOGLE_CLIENT_ID;
+    @Value("${GOOGLE.CLIENT_SECRET}")
+    private String GOOGLE_CLIENT_SECRET;
     private final String GOOGLE_OAUTH_TOKEN_URL = "https://accounts.google.com/o/oauth2/token";
     private final String GOOGLE_USER_INFO_REQUEST_URL = "https://www.googleapis.com/oauth2/v1/userinfo";
     private final String GOOGLE_LOGOUT_REQUEST_URL = "https://accounts.google.com/o/oauth2/revoke";

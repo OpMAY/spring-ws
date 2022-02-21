@@ -3,6 +3,7 @@ package com.model.sns.naver;
 import com.transfer.ProtocolBuilder;
 import com.util.ProtocolBuilderHelper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -14,8 +15,10 @@ import java.util.HashMap;
 @Service
 @Slf4j
 public class NaverAPI {
-    private final String NAVER_CLIENT_ID = "CJua6oPGv9mb8DvUw0Lk";
-    private final String NAVER_CLIENT_SECRET = "L4F6mlP6pb";
+    @Value("${NAVER.CLIENT_ID}")
+    private String NAVER_CLIENT_ID;
+    @Value("${NAVER.CLIENT_SECRET}")
+    private String NAVER_CLIENT_SECRET;
     private final String NAVER_OAUTH_TOKEN_URL = "https://nid.naver.com/oauth2.0/token";
     private final String NAVER_USER_INFO_REQUEST_URL = "https://openapi.naver.com/v1/nid/me";
     private final String NAVER_LOGOUT_REQUEST_URL = "https://nid.naver.com/oauth2.0/token";
