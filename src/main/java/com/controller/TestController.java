@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.api.lunarsoft.alarm.LunarAlarmAPI;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.model.User;
@@ -13,6 +14,7 @@ import com.util.Constant;
 import com.util.FileUploadUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -131,7 +133,7 @@ public class TestController {
     public ModelAndView filesUploadTest(@RequestParam Map<String, MultipartFile> files) {
         List<MFile> mFiles = new ArrayList<>();
         for (Map.Entry<String, MultipartFile> entry : files.entrySet()) {
-            MultipartFile file =files.get(entry.getKey());
+            MultipartFile file = files.get(entry.getKey());
             MFile mfile = fileUploadUtility.uploadFile(file, Constant.CDN_PATH.TEST);
             if (mfile != null) {
                 mFiles.add(mfile);
@@ -150,6 +152,14 @@ public class TestController {
         System.out.println("string = " + string);
 //        homeService.sqlRollbackTest(string);
         homeService.recursiveSqlRollbackTest(string);
+        return new ModelAndView("test");
+    }
+
+    @Autowired
+    private LunarAlarmAPI lunarAlarmAPI;
+    @GetMapping("lunarsoft.do")
+    public ModelAndView lunarsoftAlarmTest() {
+        log.info(lunarAlarmAPI.getTestSample().toString());
         return new ModelAndView("test");
     }
 }

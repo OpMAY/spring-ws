@@ -74,6 +74,9 @@ public class LunarAlarmAPI {
      * 2022.02.21 1 author : @woosik
      * Method Overview
      * Lunarsoft Alarm Test function (Register Message in kakaotalk)
+     * @Caution
+     * Be careful not to make any mistakes
+     * It must be used as it is given by the company.
      */
     public boolean signUpTest(SignUp signUp) {
         AlarmTemplate alarmTemplate = new AlarmTemplate();
@@ -112,23 +115,6 @@ public class LunarAlarmAPI {
      * Sample Data Set
      */
     public JSONObject getTestSample() {
-        return new JSONObject("{\n" +
-                "  \"template_id\": 26077,\n" +
-                "  \"messages\": [\n" +
-                "    {\n" +
-                "      \"no\": \"1\",\n" +
-                "      \"tel_num\": \"01045299453\",\n" +
-                "      \"msg_content\": \"message test\",\n" +
-                "      \"sms_content\": \"sms test\",\n" +
-                "      \"use_sms\":\"1\",\n" +
-                "      \"btn_url\": [\n" +
-                "        {\n" +
-                "          \"url_pc\": \"http://www.sustable.kr\",\n" +
-                "          \"url_mobile\": \"http://www.sustable.kr\"\n" +
-                "        }\n" +
-                "      ]\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}");
+        return new JSONObject("{\"messages\":[{\"no\":\"1\",\"use_sms\":\"1\",\"btn_url\":[{\"url_mobile\":\"http://www.sustable.kr\",\"url_pc\":\"http://www.sustable.kr\"}],\"sms_content\":\"sms test\",\"msg_content\":\"message test\",\"tel_num\":\"01045299453\"}],\"template_id\":26077}");
     }
 }
