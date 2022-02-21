@@ -1,4 +1,4 @@
-package com.model.sns;
+package com.model.sns.google;
 
 
 import lombok.Data;

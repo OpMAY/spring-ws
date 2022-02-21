@@ -50,7 +50,7 @@
     </bean>
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="LocalSource2"/>
+        <property name="dataSource" ref="LocalSource1"/>
         <property name="configLocation" value="classpath:/mybatis-config.xml"/>
         <property name="mapperLocations" value="classpath:/sqls/*.xml"/>
     </bean>
@@ -60,6 +60,6 @@
     </bean>
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <constructor-arg ref="LocalSource2"/>
+        <constructor-arg ref="LocalSource1"/>
     </bean>
 </beans>
