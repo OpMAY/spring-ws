@@ -23,6 +23,15 @@
  - Checked Exception 발생시에도 롤백을 하고싶다면 어노테이션에 속성에서 설정해야합니다.
  - 기본적으로 `@Transactional`메소드가 다른 `@Transactional`메소드를 내부 호출하면 호출된 메소드의 DB Transaction 은 호출한 메소드에 귀속됩니다.
 
+####5. ProtocolBuilder
+ - 모든 REST API는 `ProtocolBuilder.class`를 통해서 만들 수 있습니다.(사용법 `ProtocolBuilder.class` 참조)
+ - `ProtocolBuilder.class`를 통해 받는 서버의 메세지는 모든 Model로 return할 수 있도록 수정되었습니다.
+ - ProtocolBuilder의 GET, POST 방식에 있어서 Body 및 URL에 더 좋게 도움을 줄 수 있도록 `ProtocolBuilderHelper.class`가 추가되었습니다.(사용법 `ProtocolBuilderHelper.class` 참조)
+
+####6. SNS Login API
+ - `key.properties`에 SNS Login에 관련된 키가 포함되었습니다.
+ - `ProtocolBuilder.class`를 통해 재구성되었습니다.
+
 ##Database Init
 ```
 CREATE DATABASE  IF NOT EXISTS `flowtest` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
