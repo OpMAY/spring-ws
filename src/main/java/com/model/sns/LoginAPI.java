@@ -1,13 +1,20 @@
 package com.model.sns;
 
 import com.model.User;
-import com.service.HomeService;
+import com.model.sns.google.GoogleAPI;
+import com.model.sns.google.GoogleAccess;
+import com.model.sns.google.GoogleInfo;
+import com.model.sns.kakao.KakaoAPI;
+import com.model.sns.kakao.KakaoAccess;
+import com.model.sns.kakao.KakaoInfo;
+import com.model.sns.naver.NaverAPI;
+import com.model.sns.naver.NaverAccess;
+import com.model.sns.naver.NaverInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 
 @Slf4j
 @Service
@@ -46,59 +53,81 @@ public class LoginAPI {
         if (code != null && state != null && scope == null) {
             /** Naver Login Success*/
             System.out.println("Naver Code : " + code);
-            String access_Token = naverAPI.getAccessToken(req, code, state);
+            NaverAccess naverAccess = naverAPI.getAccessToken(req, code, state);
             /** Naver Login Get Token*/
-            HashMap<String, Object> userInfo = access_Token != null ? naverAPI.getUser(access_Token) : null;
-            if (userInfo == null) {
+            NaverInfo naverInfo = naverAccess.getAccess_token() != null ? naverAPI.getUser(naverAccess.getAccess_token()) : null;
+            if (naverInfo == null) {
                 /**Login Failed*/
                 return;
             }
-            log.info("User Information : " + userInfo);
             /** Login Success*/
-            User user = new User((String) userInfo.get("email"), (String) userInfo.get("id"), (String) userInfo.get("nickname"));
+            User user = new User(naverInfo.getResponse().getEmail(), naverInfo.getResponse().getId(), naverInfo.getResponse().getNickname());
             /** Naver Logout*/
-            /**System.out.println(new NaverAPI().naverLogout(access_Token));*/
+            /*NaverAccess logoutAccess = naverAPI.logout(naverAccess.getAccess_token());
+            if (logoutAccess.getResult().equals("success")) {
+                log.info("logout");
+            } else {
+                log.info("logout failed");
+            }*/
         }
 
         /** Kakao*/
         if (code != null && state == null && scope == null) {
             /** Kakao Login success*/
             /** Kakao Login Get Token*/
-            String access_Token = kakaoAPI.getAccessToken(req, code);
-            if (access_Token == null) {
+            KakaoAccess kakaoAccess = kakaoAPI.getAccessToken(req, code);
+            if (kakaoAccess == null) {
                 /* Login Failed*/
                 return;
             }
             /** Kakao Login Get User*/
-            HashMap<String, Object> userInfo = kakaoAPI.getUser(access_Token);
+            KakaoInfo kakaoInfo = kakaoAPI.getUser(kakaoAccess.getAccess_token());
             //    클라이언트의 이메일이 존재할 때 세션에 해당 이메일과 토큰 등록
-            if (userInfo == null) {
+            if (kakaoInfo == null) {
                 /** Login Failed*/
                 return;
             }
             /** Login Success*/
-            User user = new User((String) userInfo.get("email"), (String) userInfo.get("id"), (String) userInfo.get("nickname"));
+            User user = new User(kakaoInfo.getKakao_account().getEmail(),
+                    Long.toString(kakaoInfo.getId()),
+                    kakaoInfo.getKakao_account().getProfile().getNickname() != null ? kakaoInfo.getKakao_account().getProfile().getNickname() : kakaoInfo.getProperties().getNickname());
             /** Kakao Logout*/
-            /**System.out.println(new KakaoAPI().kakaoLogout(access_Token));*/
+            /*String id = kakaoAPI.logout(kakaoAccess.getAccess_token());
+            if (id.equals(user.getId())) {
+                log.info("logout");
+            } else {
+                log.info("logout failed");
+            }*/
         }
 
         /** Google*/
         else if (code != null && state != null && scope != null) {
             /** Google Login Success*/
             code = req.getParameter("code");
-            HashMap<String, Object> userInfo = code != null ? googleAPI.getUserInfo(req, code) : null;
-            /** Google Token 3
+            /** Google Token 3 Types
              * first : access_token(logout token)
              * second : refresh token
              * third : id_token(in this is real token to get profile token)*/
-            if (userInfo == null) {
+            GoogleAccess googleAccess = code != null ? googleAPI.getAccessToken(req, code) : null;
+            if (googleAccess == null) {
+                /* Login Failed*/
+                return;
+            }
+            GoogleInfo googleInfo = code != null ? googleAPI.getUser(googleAccess.getAccess_token()) : null;
+            if (googleInfo == null) {
                 /** Login Failed*/
                 return;
             }
             /** Login Success*/
-            User user = new User((String) userInfo.get("email"), (String) userInfo.get("id"), (String) userInfo.get("name"));
+            /**Google API는 NAME 못가져옵니다. 다른 방법을 사용해서 얻어야합니다.*/
+            User user = new User(googleInfo.getEmail(), googleInfo.getId(), googleInfo.getName() == null ? "Empty User Name" : googleInfo.getName());
             /** Google Logout*/
-            /**System.out.println(new GoogleAPI().googleLogout(userInfo.get("access_token").toString()));*/
+            /*String result = googleAPI.logout(googleAccess.getAccess_token());
+            if (result != null) {
+                log.info("logout");
+            } else {
+                log.info("logout failed");
+            }*/
         } else {
             if (error != null) {
                 /**Kakao Login Error
