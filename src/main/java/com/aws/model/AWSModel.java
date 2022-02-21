@@ -1,19 +1,17 @@
 package com.aws.model;
 
-import com.aws.model.smodel.Download;
-import com.aws.model.smodel.Upload;
-import lombok.Data;
-import lombok.extern.log4j.Log4j;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Log4j
-@Data
+@Getter
+@Component
 public class AWSModel {
-    private Upload upload;
-    private Download download;
+
+    @Value("${AWS.ACCESS}")
     private String accessKey;
+    @Value("${AWS.SECRET}")
     private String secretKey;
+    @Value("${AWS.BUCKET}")
     private String bucketName;
 }

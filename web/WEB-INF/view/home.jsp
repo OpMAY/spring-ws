@@ -24,29 +24,6 @@
 </head>
 <body style="margin-top: 10vh; margin-bottom: 10vh;">
 <h1>Home</h1>
-<h1>File Upload</h1>
-<form action="/upload.do" enctype="multipart/form-data" method="post">
-    <input type="text" placeholder="id" name="id">
-    <input type="text" placeholder="password" name="password">
-    <input type="file" name="file">
-    <button type="submit">업로드</button>
-</form>
-<br/>
-<form action="/uploads.do" enctype="multipart/form-data" method="post">
-    <input type="text" placeholder="id" name="id">
-    <input type="text" placeholder="password" name="password">
-    <input type="file" multiple="multiple" name="files">
-    <button type="submit">멀티플업로드</button>
-</form>
-<br/>
-<form action="/uploadsOther.do" enctype="multipart/form-data" method="post">
-    <input type="text" placeholder="id" name="id">
-    <input type="text" placeholder="password" name="password">
-    <input type="file" name="file-1">
-    <input type="file" name="file-2">
-    <input type="file" name="file-3">
-    <button type="submit">업로드</button>
-</form>
 <br/>
 <form action="/" method="post">
     <button type="submit">POST HOME</button>
@@ -100,7 +77,7 @@
         }
     }
 </script>
-<!--TODO File Upload Max Size Limit End-->
+<%--TODO File Upload Max Size Limit End--%>
 
 <%--TODO Inspection Test--%>
 <h4>Inspection Test</h4>

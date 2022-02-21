@@ -1,25 +1,37 @@
 package com.controller;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.model.User;
+import com.model.common.MFile;
 import com.response.DefaultRes;
 import com.response.Message;
 import com.response.ResMessage;
 import com.response.StatusCode;
+import com.util.Constant;
+import com.util.FileUploadUtility;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
 public class TestController {
+
+    public final FileUploadUtility fileUploadUtility;
+
+    @Autowired
+    public TestController(FileUploadUtility fileUploadUtility) {
+        this.fileUploadUtility = fileUploadUtility;
+    }
 
     @GetMapping("/get-test.do")
     public ModelAndView getTest() {
@@ -35,6 +47,7 @@ public class TestController {
         message.put("status", true);
         return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap()), HttpStatus.OK);
     }
+
     @PostMapping("/post-test2.do")
     public ResponseEntity<String> postTest2(@RequestBody String data) {
         log.info("POST");
@@ -46,6 +59,7 @@ public class TestController {
         message.put("status", true);
         return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap()), HttpStatus.OK);
     }
+
     @PostMapping("/post-test3.do")
     public ResponseEntity<String> postTest3(@RequestBody User user) {
         log.info("POST");
@@ -80,5 +94,55 @@ public class TestController {
         Message message = new Message();
         message.put("status", true);
         return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap()), HttpStatus.OK);
+    }
+
+    @GetMapping("/file.do")
+    public ModelAndView fileUploadTest() {
+        return new ModelAndView("test");
+    }
+
+    @PostMapping("/file.do")
+    public ModelAndView fileUploadTest(MultipartFile file) {
+        MFile mFile = fileUploadUtility.uploadFile(file, Constant.CDN_PATH.TEST);
+        if (mFile == null) {
+            System.out.println("NO FILE!");
+        } else {
+            System.out.println("mFile.getName() = " + mFile.getName());
+            System.out.println("mFile.getSize() = " + mFile.getSize());
+            System.out.println("mFile.getUrl() = " + mFile.getUrl());
+        }
+        return new ModelAndView("test");
+    }
+
+    @PostMapping("/files.do")
+    public ModelAndView filesUploadTest(List<MultipartFile> files) {
+        List<MFile> mFiles = fileUploadUtility.uploadFiles(files, Constant.CDN_PATH.TEST);
+        if (mFiles.isEmpty()) {
+            System.out.println("NO FILES!");
+        }
+        for (MFile mFile : mFiles) {
+            System.out.println("mFile.getName() = " + mFile.getName());
+            System.out.println("mFile.getSize() = " + mFile.getSize());
+            System.out.println("mFile.getUrl() = " + mFile.getUrl());
+        }
+        return new ModelAndView("test");
+    }
+
+    @PostMapping("/filemap.do")
+    public ModelAndView filesUploadTest(@RequestParam Map<String, MultipartFile> files) {
+        List<MFile> mFiles = new ArrayList<>();
+        for (Map.Entry<String, MultipartFile> entry : files.entrySet()) {
+            MultipartFile file =files.get(entry.getKey());
+            MFile mfile = fileUploadUtility.uploadFile(file, Constant.CDN_PATH.TEST);
+            if (mfile != null) {
+                mFiles.add(mfile);
+            }
+        }
+        for (MFile mFile : mFiles) {
+            System.out.println("mFile.getName() = " + mFile.getName());
+            System.out.println("mFile.getSize() = " + mFile.getSize());
+            System.out.println("mFile.getUrl() = " + mFile.getUrl());
+        }
+        return new ModelAndView("test");
     }
 }

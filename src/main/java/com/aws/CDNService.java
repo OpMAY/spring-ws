@@ -1,11 +1,6 @@
 package com.aws;
-/*
- * Created By zlzld in SpringMavenProject
- * Date : 1월 월요일 16 10
- */
 
 import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -15,8 +10,11 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
 import com.aws.model.AWSModel;
+import com.aws.model.smodel.Download;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,27 +22,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Log4j
+@Component
 public class CDNService {
 
-    private AWSModel pathModel;
-
+    private final AWSModel pathModel;
     private AmazonS3 s3Client;
 
-    public CDNService(String accessKey, String secretKey, String bucketName) {
-        pathModel = new AWSModel();
-        pathModel.setAccessKey(accessKey);
-        pathModel.setSecretKey(secretKey);
-        pathModel.setBucketName(bucketName);
+    @Autowired
+    public CDNService(AWSModel pathModel) {
+        this.pathModel = pathModel;
+
         try {
             AWSCredentials credentials = new BasicAWSCredentials(pathModel.getAccessKey(), pathModel.getSecretKey());
-            s3Client = AmazonS3ClientBuilder.standard()
+            this.s3Client = AmazonS3ClientBuilder
+                    .standard()
                     .withCredentials(new AWSStaticCredentialsProvider(credentials))
                     .withRegion(Regions.AP_NORTHEAST_2)
                     .build();
-            if (!s3Client.doesBucketExistV2(pathModel.getBucketName())) {
+            if (!this.s3Client.doesBucketExistV2(pathModel.getBucketName())) {
                 // Verify that the bucket was created by retrieving it and checking its location.
-                s3Client.createBucket(pathModel.getBucketName());
-                s3Client.getBucketLocation(new GetBucketLocationRequest(pathModel.getBucketName()));
+                this.s3Client.createBucket(pathModel.getBucketName());
+                this.s3Client.getBucketLocation(new GetBucketLocationRequest(pathModel.getBucketName()));
             }
         } catch (AmazonClientException e) {
             // The call was transmitted successfully, but Amazon S3 couldn't process
@@ -54,17 +52,14 @@ public class CDNService {
     }
 
     /**
-     * @param awsModel : AWSModel(Upload)
-     * @return boolean : success = true, failed = false
+     * @param cdn_full_path Upload file path + file name
+     * @param file          file to upload
+     * @return true / false
      */
-    public boolean upload(AWSModel awsModel) {
+    public boolean upload(String cdn_full_path, File file) {
         try {
-            String awsCdnFilePath = awsModel.getUpload().getCdn_fpath();
-            s3Client.putObject(pathModel.getBucketName(), awsCdnFilePath, awsModel.getUpload().getFile());
+            s3Client.putObject(pathModel.getBucketName(), cdn_full_path, file);
             return true;
-        } catch (AmazonServiceException e) {
-            e.printStackTrace();
-            return false;
         } catch (SdkClientException e) {
             e.printStackTrace();
             return false;
@@ -72,13 +67,13 @@ public class CDNService {
     }
 
     /**
-     * @param awsModel : AWSModel(Download)
+     * @param download Download file
      * @return File or Null
      */
-    public File download(AWSModel awsModel) {
+    public File download(Download download) {
         try {
-            File file = new File(awsModel.getDownload().getCreated_local_path() + awsModel.getDownload().getCdn_fname());
-            S3Object s3object = s3Client.getObject(pathModel.getBucketName(), awsModel.getDownload().getCdn_fpath() + "/" + awsModel.getDownload().getCdn_fname());
+            File file = new File(download.getCreated_local_path() + download.getCdn_fname());
+            S3Object s3object = s3Client.getObject(pathModel.getBucketName(), download.getCdn_fpath() + "/" + download.getCdn_fname());
             S3ObjectInputStream inputStream = s3object.getObjectContent();
             FileUtils.copyInputStreamToFile(inputStream, file);  //#2 - 스트림을 파일로 저장함
             return file;
@@ -99,13 +94,12 @@ public class CDNService {
         return true;
     }
 
-    public ArrayList<String> getBucketFiles(String bucketName) {
-        ArrayList<String> files = new ArrayList<>();
-        ListObjectsV2Result result = s3Client.listObjectsV2(bucketName);
+    private ArrayList<String> getBucketFiles() {
+        ListObjectsV2Result result = s3Client.listObjectsV2(pathModel.getBucketName());
         List<S3ObjectSummary> objs = result.getObjectSummaries();
-        for (S3ObjectSummary obj : objs) {
-            files.add(obj.getKey());
-        }
+
+        ArrayList<String> files = new ArrayList<>();
+        objs.forEach(obj -> files.add(obj.getKey()));
         return files;
     }
 }
