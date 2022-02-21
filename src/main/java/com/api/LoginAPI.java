@@ -1,15 +1,15 @@
-package com.model.sns;
+package com.api;
 
 import com.model.User;
-import com.model.sns.google.GoogleAPI;
-import com.model.sns.google.GoogleAccess;
-import com.model.sns.google.GoogleInfo;
-import com.model.sns.kakao.KakaoAPI;
-import com.model.sns.kakao.KakaoAccess;
-import com.model.sns.kakao.KakaoInfo;
-import com.model.sns.naver.NaverAPI;
-import com.model.sns.naver.NaverAccess;
-import com.model.sns.naver.NaverInfo;
+import com.api.sns.google.GoogleAPI;
+import com.api.sns.google.GoogleAccess;
+import com.api.sns.google.GoogleInfo;
+import com.api.sns.kakao.KakaoAPI;
+import com.api.sns.kakao.KakaoAccess;
+import com.api.sns.kakao.KakaoInfo;
+import com.api.sns.naver.NaverAPI;
+import com.api.sns.naver.NaverAccess;
+import com.api.sns.naver.NaverInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

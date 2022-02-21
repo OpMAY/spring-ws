@@ -3,7 +3,7 @@ package com.controller;
 import com.exception.GrantAccessDeniedException;
 import com.exception.enums.BusinessExceptionType;
 import com.model.TestModel;
-import com.model.sns.LoginAPI;
+import com.api.LoginAPI;
 import com.service.HomeService;
 import com.service.OtherHomeService;
 import com.util.Folder;

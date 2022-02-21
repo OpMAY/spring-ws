@@ -1,4 +1,4 @@
-package com.model.sns.naver;
+package com.api.sns.naver;
 
 import com.transfer.ProtocolBuilder;
 import com.util.ProtocolBuilderHelper;
