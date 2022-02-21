@@ -1,4 +1,7 @@
 #Spring Project v a.2
+##추가 목록
+####1.InstagramAPI
+ - 인스타그램 API가 추가되었습니다. (`InstagramAPI.class` 참조)
 ##업데이트
 ####0.Build
  - 이제 모든 설정 파일이 Github에 올라가게 됩니다. (`log4j.xml` 제외)
