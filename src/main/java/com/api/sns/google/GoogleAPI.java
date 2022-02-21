@@ -1,4 +1,4 @@
-package com.model.sns.google;
+package com.api.sns.google;
 
 import com.transfer.ProtocolBuilder;
 import com.util.ProtocolBuilderHelper;

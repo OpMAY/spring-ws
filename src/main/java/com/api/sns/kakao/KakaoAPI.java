@@ -1,4 +1,4 @@
-package com.model.sns.kakao;
+package com.api.sns.kakao;
 
 import com.transfer.ProtocolBuilder;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.model.sns.kakao;
+package com.api.sns.kakao;
 
 import lombok.Data;
 

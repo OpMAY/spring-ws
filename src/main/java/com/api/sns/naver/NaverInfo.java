@@ -1,4 +1,4 @@
-package com.model.sns.naver;
+package com.api.sns.naver;
 
 import lombok.Data;
 
