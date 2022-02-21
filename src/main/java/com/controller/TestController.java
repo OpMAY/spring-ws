@@ -8,10 +8,11 @@ import com.response.DefaultRes;
 import com.response.Message;
 import com.response.ResMessage;
 import com.response.StatusCode;
+import com.service.HomeService;
 import com.util.Constant;
 import com.util.FileUploadUtility;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,16 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@RestController
 @Slf4j
+@RestController
+@RequiredArgsConstructor
 public class TestController {
 
     public final FileUploadUtility fileUploadUtility;
+    public final HomeService homeService;
 
-    @Autowired
-    public TestController(FileUploadUtility fileUploadUtility) {
-        this.fileUploadUtility = fileUploadUtility;
-    }
 
     @GetMapping("/get-test.do")
     public ModelAndView getTest() {
@@ -143,6 +142,14 @@ public class TestController {
             System.out.println("mFile.getSize() = " + mFile.getSize());
             System.out.println("mFile.getUrl() = " + mFile.getUrl());
         }
+        return new ModelAndView("test");
+    }
+
+    @GetMapping("rollback.do")
+    public ModelAndView rollbackTestGet(String string) {
+        System.out.println("string = " + string);
+//        homeService.sqlRollbackTest(string);
+        homeService.recursiveSqlRollbackTest(string);
         return new ModelAndView("test");
     }
 }

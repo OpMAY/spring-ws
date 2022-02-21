@@ -14,7 +14,7 @@
                 typeHandler="com.middleware.JsonArrayObjectTypeHandler"/>
     </resultMap>
     <insert id="insertTest" useGeneratedKeys="true" parameterType="Test" keyProperty="no">
-        insert into test(no, testcol) values (#{no},#{testcol});
+        insert into test(testcol) values (#{testcol});
     </insert>
     <select id="selectTest" resultType="Test">
         select *
