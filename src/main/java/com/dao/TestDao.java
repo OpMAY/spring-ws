@@ -2,23 +2,20 @@ package com.dao;
 
 import com.mapper.TestMapper;
 import com.model.*;
-import lombok.extern.log4j.Log4j;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+@Slf4j
 @Repository
-@Log4j
+@RequiredArgsConstructor
 public class TestDao {
-    private SqlSession sqlSession;
 
-    public void setSession(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
+    private final SqlSession sqlSession;
 
     public ArrayList<Test> selectTest() throws SQLException {
         TestMapper testMapper = sqlSession.getMapper(TestMapper.class);

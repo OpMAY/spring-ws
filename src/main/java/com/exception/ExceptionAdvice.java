@@ -163,6 +163,14 @@ public class ExceptionAdvice {
         return modelAndView;
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    protected ModelAndView handleRuntimeException(HttpServletRequest request, Exception e) {
+        e.printStackTrace();
+        log.info("handleRuntimeException");
+        modelAndView = new ModelAndView("error/error");
+        return modelAndView;
+    }
+
     private boolean isAjaxRequest(HttpServletRequest request) {
         String header = request.getHeader("x-requested-with");
         log.info("Ajax Request : " + request.getHeader("x-requested-with"));
