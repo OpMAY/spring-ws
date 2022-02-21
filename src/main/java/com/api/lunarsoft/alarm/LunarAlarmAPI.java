@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * LunarAlarmAPI (Classname)
+ * LunarAlarmAPI
  * Version information
  * 2022.02.21 1 author : @woosik
  * Class Overview

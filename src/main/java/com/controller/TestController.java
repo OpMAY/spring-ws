@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.api.instagram.InstagramAPI;
 import com.api.lunarsoft.alarm.LunarAlarmAPI;
 import com.api.lunarsoft.alarm.custom.SignUp;
 import com.google.gson.JsonElement;
@@ -12,10 +13,12 @@ import com.response.ResMessage;
 import com.response.StatusCode;
 import com.service.HomeService;
 import com.util.Constant;
+import com.util.EncryptionService;
 import com.util.FileUploadUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -162,5 +165,21 @@ public class TestController {
     public ModelAndView lunarsoftAlarmTest() {
         //lunarAlarmAPI.signUpTest(new SignUp());
         return new ModelAndView("test");
+    }
+
+    @Autowired
+    private InstagramAPI instagramAPI;
+
+    @ResponseBody
+    @GetMapping(value = "/instagram/media")
+    @Cacheable(value = "IG")
+    public ResponseEntity<String> getInstagramTest(String type) {
+        Message message = new Message();
+        instagramAPI.getImages(type);
+        return new ResponseEntity(
+                DefaultRes.res(
+                        StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap("ajax")
+                ), HttpStatus.OK
+        );
     }
 }
