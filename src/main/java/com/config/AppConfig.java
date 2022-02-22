@@ -28,10 +28,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.BeanNameViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRegistration;
+import javax.servlet.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -56,6 +53,11 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
         dispatcher.addMapping("/");
         dispatcher.setInitParameter("throwExceptionIfNoHandlerFound", "true");
 
+        // for redirect http => https
+//        HttpConstraintElement httpConstraintElement = new HttpConstraintElement(ServletSecurity.TransportGuarantee.CONFIDENTIAL);
+//        ServletSecurityElement servletSecurityElement = new ServletSecurityElement(httpConstraintElement);
+//        dispatcher.setServletSecurity(servletSecurityElement);
+
         // root config
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         container.addListener(new ContextLoaderListener(context));
@@ -71,6 +73,8 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
 
         FilterRegistration.Dynamic sessionFilter = container.addFilter("sessionFilter", new SessionFilter()); // session filter 등록
         sessionFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.do");
+
+        container.addListener(new SessionConfig());
         log.info("WebInitializer : finished");
     }
 
