@@ -54,6 +54,7 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
         ServletRegistration.Dynamic dispatcher = container.addServlet("dispatcher", new DispatcherServlet());
         dispatcher.setLoadOnStartup(1);
         dispatcher.addMapping("/");
+        dispatcher.setInitParameter("throwExceptionIfNoHandlerFound", "true");
 
         // root config
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
