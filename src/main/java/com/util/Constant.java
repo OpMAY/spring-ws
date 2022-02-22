@@ -7,7 +7,7 @@ public class Constant {
 
     /**
      * Time Constant
-     * */
+     */
     public static final int SEC = 60;
     public static final int MIN = 60;
     public static final int HOUR = 24;
@@ -18,4 +18,6 @@ public class Constant {
     public static class CDN_PATH {
         public static final String TEST = "test/";
     }
+
+    public static final String DATABASE_SOURCE = "LOCAL1";
 }

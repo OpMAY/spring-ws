@@ -46,4 +46,9 @@ public class TestDao {
         TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
         testMapper.insertTest(test);
     }
+
+    public void insertTestByNo(Test test) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        testMapper.insertTestByNo(test);
+    }
 }
