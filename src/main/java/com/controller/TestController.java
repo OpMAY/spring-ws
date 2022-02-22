@@ -3,6 +3,8 @@ package com.controller;
 import com.api.instagram.InstagramAPI;
 import com.api.lunarsoft.alarm.LunarAlarmAPI;
 import com.api.lunarsoft.alarm.custom.SignUp;
+import com.api.mail.Mail;
+import com.api.mail.MailBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.model.User;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.mail.MessagingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -161,6 +164,7 @@ public class TestController {
 
     @Autowired
     private LunarAlarmAPI lunarAlarmAPI;
+
     @GetMapping("lunarsoft.do")
     public ModelAndView lunarsoftAlarmTest() {
         //lunarAlarmAPI.signUpTest(new SignUp());
@@ -182,4 +186,26 @@ public class TestController {
                 ), HttpStatus.OK
         );
     }
+
+    @Autowired
+    private MailBuilder mailBuilder;
+
+    @GetMapping("mail.do")
+    public ModelAndView mailSendTest() {
+        try {
+            if (mailBuilder.setSession()
+                    .setTo("zlzldntlr@naver.com")
+                    .setMailTitle("title test")
+                    .setMailContent("<h1>content test</h1>")
+                    .send()) {
+                /** Mail Send Success */
+            } else {
+                /** Mail Send Failed*/
+            }
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        return new ModelAndView("test");
+    }
+
 }
