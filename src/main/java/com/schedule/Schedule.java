@@ -15,7 +15,7 @@ public class Schedule {
     private static final long SCHEDULE_VARIABLE_TEST1 = 10000;
     private static final long SCHEDULE_VARIABLE_TEST2 = 10000;
     private static final long SCHEDULE_VARIABLE_TEST3 = 10000;
-    private static final long SCHEDULE_VARIABLE_TEST4 = 10000;
+    private static final long SCHEDULE_VARIABLE_TEST4 = 1000;
 
     @Scheduled(fixedDelay = SCHEDULE_VARIABLE)
     public void ScheduleTest1() {
