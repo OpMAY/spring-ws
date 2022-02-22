@@ -59,6 +59,8 @@ public class HomeService {
         test.setTestcol("string");
         testDao.insertTest(test);
         System.out.println("success : " + test.getNo());
+        /**If an error occurs in that part, the test succeeds.*/
+        //testDao.insertTestByNo(test);
     }
 
     @Transactional
