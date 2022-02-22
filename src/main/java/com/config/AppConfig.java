@@ -1,8 +1,19 @@
 package com.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.util.FileDownload;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.ResourceHttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
+import org.springframework.http.converter.xml.SourceHttpMessageConverter;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -11,9 +22,32 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.BeanNameViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
 @Configuration
 @EnableWebMvc
+@Slf4j
 public class AppConfig implements WebMvcConfigurer { // WebMvcConfigurer: for interceptor
+
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        log.info("configureMessageConverters");
+        StringHttpMessageConverter stringConverter = new StringHttpMessageConverter();
+        stringConverter.setWriteAcceptCharset(true);
+        MediaType mediaType = new MediaType("text", "html",
+                Charset.forName("UTF-8"));
+        List<MediaType> types = new ArrayList<MediaType>();
+        types.add(mediaType);
+        stringConverter.setSupportedMediaTypes(types);
+        converters.add(stringConverter);
+        converters.add(new SourceHttpMessageConverter<>());
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        converter.setPrettyPrint(true);
+        converters.add(converter);
+    }
 
     @Bean // view resolver
     public ViewResolver configureViewResolvers() {
@@ -24,11 +58,12 @@ public class AppConfig implements WebMvcConfigurer { // WebMvcConfigurer: for in
     }
 
     @Bean // custom view: view가 없을 경우 커스텀 지정한 class를 찾도록 설정
-    public ViewResolver beanNameViewResolver(){
+    public ViewResolver beanNameViewResolver() {
         BeanNameViewResolver resolver = new BeanNameViewResolver();
         resolver.setOrder(0);
         return resolver;
     }
+
     @Bean // 파일 다운로드 빈 등록
     public FileDownload fileDownload() {
         return new FileDownload();
