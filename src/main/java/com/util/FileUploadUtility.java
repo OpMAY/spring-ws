@@ -1,6 +1,7 @@
 package com.util;
 
 import com.model.common.MFile;
+import com.util.fileUploadStrategy.FileUploadStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
