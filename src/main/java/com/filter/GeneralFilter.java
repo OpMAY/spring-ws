@@ -1,14 +1,11 @@
 package com.filter;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.ComponentScan;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Filter의 올바른 기능

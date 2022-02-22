@@ -4,12 +4,21 @@ import com.util.FileDownload;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.converter.xml.SourceHttpMessageConverter;
+import org.springframework.scheduling.annotation.SchedulingConfigurer;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.context.ContextLoaderListener;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -17,14 +26,56 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.BeanNameViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletRegistration;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
+@Slf4j
 @Configuration
 @EnableWebMvc
-@Slf4j
-public class AppConfig implements WebMvcConfigurer {
+@EnableAspectJAutoProxy(proxyTargetClass = true) // for AOP
+public class AppConfig implements WebApplicationInitializer, SchedulingConfigurer, WebMvcConfigurer {
+
+    @Override
+    public void onStartup(ServletContext container) {
+        log.info("WebInitializer : starting");
+
+        // init properties
+        container.setInitParameter("contextInitializerClasses", "com.config.PropertyConfig");
+
+        // init dispatcher servlet
+        ServletRegistration.Dynamic dispatcher = container.addServlet("dispatcher", new DispatcherServlet());
+        dispatcher.setLoadOnStartup(1);
+        dispatcher.addMapping("/");
+
+        // root config
+        AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
+        container.addListener(new ContextLoaderListener(context));
+
+        // 인코딩 필터 적용
+        FilterRegistration.Dynamic charaterEncodingFilter = container.addFilter("charaterEncodingFilter", new CharacterEncodingFilter());
+        charaterEncodingFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+        charaterEncodingFilter.setInitParameter("encoding", "UTF-8");
+        charaterEncodingFilter.setInitParameter("forceEncoding", "true");
+        log.info("WebInitializer : finished");
+    }
+
+    private final int POOL_SIZE = 5;
+    @Override
+    public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
+        log.info("Schedule initializing");
+        ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+        threadPoolTaskScheduler.setPoolSize(POOL_SIZE);
+        threadPoolTaskScheduler.setThreadNamePrefix("scheduled-task-pool-");
+        threadPoolTaskScheduler.initialize();
+        scheduledTaskRegistrar.setTaskScheduler(threadPoolTaskScheduler);
+        log.info("Schedule initialized");
+    }
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
