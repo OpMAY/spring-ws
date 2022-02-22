@@ -18,11 +18,7 @@
         <mvc:message-converters>
             <!-- @ResponseBody로 String 처리할때 한글처리 -->
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
-                <property name="supportedMediaTypes">
-                    <list>
-                        <value>text/html;charset=UTF-8</value>
-                    </list>
-                </property>
+                <property name="supportedMediaTypes" value="text/html;charset=UTF-8"/>
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
@@ -34,34 +30,32 @@
     </context:component-scan>
 
     <!--URI Mapping-->
-    <bean id="handlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
-    <mvc:resources mapping="/resources/**" cache-period="0" location="/resources/"/>
-    <mvc:resources mapping="/files/**" cache-period="0" location="/files/"/>
-    <mvc:resources mapping="/favicon.ico" cache-period="0" location="/resources/assets/meta/favicon.ico"/>
-    <mvc:resources mapping="/robots.txt" location="/"/>
-    <mvc:resources mapping="/sitemap.xml" location="/"/>
+<!--    <bean id="handlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>-->
+<!--    <mvc:resources mapping="/resources/**" cache-period="0" location="/resources/"/>-->
+<!--    <mvc:resources mapping="/files/**" cache-period="0" location="/files/"/>-->
+<!--    <mvc:resources mapping="/favicon.ico" cache-period="0" location="/resources/assets/meta/favicon.ico"/>-->
 
     <!--View Resolver-->
-    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="order" value="1"/>
         <property name="prefix" value="/WEB-INF/view/"></property>
         <property name="suffix" value=".jsp"></property>
-    </bean>
+    </bean>-->
 
     <!--BeanNameView Resolver (View가 없을 때의 Resolver)-->
-    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
-        <property name="order" value="0"/>
-    </bean>
+<!--    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver">-->
+<!--        <property name="order" value="0"/>-->
+<!--    </bean>-->
 
     <!--Download-->
-    <bean id="download" class="com.util.FileDownload"/>
+    <!--<bean id="download" class="com.util.FileDownload"/>-->
 
     <!--Upload-->
-    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-        <property name="maxUploadSize" value="20000000"/> <!-- 파일들 전체 20Mb 제한 -->
-        <property name="maxUploadSizePerFile" value="5000000"/> <!--파일당 5Mb 제한-->
+    <!--<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="20000000"/> &lt;!&ndash; 파일들 전체 20Mb 제한 &ndash;&gt;
+        <property name="maxUploadSizePerFile" value="5000000"/> &lt;!&ndash;파일당 5Mb 제한&ndash;&gt;
         <property name="defaultEncoding" value="utf-8"/>
-    </bean>
+    </bean>-->
 
     <!--Interceptors-->
     <mvc:interceptors>
