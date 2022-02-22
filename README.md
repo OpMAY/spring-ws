@@ -45,6 +45,10 @@
  - `key.properties`에 SNS Login에 관련된 키가 포함되었습니다.
  - `ProtocolBuilder.class`를 통해 재구성되었습니다.
 
+####7. applicationContext.xml, web.xml -> config java class
+ - 코드 관리의 용이성 + 컴파일단계에서 에러를 잡을 수 있도록 xml 파일에서 java class로 변경하였습니다.
+ - spring 구조상 dispatcher servlet은 유지됩니다.
+
 ##Database Init
 ```
 CREATE DATABASE  IF NOT EXISTS `flowtest` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;

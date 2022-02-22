@@ -51,7 +51,6 @@ public class PropertyConfig implements ApplicationContextInitializer<Configurabl
                     e.printStackTrace();
                 }
             });
-            log.info(en_properties.toString());
             ctx.getEnvironment().getPropertySources().addLast(new MapPropertySource("props", en_properties));
             log.info("Added Key Properties");
         } catch (IOException e) {
