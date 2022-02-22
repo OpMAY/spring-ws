@@ -2,9 +2,19 @@
 ##추가 목록
 ####1.InstagramAPI
  - 인스타그램 API가 추가되었습니다. (`InstagramAPI.class` 참조)
+
+####2. AOP
+ - AOP 설정이 추가되었습니다. (`aop` 디렉토리)
+ - 기존 코드에 영향을 주지 않으면서 메소드에 부가기능을 추가할 수 있습니다.
+ - `LogAop`클래스는 각 컨트롤러, 서비스의 시작과 끝에서 로그를 기록합니다.
+ - `RequestLogger`클래스는 `Bean Scope: request`로, 각 request의 uuid를 기록하여 로그 추적을 용이하게 해줍니다.
+ - `LogAop`에 메소드를 추가/수정하거나 `execution`을 설정해서 추적 설정을 변경할 수 있습니다.
+
 ##업데이트
+
 ####0.Build
  - 이제 모든 설정 파일이 Github에 올라가게 됩니다. (`log4j.xml` 제외)
+
 ####1.Properties
  - 모든 properties는 Github에 올라가게 됩니다.
  - 모든 설정들은 `key.properties`, `config.properties`로 통일됩니다.
