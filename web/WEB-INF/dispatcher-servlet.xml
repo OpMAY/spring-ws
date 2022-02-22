@@ -13,14 +13,14 @@
        http://www.springframework.org/schema/task
        http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
     <!-- Annotation Uses-->
-    <mvc:annotation-driven>
+    <!--<mvc:annotation-driven>
         <mvc:message-converters>
-            <!-- @ResponseBody로 String 처리할때 한글처리 -->
+            &lt;!&ndash; @ResponseBody로 String 처리할때 한글처리 &ndash;&gt;
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
                 <property name="supportedMediaTypes" value="text/html;charset=UTF-8"/>
             </bean>
         </mvc:message-converters>
-    </mvc:annotation-driven>
+    </mvc:annotation-driven>-->
 
     <!-- Base Back java -->
     <context:component-scan base-package="com">
@@ -28,4 +28,20 @@
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
+    <!--Interceptors-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!--모든 경로에 Intercept 설정-->
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/resources/**"/>
+            <bean class="com.interceptor.BaseInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!--Scheduling Module Driven-->
+    <task:annotation-driven/>
+    <!--Transaction Manager-->
+    <tx:annotation-driven/>
+    <!-- AOP -->
+    <aop:aspectj-autoproxy/>
 </beans>
