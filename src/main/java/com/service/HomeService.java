@@ -60,7 +60,7 @@ public class HomeService {
         testDao.insertTest(test);
         System.out.println("success : " + test.getNo());
         /**If an error occurs in that part, the test succeeds.*/
-        //testDao.insertTestByNo(test);
+        testDao.insertTestByNo(test);
     }
 
     @Transactional

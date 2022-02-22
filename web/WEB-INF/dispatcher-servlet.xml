@@ -39,9 +39,9 @@
     </mvc:interceptors>
 
     <!--Scheduling Module Driven-->
-    <task:annotation-driven/>
+    <!--<task:annotation-driven/>-->
     <!--Transaction Manager-->
-    <tx:annotation-driven/>
+    <!--<tx:annotation-driven/>-->
     <!-- AOP -->
-    <aop:aspectj-autoproxy/>
+    <!--<aop:aspectj-autoproxy/>-->
 </beans>
