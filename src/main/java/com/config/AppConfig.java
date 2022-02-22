@@ -73,6 +73,8 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
 
         FilterRegistration.Dynamic sessionFilter = container.addFilter("sessionFilter", new SessionFilter()); // session filter 등록
         sessionFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.do");
+
+        container.addListener(new SessionConfig());
         log.info("WebInitializer : finished");
     }
 
