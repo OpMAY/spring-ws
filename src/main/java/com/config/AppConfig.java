@@ -1,5 +1,7 @@
 package com.config;
 
+import com.filter.GeneralFilter;
+import com.filter.SessionFilter;
 import com.util.FileDownload;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -62,6 +64,12 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
         charaterEncodingFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
         charaterEncodingFilter.setInitParameter("encoding", "UTF-8");
         charaterEncodingFilter.setInitParameter("forceEncoding", "true");
+
+        FilterRegistration.Dynamic generalFilter = container.addFilter("generalFilter", new GeneralFilter()); // general filter 등록
+        generalFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.do");
+
+        FilterRegistration.Dynamic sessionFilter = container.addFilter("sessionFilter", new SessionFilter()); // session filter 등록
+        sessionFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.do");
         log.info("WebInitializer : finished");
     }
 
