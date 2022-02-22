@@ -2,6 +2,7 @@ package com.config;
 
 import com.filter.GeneralFilter;
 import com.filter.SessionFilter;
+import com.interceptor.BaseInterceptor;
 import com.util.FileDownload;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.BeanNameViewResolver;
@@ -79,6 +81,7 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
     }
 
     private final int POOL_SIZE = 5;
+
     @Override
     public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
         log.info("Schedule initializing");
@@ -148,5 +151,13 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
         registry.addResourceHandler("/files/**").addResourceLocations("/files/");
         registry.addResourceHandler("/favicon.ico").addResourceLocations("/resources/assets/meta/favicon.ico");
         log.info("addResourceHandlers : initialized");
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new BaseInterceptor())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/resources/**")
+                .excludePathPatterns("/files/**");
     }
 }
