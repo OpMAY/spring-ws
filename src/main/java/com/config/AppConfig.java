@@ -5,6 +5,10 @@ import com.filter.SessionFilter;
 import com.interceptor.BaseInterceptor;
 import com.util.FileDownload;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCache;
+import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -33,6 +37,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import javax.servlet.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -40,6 +45,7 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 @EnableAspectJAutoProxy(proxyTargetClass = true) // for AOP
+@EnableCaching
 public class AppConfig implements WebApplicationInitializer, SchedulingConfigurer, WebMvcConfigurer {
 
     @Override
@@ -159,5 +165,12 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
                 .addPathPatterns("/**")
                 .excludePathPatterns("/resources/**")
                 .excludePathPatterns("/files/**");
+    }
+
+    @Bean
+    public CacheManager cacheManager() {
+        SimpleCacheManager cacheManager = new SimpleCacheManager();
+        cacheManager.setCaches(Arrays.asList(new ConcurrentMapCache("IG")));
+        return cacheManager;
     }
 }
