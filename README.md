@@ -10,6 +10,11 @@
  - `RequestLogger`클래스는 `Bean Scope: request`로, 각 request의 uuid를 기록하여 로그 추적을 용이하게 해줍니다.
  - `LogAop`에 메소드를 추가/수정하거나 `execution`을 설정해서 추적 설정을 변경할 수 있습니다.
 
+####3. /WEB-INF/tags/formatDatetime.tag
+ - `Date`클래스 -> `LocalDate`, `LocalDateTime` 클래스로 사용함에 따라 기존 jstl 태그인 fmt 태그로 formatting이 불가능하여 Custom Tag를 만들었습니다.
+ - jsp 파일 상단에 `<%@ taglib prefix="tf" tagdir="/WEB-INF/tags" %>` 선언 후 사용시 `<tf:formatDatetime value="${user.reg_datetime}"/>` 와 같이 사용하시면 됩니다.
+ - `formatDatetime.tag` 파일의 Default pattern을 지정하거나, 사용시에 pattern attribute를 추가하여 변경할 수 있습니다.
+
 ##업데이트
 
 ####0.Build
@@ -152,6 +157,8 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `no` int NOT NULL AUTO_INCREMENT,
   `usertest` varchar(2000) DEFAULT NULL,
+  `reg_datetime` datetime DEFAULT NULL,
+  `updated_datetime` datetime DEFAULT NULL,
   PRIMARY KEY (`no`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

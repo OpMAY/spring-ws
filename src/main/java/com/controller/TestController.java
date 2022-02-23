@@ -2,8 +2,6 @@ package com.controller;
 
 import com.api.instagram.InstagramAPI;
 import com.api.lunarsoft.alarm.LunarAlarmAPI;
-import com.api.lunarsoft.alarm.custom.SignUp;
-import com.api.mail.Mail;
 import com.api.mail.MailBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -14,8 +12,8 @@ import com.response.Message;
 import com.response.ResMessage;
 import com.response.StatusCode;
 import com.service.HomeService;
+import com.service.OtherHomeService;
 import com.util.Constant;
-import com.util.EncryptionService;
 import com.util.FileUploadUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +38,7 @@ public class TestController {
 
     public final FileUploadUtility fileUploadUtility;
     public final HomeService homeService;
+    public final OtherHomeService otherHomeService;
 
 
     @GetMapping("/get-test.do")
@@ -208,4 +208,15 @@ public class TestController {
         return new ModelAndView("test");
     }
 
+    @GetMapping("/users.do")
+    public ModelAndView seeUsers(HttpServletRequest request) {
+        List<User> users = otherHomeService.selectUsers();
+        request.setAttribute("users", users);
+        return new ModelAndView("test");
+    }
+    @PostMapping("/user.do")
+    public ModelAndView registerUsers(User user) {
+        otherHomeService.insertUser(user);
+        return new ModelAndView("redirect:/users.do");
+    }
 }
