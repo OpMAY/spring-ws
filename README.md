@@ -54,6 +54,11 @@
  - 코드 관리의 용이성 + 컴파일단계에서 에러를 잡을 수 있도록 xml 파일에서 java class로 변경하였습니다.
  - spring 구조상 dispatcher servlet은 유지됩니다.
 
+####8. MailService
+ - 기존의 `MailService.class`가 `MailBuilder`로 통합하였습니다.
+ - `config.properties`에 Mail에 관한 설정을 미리 하여 Google과 Naver인지 자동으로 파악을 하게 하였습니다.
+ - 기타 정보 없이 메일의 제목, 내용, 보낼 사람의 E-Mail 주소 정보만 입력하도록 하였습니다.
+ 
 ##Database Init
 ```
 CREATE DATABASE  IF NOT EXISTS `flowtest` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
