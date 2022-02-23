@@ -69,8 +69,8 @@ public class EncryptionService implements Encrypt{
                 .withClaim("version", Constant.VERSION)
                 .withClaim("grant", user.getGrant())
                 .withClaim("token", user.getAccess_token())
-                .withClaim("email", user.getEmail())//후에 ID로 대체
-                .withClaim("id", user.getId())//후에 ID로 대체
+                .withClaim("email", user.getEmail())
+                .withClaim("id", user.getId())
                 .withClaim("no", user.getNo())
                 .withClaim("signature", encryptSHA256("secret"))
                 .withIssuer("auth0")

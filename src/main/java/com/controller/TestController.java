@@ -14,7 +14,7 @@ import com.response.StatusCode;
 import com.service.HomeService;
 import com.service.OtherHomeService;
 import com.util.Constant;
-import com.util.Encryption.EncryptionServiceDup;
+import com.util.Encryption.EncryptionService;
 import com.util.FileUploadUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -232,10 +232,10 @@ public class TestController {
         user.setName("name");
         user.setAccess_token("access_token");
         try {
-            String token = new EncryptionServiceDup().encryptJWT(user);
+            String token = new EncryptionService().encryptJWT(user);
             log.info(user.toString());
             log.info(token);
-            log.info(new EncryptionServiceDup().decryptJWT(token).toString());
+            log.info(new EncryptionService().decryptJWT(token).toString());
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
