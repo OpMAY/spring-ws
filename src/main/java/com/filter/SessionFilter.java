@@ -32,7 +32,7 @@ public class SessionFilter implements Filter {
 
         if (req.getSession().getAttribute("jwt") != null) {
             /**Login 했을 때의 Session 필터링*/
-            HashMap<String, Object> hashMap = new EncryptionService().decodeJWT(req.getSession().getAttribute("jwt").toString());
+            HashMap<String, Object> hashMap = new EncryptionService().decryptJWT(req.getSession().getAttribute("jwt").toString());
             String version = (String) hashMap.get("version");
             if (Objects.equals(version, Constant.VERSION))
                 filterChain.doFilter(servletRequest, servletResponse);
