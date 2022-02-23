@@ -1,7 +1,7 @@
 package com.api.mail;
 
 
-import com.util.EncryptionService;
+import com.util.Encryption.EncryptionService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

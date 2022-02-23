@@ -1,8 +1,7 @@
 package com.filter;
 
-import com.amazonaws.services.s3.model.Encryption;
 import com.util.Constant;
-import com.util.EncryptionService;
+import com.util.Encryption.EncryptionService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.*;

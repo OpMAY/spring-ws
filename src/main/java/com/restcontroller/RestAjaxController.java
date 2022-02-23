@@ -6,7 +6,6 @@ import com.response.Message;
 import com.response.ResMessage;
 import com.response.StatusCode;
 import com.service.HomeService;
-import com.util.EncryptionService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
