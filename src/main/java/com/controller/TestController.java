@@ -181,7 +181,8 @@ public class TestController {
     @Cacheable(value = "IG")
     public ResponseEntity<String> getInstagramTest(String type) {
         Message message = new Message();
-        instagramAPI.getImages(type);
+        List<String> images = instagramAPI.getImages(type);
+        log.info(images.toString());
         return new ResponseEntity(
                 DefaultRes.res(
                         StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap("ajax")

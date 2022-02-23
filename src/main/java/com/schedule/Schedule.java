@@ -1,6 +1,7 @@
 package com.schedule;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -43,4 +44,10 @@ public class Schedule {
         Thread.sleep(3000L);
         log.info("================Task has been ended===============");
     }*/
+
+    @Scheduled(fixedRate = 30 * 1000)
+    @CacheEvict(value = "IG", allEntries = true)
+    public void evictCache() {
+        /** System Scheduling or Database Scheduling Develop here*/
+    }
 }
