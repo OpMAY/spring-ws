@@ -1,3 +1,5 @@
+<%@ page import="com.model.User" %>
+<%@ page import="java.util.List" %>
 <%--
   Created by IntelliJ IDEA.
   User: sangwoo
@@ -6,6 +8,12 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="tf" tagdir="/WEB-INF/tags" %>
+<%
+    List<User> users = (List<User>) request.getAttribute("users");
+    request.setAttribute("users", users);
+%>
 <html>
 <head>
     <title>Title</title>
@@ -34,6 +42,28 @@
             <input type="file" name="file2">
             <input type="file" name="file3">
             <button type="submit">복수업로드2</button>
+        </form>
+    </section>
+    <section>
+        <table>
+            <tr>
+                <th>PK</th>
+                <th>이름</th>
+                <th>생성날짜</th>
+                <th>수정날짜</th>
+            </tr>
+            <c:forEach items="${users}" var="user">
+            <tr>
+                <td>${user.no}</td>
+                <td>${user.name}</td>
+                <td><tf:formatDatetime value="${user.reg_datetime}"/></td>
+                <td><tf:formatDatetime value="${user.updated_datetime}"/></td>
+            </tr>
+            </c:forEach>
+        </table>
+        <form action="/user.do" method="post">
+            <input type="text" name="name" placeholder="회원이름을 입력하세요.">
+            <button type="submit">회원등록</button>
         </form>
     </section>
 </main>

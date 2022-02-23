@@ -47,4 +47,11 @@
         insert into arraytest(usertest)
         values (#{userTests,typeHandler=com.middleware.JsonArrayObjectTypeHandler});
     </insert>
+    <select id="selectUsers" resultType="User">
+        select * from user;
+    </select>
+    <insert id="insertUser" parameterType="User" keyProperty="no" useGeneratedKeys="true">
+        insert into user(name, reg_datetime, updated_datetime)
+        values (#{name}, now(), now());
+    </insert>
 </mapper>

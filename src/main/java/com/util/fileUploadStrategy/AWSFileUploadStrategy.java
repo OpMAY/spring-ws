@@ -1,4 +1,4 @@
-package com.util;
+package com.util.fileUploadStrategy;
 
 import com.aws.CDNService;
 import lombok.extern.slf4j.Slf4j;

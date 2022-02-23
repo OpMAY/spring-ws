@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Repository
@@ -50,5 +51,15 @@ public class TestDao {
     public void insertTestByNo(Test test) {
         TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
         testMapper.insertTestByNo(test);
+    }
+
+    public List<User> selectUsers() {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        return testMapper.selectUsers();
+    }
+
+    public void insertUser(User user) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        testMapper.insertUser(user);
     }
 }
