@@ -59,6 +59,11 @@
  - `config.properties`에 Mail에 관한 설정을 미리 하여 Google과 Naver인지 자동으로 파악을 하게 하였습니다.
  - 기타 정보 없이 메일의 제목, 내용, 보낼 사람의 E-Mail 주소 정보만 입력하도록 하였습니다.
  
+####9. Encrypt
+ - 프로젝트별로 유연하게 사용할 수 있도록 EncryptionService를 인터페이스화 하였습니다.
+ - Front에서 하던 Cookie 암호화 작업을 Server에서 하도록 하였습니다.
+ - `/encrypt.do`, `/decrypt.do` 컨트롤러에서 REST API 형식으로 암/복호화를 할 수 있습니다.
+
 ##Database Init
 ```
 CREATE DATABASE  IF NOT EXISTS `flowtest` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
