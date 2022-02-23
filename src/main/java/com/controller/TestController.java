@@ -241,4 +241,36 @@ public class TestController {
         }
         return new ModelAndView("test");
     }
+
+    @GetMapping("/cookie.do")
+    public ModelAndView cookieTest(HttpServletRequest request) {
+        return new ModelAndView("test");
+    }
+
+    @PostMapping("/encrypt.do")
+    public ResponseEntity<String> encrypt(String value) {
+        Message message = new Message();
+        message.put("status", true);
+        try {
+            String result = new EncryptionService().encryptAES(value);
+            System.out.println(value + " --> " + result);
+            message.put("result", result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap()), HttpStatus.OK);
+    }
+    @PostMapping("/decrypt.do")
+    public ResponseEntity<String> decrypt(String value) {
+        Message message = new Message();
+        try {
+            String result = new EncryptionService().decryptAES(value);
+            System.out.println(value + " --> " + result);
+            message.put("result", result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        message.put("status", true);
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap()), HttpStatus.OK);
+    }
 }

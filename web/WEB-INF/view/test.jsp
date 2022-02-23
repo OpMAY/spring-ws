@@ -66,8 +66,16 @@
             <button type="submit">회원등록</button>
         </form>
     </section>
+    <section>
+        <span>쿠키 : </span>
+        <span id="cookie">?</span>
+        <input type="text" id="cookie-input" placeholder="쿠키에 넣을 숫자를 입력하세요.">
+        <button type="button" onclick="addCookie();">브라우저 삽입</button>
+        <button type="button" onclick="getDecryptedCookie();">쿠키정보보기</button>
+    </section>
 </main>
 
+<script src="/resources/js/cookie.js"></script>
 <script>
 
     async function postTest1() {
@@ -168,6 +176,37 @@
         }
     }
 
+    document.addEventListener('DOMContentLoaded', function () {
+        const cookie = getCookie('test');
+        document.querySelector('#cookie').innerText = cookie;
+    });
+
+    async function addCookie() {
+        let value = document.querySelector('#cookie-input').value;
+        const data = {value};
+        const options = {
+            method: "POST",
+            body: new URLSearchParams(data)
+        };
+        const result = await fetch('/encrypt.do', options).then(res => res.json()).then(res => res.data.result);
+        setCookie({name: 'test', value: result});
+
+        document.querySelector('#cookie').innerText = result;
+    }
+    async function getDecryptedCookie() {
+        const cookie = getCookie('test');
+        if (cookie === null) {
+            alert('쿠키가 없습니다.');
+            return;
+        }
+        const data = {value: cookie};
+        const options = {
+            method: "POST",
+            body: new URLSearchParams(data)
+        };
+        const result = await fetch('/decrypt.do', options).then(res => res.json()).then(res => res.data.result);
+        alert(result);
+    }
 </script>
 </body>
 </html>
