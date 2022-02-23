@@ -17,8 +17,6 @@ public class User extends TimeRecordable {
     private String id;
     @NonNull
     private String name;
-
-
     private String grant = "general";
     private String access_token = "setting the password";
 }

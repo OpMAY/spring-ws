@@ -14,6 +14,7 @@ import com.response.StatusCode;
 import com.service.HomeService;
 import com.service.OtherHomeService;
 import com.util.Constant;
+import com.util.Encryption.EncryptionServiceDup;
 import com.util.FileUploadUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -214,9 +216,29 @@ public class TestController {
         request.setAttribute("users", users);
         return new ModelAndView("test");
     }
+
     @PostMapping("/user.do")
     public ModelAndView registerUsers(User user) {
         otherHomeService.insertUser(user);
         return new ModelAndView("redirect:/users.do");
+    }
+
+    @GetMapping("/encrypt.do")
+    public ModelAndView encrypt(HttpServletRequest request) {
+        User user = new User();
+        user.setNo(1);
+        user.setEmail("zlzldntlr@naver.com");
+        user.setId("239428424");
+        user.setName("name");
+        user.setAccess_token("access_token");
+        try {
+            String token = new EncryptionServiceDup().encryptJWT(user);
+            log.info(user.toString());
+            log.info(token);
+            log.info(new EncryptionServiceDup().decryptJWT(token).toString());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return new ModelAndView("test");
     }
 }

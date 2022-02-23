@@ -21,53 +21,64 @@ import javax.crypto.spec.SecretKeySpec;
 @Service
 public class EncryptionService implements Encrypt{
     @Override
-    public HashMap<String, Object> decodeJWT(String encryptedJWT) {
-        try{
+    public <T> T getSessionParameter(String token, String key) {
+        if (token != null) {
+            HashMap<String, Object> hashMap = decryptJWT(token);
+            return (T) hashMap.get(key);
+        } else {
+            return (T) null;
+        }
+    }
+
+    @Override
+    public HashMap<String, Object> decryptJWT(String encryptedJWT) {
+        try {
             Algorithm algorithm = Algorithm.HMAC256("secret");
             JWTVerifier verifier = JWT.require(algorithm)
                     .withIssuer("auth0")
                     .build(); //Reusable verifier instance
             DecodedJWT jwt = verifier.verify(encryptedJWT);
-
             String email = jwt.getClaim("email").asString();
             String signature = jwt.getClaim("signature").asString();
             String grant = jwt.getClaim("grant").asString();
             String version = jwt.getClaim("version").asString();
-            String access_token = jwt.getClaim("access_token").asString();
-            int user_no = jwt.getClaim("user_no").asInt();
+            String token = jwt.getClaim("token").asString();
+            int no = jwt.getClaim("no").asInt();
+            String id = jwt.getClaim("id").asString();
 
-            HashMap<String, Object>hashMap = new HashMap<>();
+            HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("email", email);
             hashMap.put("signature", signature);
             hashMap.put("grant", grant);
             hashMap.put("version", version);
-            hashMap.put("access_token", access_token);
-            hashMap.put("user_no", user_no);
-
+            hashMap.put("token", token);
+            hashMap.put("no", no);
+            hashMap.put("id", id);
             return hashMap;
-        }catch(NullPointerException e) {
+        } catch (NullPointerException e) {
             e.printStackTrace();
             return null;
         }
     }
 
     @Override
-    public String encryptionJWT(User user) throws NoSuchAlgorithmException {
+    public String encryptJWT(User user) throws NoSuchAlgorithmException {
         Algorithm algorithm = Algorithm.HMAC256("secret");
         return JWT.create()
                 .withExpiresAt(Time.LongTimeStamp())
                 .withClaim("version", Constant.VERSION)
                 .withClaim("grant", user.getGrant())
-                .withClaim("access_token", user.getAccess_token())
+                .withClaim("token", user.getAccess_token())
                 .withClaim("email", user.getEmail())//후에 ID로 대체
-                .withClaim("user_no", user.getNo())
-                .withClaim("signature", encryptionSHA256("secret"))
+                .withClaim("id", user.getId())//후에 ID로 대체
+                .withClaim("no", user.getNo())
+                .withClaim("signature", encryptSHA256("secret"))
                 .withIssuer("auth0")
                 .sign(algorithm);
     }
 
     @Override
-    public String encryptionSHA256(String msg) throws NoSuchAlgorithmException {
+    public String encryptSHA256(String msg) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.update(msg.getBytes());
         return bytesToHex(md.digest());
