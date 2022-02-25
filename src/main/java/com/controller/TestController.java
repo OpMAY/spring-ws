@@ -264,6 +264,7 @@ public class TestController {
         }
         return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap()), HttpStatus.OK);
     }
+
     @PostMapping("/decrypt.do")
     public ResponseEntity<String> decrypt(String value) {
         Message message = new Message();
