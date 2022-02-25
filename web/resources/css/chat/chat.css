@@ -1,0 +1,15 @@
+.clearfix {
+    clear: both;
+}
+
+.odd {
+    float: right;
+}
+
+.point {
+    cursor: pointer;
+}
+
+.point-static {
+    cursor: initial;
+}
