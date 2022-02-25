@@ -262,6 +262,17 @@
             <version>1.6.2</version>
         </dependency>
 
+        <!-- 채팅 위한 socket -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-websocket</artifactId>
+            <version>${org.springframework-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-messaging</artifactId>
+            <version>${org.springframework-version}</version>
+        </dependency>
     </dependencies>
 
     <!--Amazon CDN Maven-->
