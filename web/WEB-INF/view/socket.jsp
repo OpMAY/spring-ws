@@ -445,7 +445,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="chat-item odd clearfix pb-2 pt-2">
+                            <%--<li class="chat-item odd clearfix pb-2 pt-2">
                                 <div class="chat-item-wrapper d-flex">
                                     <div class="mr-2 chat-content">
                                         <div class="text-wrap position-relative">
@@ -467,7 +467,7 @@
                                     <div class="file-item-wrapper p-0">
                                         <div class="row align-items-center">
                                             <div class="col-auto w-100">
-                                                <%-- 1. The <iframe> (and video player) will replace this <div> tag. --%>
+                                                &lt;%&ndash; 1. The <iframe> (and video player) will replace this <div> tag. &ndash;%&gt;
                                                 <div class="player"></div>
                                             </div>
                                         </div>
@@ -496,13 +496,13 @@
                                     <div class="file-item-wrapper p-0">
                                         <div class="row align-items-center">
                                             <div class="col-auto w-100">
-                                                <%-- 1. The <iframe> (and video player) will replace this <div> tag. --%>
+                                                &lt;%&ndash; 1. The <iframe> (and video player) will replace this <div> tag. &ndash;%&gt;
                                                 <div class="player"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </li>
+                            </li>--%>
                         </ul>
                         <%-- Textarea Container --%>
                         <div>
@@ -512,7 +512,8 @@
                                         amet.</label>
                                     <textarea rows="3" id="chat-keyboard" class="form-control"></textarea>
                                 </div>
-                                <button type="button" class="btn btn-primary my-auto ml-3" onclick="sendMessage();">Submit</button>
+                                <button type="button" class="btn btn-primary my-auto ml-3" onclick="sendTextMessage();">Submit</button>
+                                <button type="button" class="btn btn-primary my-auto ml-3" onclick="disconnect();">Disconnet</button>
                             </div>
                             <div class="mt-2">
                                 <i data-type="general" class="icon-file fa-solid fa-file-arrow-up fa-2x mr-2 point"></i>
@@ -568,10 +569,8 @@
         crossorigin="anonymous"></script>
 
 <!-- custom chat-->
-<%--<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>--%>
 <script src="../../resources/js/chat/chat.js"></script>
 <script src="../../resources/js/stomp.js"></script>
-<script src="../../resources/js/sockjs.js"></script>
 <script src="../../resources/js/chat/template.js"></script>
 
 <!-- font-awesome -->
@@ -591,7 +590,6 @@
         username: 'tester',
         role: 'dev'
     };
-
 
     /** Document Ready*/
     $(document).ready(function () {
@@ -613,7 +611,7 @@
         icon_files.forEach((e) => {
             e.addEventListener('click', fileUpload);
         });
-        let youtube = document.querySelector('.youtube');
+        /*let youtube = document.querySelector('.youtube');
         let youtube_link = document.querySelector('.link-input-wrapper');
         youtube_link.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -622,7 +620,7 @@
         $(youtube_link_input).bind('change keyup input', (e) => {
             if (e.keyCode === 13) {
                 console.log('input youtube link');
-                /**chat youtube item create*/
+                /!**chat youtube item create*!/
                 let container = $('.chat-list-wrapper');
                 let chat = {
                     username: 'Kimwoosik',
@@ -645,66 +643,74 @@
             $('.link-input-wrapper').toggle(100, 'linear', (e) => {
                 console.log('toggle after');
             });
-        });
+        });*/
         /** Add File Upload Listener End*/
-        connect();
+
+        if ('${param.no eq null}' === 'true') {
+            alert('방 번호가 없습니다.');
+        } else {
+            connect();
+        }
+        scrollToBottom();
     });
 
     function connect() {
-        // 웹소켓 주소
-        let wsUri = "/stomp";
+        let wsUri = "ws://localhost:8080/stomp"; // stomp endpoint
         console.log('connecting to ', wsUri);
-        client = Stomp.over(new SockJS(wsUri));
+        client = Stomp.client(wsUri);
+        client.connect({}, connectCallback, errorCallback);
+    }
 
-        client.connect({}, () => {
-            console.log('connect stomp');
-            client.subscribe('/topic/message', (event) => {
+    const connectCallback = () => {
+        console.log('connect stomp');
+        client.subscribe('/topic/message/${param.no}', onmessage);
+    };
+    const errorCallback = () => {
+        console.log('connetion failed');
+    };
 
-                const content = JSON.parse(event.body);
-                console.log(event);
-                console.log('message: ', content.message);
-                let message = {
-                    username: user_info.username,
-                    message: content.message,
-                    timestamp: getTimestamp(),
-                    role: user_info.role,/*
-                    file: {
-                        type: 'ZIP',
-                        name: 'file.zip',
-                        size: '2.5 MB'
-                    }*/
-                }
-                if (content.id === id) {
-                    chat_container.append(getTextMessageRight(message));
-                } else {
-                    chat_container.append(getTextMessageLeft(message));
-                }
-                scrollToBottom();
-            });
-        });
+    const onmessage = (event) => {
+        const content = JSON.parse(event.body);
+        content.self = content.id === id;
+        const messageHtml = getMessageHtmlByContentType(content);
+        chat_container.append(messageHtml);
+        scrollToBottom();
+    };
+
+    function getMessageHtmlByContentType(content) {
+        if (content.type === 'text') {
+            return getTextMessage(content);
+        } else if (content.type === 'file') {
+            return getFileMessage(content);
+        }
     }
 
     function getTimestamp() {
-        const date = new Date();
-        return date.toLocaleString();
+        return new Date().toLocaleString();
     }
+
+    const disconnectCallback = () => {
+        console.log("Disconnected");
+    };
 
     function disconnect() {
         if (client !== null) {
-            client.disconnect();
+            client.disconnect(disconnectCallback);
             client = null;
         }
-        console.log("Disconnected");
     }
 
-    function sendMessage() {
+    function sendTextMessage() {
         if (client === null) {
             alert('연결되지 않음');
             return;
         }
-        const message = document.querySelector('#chat-keyboard').value;
-        const data = {id, message};
-        client.send('/test', {}, JSON.stringify(data));
+        const input_elem = document.querySelector('#chat-keyboard');
+        const text = input_elem.value;
+        const message = new Message(text);
+        message.type = 'text';
+        client.send('/test/${param.no}', {}, JSON.stringify(message));
+        input_elem.value = '';
     }
 
     function scrollToBottom() {
@@ -728,31 +734,61 @@
         if (input.files && input.files[0]) {
             // 이미지 파일인지 검사 (생략)
             // FileReader 인스턴스 생성
+            const file = input.files[0];
             const reader = new FileReader()
             // 이미지가 로드가 된 경우
             reader.onload = e => {
                 console.log('readImage onload');
             }
-            reader.onloadend = e => {
-                console.log(e);
+            reader.onloadend = async (e) => {
                 /**chat file item create*/
-                let chat = {
-                    username: 'Kimwoosik',
-                    message: 'Donec tortor augue, mattis porttitor elementum dapibus, porta sed ante.',
-                    timestamp: '2022-02-25 11:45 AM',
-                    role: 'Developer',
-                    file: {
-                        type: 'ZIP',
-                        name: 'file.zip',
-                        size: '2.5 MB'
-                    }
+                try {
+                    const file_info = await uploadFileToServer(file);
+                    sendFileMessage(file_info);
+                } catch (e) {
+                    console.error(e);
                 }
-                container.append(appendChatRightItem(chat));
-                container.append(appendChatLeftItem(chat));
             }
             // reader가 이미지 읽도록 하기
-            reader.readAsDataURL(input.files[0])
+            reader.readAsDataURL(input.files[0]);
         }
+    }
+
+    async function uploadFileToServer(file) {
+        try {
+            const formData = new FormData();
+            formData.append('mfile', file);
+            const options = {
+                method: "POST",
+                body: formData
+            };
+            const result = await fetch('/wsfile', options).then(res => res.json());
+            console.log(result);
+            return result.data.file;
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    function sendFileMessage(file_info) {
+        let message = new Message();
+        message.file = file_info;
+        message.type = 'file';
+        console.log(message);
+        client.send('/test/${param.no}', {}, JSON.stringify(message));
+    }
+
+    function parseFileSize(size) {
+        let file_size = size / 1024 / 1024;
+        if (file_size < 1) {
+            file_size *= 1024;
+            file_size = Math.ceil(file_size);
+            file_size += 'KB';
+        } else {
+            file_size = Math.ceil(file_size);
+            file_size += 'MB';
+        }
+        return file_size;
     }
 
     /**
@@ -794,6 +830,16 @@
             });
             player_elems.push(player);
         });
+    }
+
+    class Message {
+        constructor(message) {
+            this.id = id;
+            this.username = user_info.username;
+            this.role = user_info.role;
+            this.message = message;
+            this.timestamp = getTimestamp();
+        }
     }
 </script>
 <script>

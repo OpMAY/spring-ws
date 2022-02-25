@@ -35,12 +35,10 @@ function appendChatRightItem(chat) {
                                 <p class="mb-0">${chat.file.size}</p>
                             </div>
                             <div class="col-auto">
-                                <%-- Button --%>
                                 <a href="javascript:void(0);"
                                    class="btn btn-link btn-lg text-muted">
                                     <i class="fa-solid fa-file-arrow-down"></i>
                                 </a>
-                                <%-- /Button --%>
                             </div>
                         </div>
                     </div>
@@ -86,12 +84,10 @@ function appendChatLeftItem(chat) {
                                 <p class="mb-0">${chat.file.size}</p>
                             </div>
                             <div class="col-auto">
-                                <%-- Button --%>
                                 <a href="javascript:void(0);"
                                    class="btn btn-link btn-lg text-muted">
                                     <i class="fa-solid fa-file-arrow-down"></i>
                                 </a>
-                                <%-- /Button --%>
                             </div>
                         </div>
                     </div>
@@ -176,25 +172,28 @@ function appendChatYoutubeRightItem(chat) {
 
 /**
  * @dates 2022.02.25
- * @author kimwoosik
- * @description right chat item create
- * @param {object} chat
- * @return {element} Chat Item
+ * @author sangwoo
+ * @description text message html
+ * @param username
+ * @param role
+ * @param message
+ * @param timestamp
+ * @param self
+ * @returns {string} html
  */
-function getTextMessageRight(chat) {
-    return `<li class="chat-item odd clearfix pb-2 pt-2">
+function getTextMessage({username, role, message, timestamp, self}) {
+    const text_position = self ? 'odd' : '';
+    return `<li class="chat-item ${text_position} clearfix pb-2 pt-2">
                 <div class="chat-item-wrapper d-flex">
                     <div class="mr-2 chat-content">
                         <div class="text-wrap position-relative">
-                            <i class="font-weight-bold">${chat.username} <span class="text-primary">[${chat.role}]</span></i>
-                            <p>${chat.message}</p>
-                            <i class="position-absolute" style="top: 0; right: 0;">${chat.timestamp}</i>
+                            <i class="font-weight-bold">${username} <span class="text-primary">[${role}]</span></i>
+                            <p>${message}</p>
+                            <i class="position-absolute" style="top: 0; right: 0;">${timestamp}</i>
                         </div>
                     </div>
                     <div class="chat-avatar">
-                        <img width="60" height="60" src="../../resources/assets/images/users/user-2.jpg"
-                             alt="${chat.username}"
-                             class="rounded">
+                         <img width="60" height="60" src="../../resources/assets/images/users/user-2.jpg" alt="${username}" class="rounded">  <!-- todo: user profile image -->
                     </div>
                 </div>
             </li>`;
@@ -202,24 +201,49 @@ function getTextMessageRight(chat) {
 
 /**
  * @dates 2022.02.25
- * @author kimwoosik
- * @description left chat item create
- * @param {object} chat
- * @return {element} Chat Item
+ * @author sangwoo
+ * @description right text message html
+ * @param username
+ * @param role
+ * @param message
+ * @param timestamp
+ * @param file : object {type, name, size}
+ * @param self
+ * @returns {string} html
  */
-function getTextMessageLeft(chat) {
-    return `<li class="chat-item clearfix pb-2 pt-2">
+function getFileMessage({username, role, message, timestamp, file, self}) {
+    const text_position = self ? 'odd' : '';
+    return `<li class="chat-item ${text_position} clearfix pb-2 pt-2">
                 <div class="chat-item-wrapper d-flex">
-                    <div class="chat-avatar">
-                        <img width="60" height="60" src="../../resources/assets/images/users/user-2.jpg"
-                             alt="${chat.username}"
-                             class="rounded">
-                    </div>
-                    <div class="chat-content ml-2">
+                    <div class="mr-2 chat-content">
                         <div class="text-wrap position-relative">
-                            <i class="font-weight-bold">${chat.username} <span class="text-primary">[${chat.role}]</span></i>
-                            <p>${chat.message}</p>
-                            <i class="position-absolute" style="top: 0; right: 0;">${chat.timestamp}</i>
+                            <i class="font-weight-bold">${username} <span class="text-primary">[${role}]</span></i>
+                            <i class="position-absolute" style="top: 0; right: 0;">${timestamp}</i>
+                        </div>
+                    </div>
+                    <div class="chat-avatar">
+                        <img width="60" height="60" src="../../resources/assets/images/users/user-2.jpg" alt="${username}" class="rounded">  <!-- todo: user profile image -->
+                    </div>
+                </div>
+                <div class="file-item card mt-2 mb-2 border text-left d-inline-block">
+                    <div class="file-item-wrapper p-2">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <div class="type">
+                                    <span class="avatar-title bg-secondary rounded text-white p-1 text-uppercase">${file.type}</span>
+                                </div>
+                            </div>
+                            <div class="col ps-0">
+                                <a href="${file.url}" target="_blank"
+                                   class="text-muted fw-bold">${file.name}</a>
+                                <p class="mb-0">${parseFileSize(file.size)}</p>
+                            </div>
+                            <div class="col-auto">
+                                <a href="javascript:void(0);"
+                                   class="btn btn-link btn-lg text-muted">
+                                    <i class="fa-solid fa-file-arrow-down"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

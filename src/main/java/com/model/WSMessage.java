@@ -13,6 +13,7 @@ public class WSMessage {
     private String username;
     private String timestamp;
     private String role;
+    private String type;
 
     private MFile file;
 }
