@@ -178,7 +178,7 @@ function appendChatYoutubeRightItem(chat) {
  * @param role
  * @param message
  * @param timestamp
- * @param self
+ * @param self true: 자신의 매세지, false: 타인의 메세지
  * @returns {string} html
  */
 function getTextMessage({username, role, message, timestamp, self}) {
@@ -202,18 +202,20 @@ function getTextMessage({username, role, message, timestamp, self}) {
 /**
  * @dates 2022.02.25
  * @author sangwoo
- * @description right text message html
+ * @description file message html
  * @param username
  * @param role
  * @param message
  * @param timestamp
  * @param file : object {type, name, size}
- * @param self
+ * @param self true: 자신의 매세지, false: 타인의 메세지
+ * @param temp 파일 업로드 대기를 위한 임시 파일인지 아닌지
  * @returns {string} html
  */
-function getFileMessage({username, role, message, timestamp, file, self}) {
+function getFileMessage({username, role, message, timestamp, file, self, temp= false}) {
     const text_position = self ? 'odd' : '';
-    return `<li class="chat-item ${text_position} clearfix pb-2 pt-2">
+    const temp_id = temp ? 'id="temp"' : '';
+    return `<li class="chat-item ${text_position} clearfix pb-2 pt-2" ${temp_id}>
                 <div class="chat-item-wrapper d-flex">
                     <div class="mr-2 chat-content">
                         <div class="text-wrap position-relative">

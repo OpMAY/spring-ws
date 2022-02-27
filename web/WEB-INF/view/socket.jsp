@@ -673,6 +673,7 @@
         const content = JSON.parse(event.body);
         content.self = content.id === id;
         const messageHtml = getMessageHtmlByContentType(content);
+        document.getElementById('temp')?.remove(); // 파일 업로드용 임시 메세지가 있는 경우 지워주기
         chat_container.append(messageHtml);
         scrollToBottom();
     };
@@ -729,12 +730,12 @@
     }
 
     function readImage(input) {
-        let container = $('.chat-list-wrapper');
         // 인풋 태그에 파일이 있는 경우
         if (input.files && input.files[0]) {
             // 이미지 파일인지 검사 (생략)
             // FileReader 인스턴스 생성
             const file = input.files[0];
+            makeTempFileHtml(file);
             const reader = new FileReader()
             // 이미지가 로드가 된 경우
             reader.onload = e => {
@@ -752,6 +753,23 @@
             // reader가 이미지 읽도록 하기
             reader.readAsDataURL(input.files[0]);
         }
+    }
+
+    function makeTempFileHtml(file) {
+        const message = new Message();
+        message.type = 'file';
+        const file_info = {
+            type: file.type,
+            // name: file.name,
+            name: 'loading...',
+            size: file.size
+        }
+        message.file = file_info;
+        message.self = true;
+        message.temp = true;
+        const temp_html = getMessageHtmlByContentType(message); // temp message
+        chat_container.append(temp_html);
+        scrollToBottom();
     }
 
     async function uploadFileToServer(file) {

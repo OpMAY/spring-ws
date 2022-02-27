@@ -40,6 +40,7 @@ public class WebSocketController {
         return message;
     }
 
+/* // 바이트파일 받아오기 불가
     @MessageMapping("/binary")
     @SendTo("/topic/message")
 //    public WSFile handle(WSFile wsFile, byte[] bytes) {
@@ -56,15 +57,26 @@ public class WebSocketController {
         }
         return "{\"message\":\"testing\"}";
     }
+*/
 
 
 
     @PostMapping(value = "/wsfile")
     public ResponseEntity<String> ajax(MultipartFile mfile) {
+        long start = System.currentTimeMillis();
+        System.out.println("start");
         Message message = new Message();
 
         MFile mFile = fileUploadUtility.uploadFile(mfile, null);
+        try {
+            System.out.println("processing big file...");
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         message.put("file", mFile);
+        long end = System.currentTimeMillis();
+        System.out.println("finish : " + (end-start));
         return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap()), HttpStatus.OK);
     }
 }
