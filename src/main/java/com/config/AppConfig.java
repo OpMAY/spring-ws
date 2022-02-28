@@ -3,6 +3,7 @@ package com.config;
 import com.filter.GeneralFilter;
 import com.filter.SessionFilter;
 import com.interceptor.BaseInterceptor;
+import com.model.SplitFileData;
 import com.util.FileDownload;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
@@ -36,10 +37,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.servlet.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Configuration
@@ -105,14 +103,22 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
         StringHttpMessageConverter stringConverter = new StringHttpMessageConverter();
         stringConverter.setWriteAcceptCharset(true);
         MediaType mediaType = new MediaType("text", "html", StandardCharsets.UTF_8);
+        MediaType mediaType1 = new MediaType("application", "x-www-form-urlencoded", StandardCharsets.UTF_8);
         List<MediaType> types = new ArrayList<>();
         types.add(mediaType);
+        types.add(mediaType1);
         stringConverter.setSupportedMediaTypes(types);
         converters.add(stringConverter);
         converters.add(new SourceHttpMessageConverter<>());
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         converter.setPrettyPrint(true);
         converters.add(converter);
+    }
+
+    @Bean
+    public synchronized HashMap<String, ArrayList<SplitFileData>> splitFileStorage() {
+        log.info("SplitFileStorage initialized");
+        return new HashMap<String, ArrayList<SplitFileData>>();
     }
 
     @Bean // view resolver
@@ -139,16 +145,16 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
         return new FileDownload();
     }
 
-    /*@Bean // 파일 업로드 설정
+    @Bean // 파일 업로드 설정
     public CommonsMultipartResolver multipartResolver() {
         log.info("multipartResolver : initializing");
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
         multipartResolver.setDefaultEncoding("utf-8");
-        multipartResolver.setMaxUploadSize(-1); // 전체 최대 25mb
-        multipartResolver.setMaxUploadSizePerFile(-1); // 각 최대 5mb
+        multipartResolver.setMaxUploadSize(40_212_354_720L); // 전체 최대 45GB
+        multipartResolver.setMaxUploadSizePerFile(13_737_418_240L); // 각 최대 15GB
         log.info("multipartResolver : initialized");
         return multipartResolver;
-    }*/
+    }
 
     @Override // 정적 리소스 매핑
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
