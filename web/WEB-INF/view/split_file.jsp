@@ -39,7 +39,7 @@
 <script>
     let fileInput = undefined;
 
-    var chunk_size = 1024 * 1024 * 4; // 10mb
+    var chunk_size = 1024 * 1024 * 1;
     var reader = new FileReader();
     let checkBase64 = '';
 
@@ -59,8 +59,10 @@
 
     function _uploadChunk(file, offset, range) {
         // if no more chunks, send EOF
+        console.log(offset, range);
         if (offset >= file.size) {
-            $.post('http://localhost:8080/upload/split/general', {
+            console.log('last file upload');
+            $.post('/upload/split/general', {
                 filename: file.name,
                 eof: true
             });
@@ -77,11 +79,12 @@
             var payload = {
                 filename: filename,
                 index: index,
-                data: compressText(data),
+                data: data,
                 eof: false,
             };
+            console.log(data,index,filename,payload);
             // send payload, and buffer next chunk to be uploaded
-            $.post('http://localhost:8080/upload/split/general',
+            $.post('/upload/split/general',
                 payload,
                 function () {
                     _uploadChunk(file, offset + range, chunk_size);
@@ -93,28 +96,6 @@
         // chunk and read file data
         var chunk = file.slice(offset, offset + range);
         reader.readAsDataURL(chunk);
-    }
-</script>
-<%--TODO Compress--%>
-<script>
-    function compressText(text) {
-        var result = '';
-        if (text.length > 0) {
-            var count = 1;
-            var value = text[0];
-            for (var i = 1; i < text.length; ++i) {
-                var entry = text[ i ];
-                if (entry == value) {
-                    count += 1;
-                } else {
-                    result += count + '' + value;
-                    count = 1;
-                    value = entry;
-                }
-            }
-            result += count + '' + entry;
-        }
-        return result;
     }
 </script>
 </html>

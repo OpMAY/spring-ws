@@ -396,20 +396,15 @@ public class TestController {
     @ResponseBody
     @RequestMapping(value = "/upload/split/general", method = RequestMethod.POST)
     public ResponseEntity<String> splitFileUpload(SplitFileData split) throws JSONException {
+        log.info("{}", split.toString());
         if (split.isEof()) {
-
             long beforeTime = System.currentTimeMillis(); //코드 실행 전에 시간 받아오기
-            /** Flow
-             * 1. splitFileStorage에서 검색하여 해당 파일 이름을 가진 SplitFileDatas를 찾는다.
-             * 2. 가져온 SplitFileDatas를 index 순으로 정렬한다.
-             * 3. 정렬한 SplitFileDatas의 data부분만 가져와서 합친다.(Base64String)
-             * 4. Base64String을 확장자에 따라서 다시 합친다.
-             * */
             ArrayList<SplitFileData> splitFileDatas = splitFileStorage.get(split.getFilename());
             Collections.sort(splitFileDatas);
             String base64Str = "";
             for (SplitFileData splitFileData : splitFileDatas) {
                 base64Str += splitFileData.getData();
+                log.info("{}", splitFileData.getIndex());
             }
             base64Str = base64Str.trim().replaceAll(" ", "");
             byte[] bytes = Base64.getDecoder().decode(base64Str);
@@ -440,38 +435,33 @@ public class TestController {
                 ), HttpStatus.OK
         );
     }
-
-    private String decode(String encoded) {
-        long nano1 = System.nanoTime();
-        StringBuilder result = new StringBuilder();
-        int lengthOfEncodedString = encoded.length();
-        StringBuilder timesToRepeatLastCharacter = new StringBuilder("");
-        char lastCharacter = encoded.charAt(0);
-        for (int index = 1; index <= lengthOfEncodedString; index++) {
-            if (index == lengthOfEncodedString) {
-                // we have reached to the end of encoding ; do the final round
-                // this code looks repeated
-                for (int i = 0; i < Integer.parseInt(timesToRepeatLastCharacter.toString()); i++) {
-                    result.append(lastCharacter);
-                }
-                break;
-            }
-            char currentCharacter = encoded.charAt(index);
-            if (Character.isDigit(currentCharacter)) {
-                timesToRepeatLastCharacter.append(currentCharacter);
+    /*@RequestMapping(value = "/upload/split/general", method = RequestMethod.POST)
+    public ResponseEntity<String> splitFileUpload(SplitFileData split) throws JSONException {
+        if (split.isEof()) {
+            Message message = new Message();
+            message.put("message", "success file");
+            return new ResponseEntity(
+                    DefaultRes.res(
+                            StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap("ajax")
+                    ), HttpStatus.OK
+            );
+        } else {
+            if (splitFileStorage.get(split.getFilename()) == null) {
+                ArrayList<SplitFileData> hashMapFileDatas = new ArrayList<>();
+                hashMapFileDatas.add(split);
+                splitFileStorage.put(split.getFilename(), hashMapFileDatas);
             } else {
-                // try parsing the timesToRepeatLastCharacter and get the number of times the character should be repeated
-                for (int i = 0; i < Integer.parseInt(timesToRepeatLastCharacter.toString()); i++) {
-                    result.append(lastCharacter);
-                }
-                lastCharacter = currentCharacter;
-                timesToRepeatLastCharacter = new StringBuilder();
+                log.info(split.toString());
+                splitFileStorage.get(split.getFilename()).add(split);
+                splitFileStorage.put(split.getFilename(), splitFileStorage.get(split.getFilename()));
             }
-
+            Message message = new Message();
+            message.put("message", "success file");
+            return new ResponseEntity(
+                    DefaultRes.res(
+                            StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap("ajax")
+                    ), HttpStatus.OK
+            );
         }
-        long nano2 = System.nanoTime();
-        long result1 = TimeUnit.NANOSECONDS.toMicros(nano2 - nano1);
-        System.out.println("decoding total time taken : nano seconds -> " + result1);
-        return result.toString();
-    }
+    }*/
 }
