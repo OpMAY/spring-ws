@@ -16,9 +16,19 @@ import com.service.OtherHomeService;
 import com.util.Constant;
 import com.util.Encryption.EncryptionService;
 import com.util.FileUploadUtility;
+import jdk.nashorn.internal.objects.NativeArrayBuffer;
+import jdk.nashorn.internal.objects.NativeUint8Array;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +41,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.*;
+import java.nio.Buffer;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
@@ -282,5 +294,62 @@ public class TestController {
     @GetMapping("/chat")
     public ModelAndView chatTest() {
         return new ModelAndView("socket");
+    }
+
+    @RequestMapping(value = "/bulk/upload", method = RequestMethod.GET)
+    public ModelAndView getBulkUpload() {
+        return new ModelAndView("test");
+    }
+
+    @Value("${PATH}")
+    private String path;
+    @RequestMapping(value = "/upload/bulk", method = RequestMethod.POST)
+    public ModelAndView postBulkUpload(HttpServletRequest request) {
+        log.info("postBulkUpload started");
+        try {
+            boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+            if (!isMultipart) {
+                // Inform user about invalid request
+                log.info("is'nt Multipart File");
+                return new ModelAndView("test");
+            }
+
+            // Create a new file upload handler
+            ServletFileUpload upload = new ServletFileUpload();
+
+            // Parse the request
+            FileItemIterator iter = upload.getItemIterator(request);
+            log.info(iter.toString());
+            while (iter.hasNext()) {
+                FileItemStream item = iter.next();
+                String name = item.getFieldName();
+                InputStream stream = item.openStream();
+                if (!item.isFormField()) {
+                    String filename = item.getName();
+                    // Process the input stream
+                    log.info("filename : " + filename);
+                    OutputStream out = new FileOutputStream(path + filename);
+                    IOUtils.copy(stream, out);
+                    stream.close();
+                    out.close();
+                } else {
+                    String formFieldValue = Streams.asString(stream);
+                    log.info("formFieldValue : " + formFieldValue);
+                }
+            }
+        } catch (FileUploadException e) {
+            e.printStackTrace();
+            log.info("postBulkUpload end");
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.info("postBulkUpload end");
+        }
+        log.info("postBulkUpload end");
+        return new ModelAndView("test");
+    }
+
+    @RequestMapping(value = "/upload/bulk", method = RequestMethod.GET)
+    public ModelAndView uploaderPage() {
+        return new ModelAndView("test");
     }
 }

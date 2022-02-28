@@ -73,6 +73,12 @@
         <button type="button" onclick="addCookie();">브라우저 삽입</button>
         <button type="button" onclick="getDecryptedCookie();">쿠키정보보기</button>
     </section>
+    <h1>대용량 파일 업로드</h1>
+    <form action="/upload/bulk" method="post" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="text" name="test" value="test">
+        <button type="submit">대용량 파일 업로드</button>
+    </form>
 </main>
 
 <script src="/resources/js/cookie.js"></script>

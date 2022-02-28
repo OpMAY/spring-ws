@@ -139,16 +139,16 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
         return new FileDownload();
     }
 
-    @Bean // 파일 업로드 설정
+    /*@Bean // 파일 업로드 설정
     public CommonsMultipartResolver multipartResolver() {
         log.info("multipartResolver : initializing");
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
         multipartResolver.setDefaultEncoding("utf-8");
-        multipartResolver.setMaxUploadSize(26214400); // 전체 최대 25mb
-        multipartResolver.setMaxUploadSizePerFile(5242880); // 각 최대 5mb
+        multipartResolver.setMaxUploadSize(-1); // 전체 최대 25mb
+        multipartResolver.setMaxUploadSizePerFile(-1); // 각 최대 5mb
         log.info("multipartResolver : initialized");
         return multipartResolver;
-    }
+    }*/
 
     @Override // 정적 리소스 매핑
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
