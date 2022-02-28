@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.api.businessRegistration.BusinessRegistrationAPI;
 import com.api.instagram.InstagramAPI;
 import com.api.lunarsoft.alarm.LunarAlarmAPI;
 import com.api.mail.MailBuilder;
@@ -18,19 +19,23 @@ import com.util.Encryption.EncryptionService;
 import com.util.FileUploadUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +46,17 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TestController {
 
-    public final FileUploadUtility fileUploadUtility;
-    public final HomeService homeService;
-    public final OtherHomeService otherHomeService;
+    @Value("${UPLOAD_PATH}")
+    private String path;
+
+    private final FileUploadUtility fileUploadUtility;
+    private final HomeService homeService;
+    private final OtherHomeService otherHomeService;
+    private final BusinessRegistrationAPI businessRegistrationAPI;
+    private final LunarAlarmAPI lunarAlarmAPI;
+    private final InstagramAPI instagramAPI;
+    private final MailBuilder mailBuilder;
+
 
 
     @GetMapping("/get-test.do")
@@ -167,17 +180,11 @@ public class TestController {
         return new ModelAndView("test");
     }
 
-    @Autowired
-    private LunarAlarmAPI lunarAlarmAPI;
-
     @GetMapping("lunarsoft.do")
     public ModelAndView lunarsoftAlarmTest() {
         //lunarAlarmAPI.signUpTest(new SignUp());
         return new ModelAndView("test");
     }
-
-    @Autowired
-    private InstagramAPI instagramAPI;
 
     @ResponseBody
     @GetMapping(value = "/instagram/media")
@@ -192,9 +199,6 @@ public class TestController {
                 ), HttpStatus.OK
         );
     }
-
-    @Autowired
-    private MailBuilder mailBuilder;
 
     @GetMapping("mail.do")
     public ModelAndView mailSendTest() {
@@ -276,6 +280,70 @@ public class TestController {
             e.printStackTrace();
         }
         message.put("status", true);
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap()), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/bulk/upload", method = RequestMethod.GET)
+    public ModelAndView getBulkUpload() {
+        return new ModelAndView("test");
+    }
+
+    @RequestMapping(value = "/upload/bulk", method = RequestMethod.POST)
+    public ModelAndView postBulkUpload(HttpServletRequest request) {
+        log.info("postBulkUpload started");
+        long beforeTime = System.currentTimeMillis(); //코드 실행 전에 시간 받아오기
+        try {
+            boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+            if (!isMultipart) {
+                // Inform user about invalid request
+                log.info("is'nt Multipart File");
+                return new ModelAndView("test");
+            }
+
+            // Create a new file upload handler
+            ServletFileUpload upload = new ServletFileUpload();
+
+            // Parse the request
+            FileItemIterator iter = upload.getItemIterator(request);
+            log.info(iter.toString());
+            while (iter.hasNext()) {
+                FileItemStream item = iter.next();
+                String name = item.getFieldName();
+                InputStream stream = item.openStream();
+                if (!item.isFormField()) {
+                    String filename = item.getName();
+                    // Process the input stream
+                    log.info("filename : " + filename);
+                    OutputStream out = new FileOutputStream(path + filename);
+                    IOUtils.copy(stream, out);
+                    stream.close();
+                    out.close();
+                } else {
+                    String formFieldValue = Streams.asString(stream);
+                    log.info("formFieldValue : " + formFieldValue);
+                }
+            }
+            long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
+            long secDiffTime = (afterTime - beforeTime)/1000; //두 시간에 차 계산
+            System.out.println("시간차이(m) : "+secDiffTime);
+        } catch (FileUploadException e) {
+            e.printStackTrace();
+            log.info("postBulkUpload end");
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.info("postBulkUpload end");
+        }
+        log.info("postBulkUpload end");
+        return new ModelAndView("test");
+    }
+
+    @PostMapping("/business-registration")
+    public ResponseEntity<String> businessRegistration(@RequestBody Map<String, String> map) {
+        Message message = new Message();
+        String value = map.get("value");
+        System.out.println("value = " + value);
+        boolean result =  businessRegistrationAPI.isValid(value);
+        message.put("status", result);
         return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap()), HttpStatus.OK);
     }
 }
