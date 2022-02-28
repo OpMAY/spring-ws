@@ -445,7 +445,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="chat-item odd clearfix pb-2 pt-2">
+                            <%--<li class="chat-item odd clearfix pb-2 pt-2">
                                 <div class="chat-item-wrapper d-flex">
                                     <div class="mr-2 chat-content">
                                         <div class="text-wrap position-relative">
@@ -467,7 +467,7 @@
                                     <div class="file-item-wrapper p-0">
                                         <div class="row align-items-center">
                                             <div class="col-auto w-100">
-                                                <%-- 1. The <iframe> (and video player) will replace this <div> tag. --%>
+                                                &lt;%&ndash; 1. The <iframe> (and video player) will replace this <div> tag. &ndash;%&gt;
                                                 <div class="player"></div>
                                             </div>
                                         </div>
@@ -496,13 +496,13 @@
                                     <div class="file-item-wrapper p-0">
                                         <div class="row align-items-center">
                                             <div class="col-auto w-100">
-                                                <%-- 1. The <iframe> (and video player) will replace this <div> tag. --%>
+                                                &lt;%&ndash; 1. The <iframe> (and video player) will replace this <div> tag. &ndash;%&gt;
                                                 <div class="player"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </li>
+                            </li>--%>
                         </ul>
                         <%-- Textarea Container --%>
                         <div>
@@ -512,7 +512,8 @@
                                         amet.</label>
                                     <textarea rows="3" id="chat-keyboard" class="form-control"></textarea>
                                 </div>
-                                <button type="submit" class="btn btn-primary my-auto ml-3">Submit</button>
+                                <button type="button" class="btn btn-primary my-auto ml-3" onclick="sendTextMessage();">Submit</button>
+                                <button type="button" class="btn btn-primary my-auto ml-3" onclick="disconnect();">Disconnet</button>
                             </div>
                             <div class="mt-2">
                                 <i data-type="general" class="icon-file fa-solid fa-file-arrow-up fa-2x mr-2 point"></i>
@@ -569,10 +570,8 @@
 
 <!-- custom chat-->
 <script src="../../resources/js/chat/chat.js"></script>
-<%--<script src="/webjars/sockjs-client/sockjs.min.js"></script>--%>
-<%--<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>--%>
 <script src="../../resources/js/stomp.js"></script>
-<script src="../../resources/js/sockjs.js"></script>
+<script src="../../resources/js/chat/template.js"></script>
 
 <!-- font-awesome -->
 <script src="https://kit.fontawesome.com/d529fb2138.js" crossorigin="anonymous"></script>
@@ -585,6 +584,12 @@
 -->
 <script>
     let client = null;
+    const id = new Date().getTime();
+    const chat_container = $('.chat-list-wrapper');
+    const user_info = {
+        username: 'tester',
+        role: 'dev'
+    };
 
     /** Document Ready*/
     $(document).ready(function () {
@@ -606,16 +611,16 @@
         icon_files.forEach((e) => {
             e.addEventListener('click', fileUpload);
         });
-        let youtube = document.querySelector('.youtube');
+        /*let youtube = document.querySelector('.youtube');
         let youtube_link = document.querySelector('.link-input-wrapper');
         youtube_link.addEventListener('click', (e) => {
             e.stopPropagation();
         });
         let youtube_link_input = document.querySelector('#youtube-link-input');
         $(youtube_link_input).bind('change keyup input', (e) => {
-            if (e.keyCode == 13) {
+            if (e.keyCode === 13) {
                 console.log('input youtube link');
-                /**chat youtube item create*/
+                /!**chat youtube item create*!/
                 let container = $('.chat-list-wrapper');
                 let chat = {
                     username: 'Kimwoosik',
@@ -638,42 +643,79 @@
             $('.link-input-wrapper').toggle(100, 'linear', (e) => {
                 console.log('toggle after');
             });
-        });
+        });*/
         /** Add File Upload Listener End*/
-        connect();
+
+        if ('${param.no eq null}' === 'true') {
+            alert('방 번호가 없습니다.');
+        } else {
+            connect();
+        }
+        scrollToBottom();
     });
 
     function connect() {
-        // 웹소켓 주소
-        let wsUri = "/stomp";
+        let wsUri = "ws://localhost:8080/stomp"; // stomp endpoint
         console.log('connecting to ', wsUri);
-        client = Stomp.over(new SockJS(wsUri));
-
-        client.connect({}, () => {
-            console.log('connect stomp');
-            client.subscribe('/topic/message', (event) => {
-                console.log(event);
-                console.log('message: ', JSON.parse(event.body).message);
-            });
-        });
+        client = Stomp.client(wsUri);
+        client.connect({}, connectCallback, errorCallback);
     }
+
+    const connectCallback = () => {
+        console.log('connect stomp');
+        client.subscribe('/topic/message/${param.no}', onmessage);
+    };
+    const errorCallback = () => {
+        console.log('connetion failed');
+    };
+
+    const onmessage = (event) => {
+        const content = JSON.parse(event.body);
+        content.self = content.id === id;
+        const messageHtml = getMessageHtmlByContentType(content);
+        document.getElementById('temp')?.remove(); // 파일 업로드용 임시 메세지가 있는 경우 지워주기
+        chat_container.append(messageHtml);
+        scrollToBottom();
+    };
+
+    function getMessageHtmlByContentType(content) {
+        if (content.type === 'text') {
+            return getTextMessage(content);
+        } else if (content.type === 'file') {
+            return getFileMessage(content);
+        }
+    }
+
+    function getTimestamp() {
+        return new Date().toLocaleString();
+    }
+
+    const disconnectCallback = () => {
+        console.log("Disconnected");
+    };
 
     function disconnect() {
         if (client !== null) {
-            client.disconnect();
+            client.disconnect(disconnectCallback);
             client = null;
         }
-        console.log("Disconnected");
     }
 
-    function sendMessage() {
+    function sendTextMessage() {
         if (client === null) {
             alert('연결되지 않음');
             return;
         }
-        const message = document.querySelector('#message').value;
-        const data = {message};
-        client.send('/test', {}, JSON.stringify(data));
+        const input_elem = document.querySelector('#chat-keyboard');
+        const text = input_elem.value;
+        const message = new Message(text);
+        message.type = 'text';
+        client.send('/test/${param.no}', {}, JSON.stringify(message));
+        input_elem.value = '';
+    }
+
+    function scrollToBottom() {
+        chat_container.scrollTop(chat_container[0].scrollHeight);
     }
 
     function fileUpload() {
@@ -688,36 +730,83 @@
     }
 
     function readImage(input) {
-        let container = $('.chat-list-wrapper');
         // 인풋 태그에 파일이 있는 경우
         if (input.files && input.files[0]) {
             // 이미지 파일인지 검사 (생략)
             // FileReader 인스턴스 생성
+            const file = input.files[0];
+            makeTempFileHtml(file);
             const reader = new FileReader()
             // 이미지가 로드가 된 경우
             reader.onload = e => {
                 console.log('readImage onload');
             }
-            reader.onloadend = e => {
-                console.log(e);
+            reader.onloadend = async (e) => {
                 /**chat file item create*/
-                let chat = {
-                    username: 'Kimwoosik',
-                    message: 'Donec tortor augue, mattis porttitor elementum dapibus, porta sed ante.',
-                    timestamp: '2022-02-25 11:45 AM',
-                    role: 'Developer',
-                    file: {
-                        type: 'ZIP',
-                        name: 'file.zip',
-                        size: '2.5 MB'
-                    }
+                try {
+                    const file_info = await uploadFileToServer(file);
+                    sendFileMessage(file_info);
+                } catch (e) {
+                    console.error(e);
                 }
-                container.append(appendChatRightItem(chat));
-                container.append(appendChatLeftItem(chat));
             }
             // reader가 이미지 읽도록 하기
-            reader.readAsDataURL(input.files[0])
+            reader.readAsDataURL(input.files[0]);
         }
+    }
+
+    function makeTempFileHtml(file) {
+        const message = new Message();
+        message.type = 'file';
+        const file_info = {
+            type: file.type,
+            // name: file.name,
+            name: 'loading...',
+            size: file.size
+        }
+        message.file = file_info;
+        message.self = true;
+        message.temp = true;
+        const temp_html = getMessageHtmlByContentType(message); // temp message
+        chat_container.append(temp_html);
+        scrollToBottom();
+    }
+
+    async function uploadFileToServer(file) {
+        try {
+            const formData = new FormData();
+            formData.append('mfile', file);
+            const options = {
+                method: "POST",
+                body: formData
+            };
+            const result = await fetch('/wsfile', options).then(res => res.json());
+            console.log(result);
+            return result.data.file;
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    function sendFileMessage(file_info) {
+        let message = new Message();
+        message.file = file_info;
+        message.type = 'file';
+        console.log(message);
+        client.send('/test/${param.no}', {}, JSON.stringify(message));
+    }
+
+    function parseFileSize(size) {
+        let file_size = size / 1024 / 1024;
+        if (file_size < 1) {
+            file_size *= 1024;
+            file_size = Math.ceil(file_size);
+            file_size += 'KB';
+        } else {
+            file_size = Math.ceil(file_size);
+            file_size += 'MB';
+        }
+        return file_size;
     }
 
     /**
@@ -733,182 +822,6 @@
         });
     }
 
-    /**
-     * @dates 2022.02.25
-     * @author kimwoosik
-     * @description right chat item create
-     * @param {object} chat
-     * @return {element} Chat Item
-     */
-
-    function appendChatRightItem(chat) {
-        return `<li class="chat-item odd clearfix pb-2 pt-2">
-                    <div class="chat-item-wrapper d-flex">
-                        <div class="mr-2 chat-content">
-                            <div class="text-wrap position-relative">
-                                <i class="font-weight-bold">\${chat.username} <span class="text-primary">[\${chat.role}]</span></i>
-                                <p>\${chat.message}</p>
-                                <i class="position-absolute" style="top: 0; right: 0;">\${chat.timestamp}</i>
-                            </div>
-                        </div>
-                        <div class="chat-avatar">
-                            <img width="60" height="60" src="../../resources/assets/images/users/user-2.jpg"
-                                 alt="\${chat.username}"
-                                 class="rounded">
-                        </div>
-                    </div>
-                    <div class="file-item card mt-2 mb-2 border text-left d-inline-block">
-                        <div class="file-item-wrapper p-2">
-                            <div class="row align-items-center">
-                                <div class="col-auto">
-                                    <div class="type">
-                                        <span class="avatar-title bg-secondary rounded text-white p-1 text-uppercase">\${chat.file.type}</span>
-                                    </div>
-                                </div>
-                                <div class="col ps-0">
-                                    <a href="javascript:void(0);"
-                                       class="text-muted fw-bold">\${chat.file.name}</a>
-                                    <p class="mb-0">\${chat.file.size}</p>
-                                </div>
-                                <div class="col-auto">
-                                    <%-- Button --%>
-                                    <a href="javascript:void(0);"
-                                       class="btn btn-link btn-lg text-muted">
-                                        <i class="fa-solid fa-file-arrow-down"></i>
-                                    </a>
-                                    <%-- /Button --%>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>`;
-    }
-
-    /**
-     * @dates 2022.02.25
-     * @author kimwoosik
-     * @description left chat item create
-     * @param {object} chat
-     * @return {element} Chat Item
-     */
-    function appendChatLeftItem(chat) {
-        return `<li class="chat-item clearfix pb-2 pt-2">
-                    <div class="chat-item-wrapper d-flex">
-                        <div class="chat-avatar">
-                            <img width="60" height="60" src="../../resources/assets/images/users/user-2.jpg"
-                                 alt="\${chat.username}"
-                                 class="rounded">
-                        </div>
-                        <div class="chat-content ml-2">
-                            <div class="text-wrap position-relative">
-                                <i class="font-weight-bold">\${chat.username} <span class="text-primary">[\${chat.role}]</span></i>
-                                <p>\${chat.message}</p>
-                                <i class="position-absolute" style="top: 0; right: 0;">\${chat.timestamp}</i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="file-item card mt-2 mb-2 border text-left d-inline-block"
-                         style="margin-left: 68px;">
-                        <div class="file-item-wrapper p-2">
-                            <div class="row align-items-center">
-                                <div class="col-auto">
-                                    <div class="type">
-                                        <span class="avatar-title bg-secondary rounded text-white p-1 text-uppercase">\${chat.file.type}</span>
-                                    </div>
-                                </div>
-                                <div class="col ps-0">
-                                    <a href="javascript:void(0);"
-                                       class="text-muted fw-bold">\${chat.file.name}</a>
-                                    <p class="mb-0">\${chat.file.size}</p>
-                                </div>
-                                <div class="col-auto">
-                                    <%-- Button --%>
-                                    <a href="javascript:void(0);"
-                                       class="btn btn-link btn-lg text-muted">
-                                        <i class="fa-solid fa-file-arrow-down"></i>
-                                    </a>
-                                    <%-- /Button --%>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>`;
-    }
-
-    /**
-     * @dates 2022.02.25
-     * @author kimwoosik
-     * @description left chat video item create
-     * @param {object} chat
-     * @return {element} Chat Item
-     */
-    function appendChatYoutubeLeftItem(chat) {
-        return `<li class="chat-item clearfix pb-2 pt-2">
-                    <div class="chat-item-wrapper d-flex">
-                        <div class="chat-avatar">
-                            <img width="60" height="60" src="../../resources/assets/images/users/user-2.jpg"
-                                 alt="\${chat.username}"
-                                 class="rounded">
-                        </div>
-                        <div class="chat-content ml-2">
-                            <div class="text-wrap position-relative">
-                                <i class="font-weight-bold">\${chat.username} <span class="text-primary">[\${chat.role}]</span></i>
-                                <p>\${chat.message}</p>
-                                <i class="position-absolute" style="top: 0; right: 0;">\${chat.timestamp}</i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="youtube-item card mt-2 mb-2 border-0 text-left d-inline-block w-100">
-                        <div class="file-item-wrapper p-0">
-                            <div class="row align-items-center">
-                                <div class="col-auto w-100">
-                                    <%-- 1. The <iframe> (and video player) will replace this <div> tag. --%>
-                                    <div class="player" data-id="\${chat.video.id}"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>`;
-    }
-
-    /**
-     * @dates 2022.02.25
-     * @author kimwoosik
-     * @description right chat video item create
-     * @param {object} chat
-     * @return {element} Chat Item
-     */
-    function appendChatYoutubeRightItem(chat) {
-        return `<li class="chat-item odd clearfix pb-2 pt-2">
-                    <div class="chat-item-wrapper d-flex">
-                        <div class="mr-2 chat-content">
-                            <div class="text-wrap position-relative">
-                                <i class="font-weight-bold">readable content <span class="text-secondary">[Video Editor]</span></i>
-                                <p style="min-width: 500px;">Donec tortor augue, mattis porttitor elementum
-                                    dapibus, porta sed
-                                    ante.</p>
-                                <i class="position-absolute" style="top: 0; right: 0;">2022-02-25 11:45
-                                    AM</i>
-                            </div>
-                        </div>
-                        <div class="chat-avatar">
-                            <img width="60" height="60" src="../../resources/assets/images/users/user-2.jpg"
-                                 alt="James Z"
-                                 class="rounded">
-                        </div>
-                    </div>
-                    <div class="youtube-item card mt-2 mb-2 border-0 text-left d-inline-block w-100">
-                        <div class="file-item-wrapper p-0">
-                            <div class="row align-items-center">
-                                <div class="col-auto w-100">
-                                    <%-- 1. The <iframe> (and video player) will replace this <div> tag. --%>
-                                    <div class="player" data-id="\${chat.video.id}"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>`;
-    }
 
     /**
      * @dates 2022.02.25
@@ -935,6 +848,16 @@
             });
             player_elems.push(player);
         });
+    }
+
+    class Message {
+        constructor(message) {
+            this.id = id;
+            this.username = user_info.username;
+            this.role = user_info.role;
+            this.message = message;
+            this.timestamp = getTimestamp();
+        }
     }
 </script>
 <script>

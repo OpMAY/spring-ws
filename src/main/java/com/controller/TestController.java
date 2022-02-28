@@ -278,9 +278,4 @@ public class TestController {
         message.put("status", true);
         return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap()), HttpStatus.OK);
     }
-
-    @GetMapping("/chat")
-    public ModelAndView chatTest() {
-        return new ModelAndView("socket");
-    }
 }
