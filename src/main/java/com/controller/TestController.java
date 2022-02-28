@@ -306,6 +306,7 @@ public class TestController {
     @RequestMapping(value = "/upload/bulk", method = RequestMethod.POST)
     public ModelAndView postBulkUpload(HttpServletRequest request) {
         log.info("postBulkUpload started");
+        long beforeTime = System.currentTimeMillis(); //코드 실행 전에 시간 받아오기
         try {
             boolean isMultipart = ServletFileUpload.isMultipartContent(request);
             if (!isMultipart) {
@@ -337,6 +338,9 @@ public class TestController {
                     log.info("formFieldValue : " + formFieldValue);
                 }
             }
+            long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
+            long secDiffTime = (afterTime - beforeTime)/1000; //두 시간에 차 계산
+            System.out.println("시간차이(m) : "+secDiffTime);
         } catch (FileUploadException e) {
             e.printStackTrace();
             log.info("postBulkUpload end");
