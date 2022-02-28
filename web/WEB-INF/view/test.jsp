@@ -73,8 +73,22 @@
         <button type="button" onclick="addCookie();">브라우저 삽입</button>
         <button type="button" onclick="getDecryptedCookie();">쿠키정보보기</button>
     </section>
+    <h1>대용량 파일 업로드</h1>
+    <form action="/upload/bulk" method="post" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="text" name="test" value="test">
+        <button type="submit">대용량 파일 업로드</button>
+    </form>
+
+    <section>
+        <label for="registration-no">사업자 등록번호 인증</label>
+        <input type="text" placeholder="사업자 등록번호" id="registration-no">
+        <button onclick="checkBusinessRegistration()">조회하기</button>
+    </section>
 </main>
 
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+        crossorigin="anonymous"></script>
 <script src="/resources/js/cookie.js"></script>
 <script>
 
@@ -206,6 +220,29 @@
         };
         const result = await fetch('/decrypt.do', options).then(res => res.json()).then(res => res.data.result);
         alert(result);
+    }
+
+    function checkBusinessRegistration() {
+        const value = document.querySelector('#registration-no').value;
+        const data = {
+            value
+        }
+        const options = {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json;'
+            },
+            body: JSON.stringify(data)
+        };
+        fetch('/business-registration', options)
+            .then(res => res.json())
+            .then(res => {
+                if (res.data.status) {
+                    alert('사업자 인증 성공');
+                } else {
+                    alert('사업자 인증 실패');
+                }
+            });
     }
 </script>
 </body>
