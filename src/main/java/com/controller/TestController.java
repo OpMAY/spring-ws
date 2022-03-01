@@ -3,6 +3,7 @@ package com.controller;
 import com.api.instagram.InstagramAPI;
 import com.api.lunarsoft.alarm.LunarAlarmAPI;
 import com.api.mail.MailBuilder;
+import com.exception.enums.BusinessExceptionType;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.model.SplitFileData;
@@ -12,11 +13,11 @@ import com.response.DefaultRes;
 import com.response.Message;
 import com.response.ResMessage;
 import com.response.StatusCode;
+import com.service.BulkFileService;
 import com.service.HomeService;
 import com.service.OtherHomeService;
-import com.util.Constant;
+import com.util.*;
 import com.util.Encryption.EncryptionService;
-import com.util.FileUploadUtility;
 import jdk.nashorn.internal.objects.NativeArrayBuffer;
 import jdk.nashorn.internal.objects.NativeUint8Array;
 import lombok.Data;
@@ -29,6 +30,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.Buffer;
 import java.nio.charset.Charset;
@@ -304,129 +307,38 @@ public class TestController {
         return new ModelAndView("socket");
     }
 
+    @Autowired
+    private HashMap<String, PriorityQueue<SplitFileData>> splitFileStorage;
+    @Autowired
+    private BulkFileService bulkFileService;
     @Value("${PATH}")
     private String path;
-
-    @RequestMapping(value = "/upload/bulk", method = RequestMethod.POST)
-    public ModelAndView postBulkUpload(HttpServletRequest request) {
-        log.info("postBulkUpload started");
-        long beforeTime = System.currentTimeMillis(); //코드 실행 전에 시간 받아오기
-        try {
-            boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-            if (!isMultipart) {
-                // Inform user about invalid request
-                log.info("is'nt Multipart File");
-                return new ModelAndView("test");
-            }
-
-            // Create a new file upload handler
-            ServletFileUpload upload = new ServletFileUpload();
-
-            // Parse the request
-            FileItemIterator iter = upload.getItemIterator(request);
-            log.info(iter.toString());
-            while (iter.hasNext()) {
-                FileItemStream item = iter.next();
-                String name = item.getFieldName();
-                InputStream stream = item.openStream();
-                if (!item.isFormField()) {
-                    String filename = item.getName();
-                    // Process the input stream
-                    log.info("filename : " + filename);
-                    OutputStream out = new FileOutputStream(path + filename);
-                    IOUtils.copy(stream, out);
-                    stream.close();
-                    out.close();
-                } else {
-                    String formFieldValue = Streams.asString(stream);
-                    log.info("formFieldValue : " + formFieldValue);
-                }
-            }
-            long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
-            long secDiffTime = (afterTime - beforeTime) / 1000; //두 시간에 차 계산
-            System.out.println("시간차이(m) : " + secDiffTime);
-        } catch (FileUploadException e) {
-            e.printStackTrace();
-            log.info("postBulkUpload end");
-        } catch (IOException e) {
-            e.printStackTrace();
-            log.info("postBulkUpload end");
-        }
-        log.info("postBulkUpload end");
-        return new ModelAndView("test");
-    }
-
-    @RequestMapping(value = "/upload/bulk", method = RequestMethod.GET)
-    public ModelAndView getBulkUpload() {
-        return new ModelAndView("test");
-    }
-
-    @GetMapping("/upload/general")
-    public ModelAndView getGeneralUpload() {
-        return new ModelAndView("test");
-    }
-
-    @PostMapping("/upload/general")
-    public ModelAndView postGeneralUpload(MultipartFile file) {
-        long beforeTime = System.currentTimeMillis(); //코드 실행 전에 시간 받아오기
-        log.info(this.path + file.getOriginalFilename());
-        try {
-            InputStream input = file.getInputStream();
-            Path path = Paths.get(this.path + file.getOriginalFilename());//check path
-            OutputStream output = Files.newOutputStream(path);
-            IOUtils.copy(input, output); //org.apache.commons.io.IOUtils or you can create IOUtils.copy
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
-            long secDiffTime = (afterTime - beforeTime); //두 시간에 차 계산
-            System.out.println("시간차이(m) : " + secDiffTime);
-        }
-        return new ModelAndView("test");
-    }
+    private FileOutputStream fos = null;
 
     @GetMapping("/upload/split/general")
     public ModelAndView getBulkSplitUpload() {
         return new ModelAndView("split_file");
     }
 
-    @Autowired
-    private HashMap<String, ArrayList<SplitFileData>> splitFileStorage;
-
     @ResponseBody
     @RequestMapping(value = "/upload/split/general", method = RequestMethod.POST)
-    public ResponseEntity<String> splitFileUpload(SplitFileData split) throws JSONException {
-        log.info("{}", split.toString());
-        if (split.isEof()) {
-            long beforeTime = System.currentTimeMillis(); //코드 실행 전에 시간 받아오기
-            ArrayList<SplitFileData> splitFileDatas = splitFileStorage.get(split.getFilename());
-            Collections.sort(splitFileDatas);
-            String base64Str = "";
-            for (SplitFileData splitFileData : splitFileDatas) {
-                base64Str += splitFileData.getData();
-                log.info("{}", splitFileData.getIndex());
-            }
-            base64Str = base64Str.trim().replaceAll(" ", "");
-            byte[] bytes = Base64.getDecoder().decode(base64Str);
-            try {
-                FileUtils.writeByteArrayToFile(new File(path + split.getFilename()), bytes);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                splitFileStorage.remove(split.getFilename());
-                long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
-                long secDiffTime = (afterTime - beforeTime) / 1000; //두 시간에 차 계산
-                System.out.println("시간차이(m) : " + secDiffTime);
+    public ResponseEntity<String> splitFileUpload(SplitFileData split) throws JSONException, IOException {
+        log.info(split.toString());
+        if (!split.isEof()) {
+            if (splitFileStorage.get(split.getFilename()) != null) {
+                splitFileStorage.get(split.getFilename()).add(split);
+                if (splitFileStorage.get(split.getFilename()).size() >= 30) {
+                    /*TODO DB 저장 추가로 진행*/
+                    runQueueSystem(split);
+                }
+            } else {
+                PriorityQueue<SplitFileData> priorityQueue = new PriorityQueue<>();
+                priorityQueue.add(split);
+                splitFileStorage.put(split.getFilename(), priorityQueue);
             }
         } else {
-            if (splitFileStorage.get(split.getFilename()) == null) {
-                ArrayList<SplitFileData> hashMapFileDatas = new ArrayList<>();
-                hashMapFileDatas.add(split);
-                splitFileStorage.put(split.getFilename(), hashMapFileDatas);
-            } else {
-                splitFileStorage.get(split.getFilename()).add(split);
-                splitFileStorage.put(split.getFilename(), splitFileStorage.get(split.getFilename()));
-            }
+            /*TODO DB 저장 추가로 진행*/
+            runQueueSystem(split);
         }
         Message message = new Message();
         return new ResponseEntity(
@@ -435,33 +347,56 @@ public class TestController {
                 ), HttpStatus.OK
         );
     }
-    /*@RequestMapping(value = "/upload/split/general", method = RequestMethod.POST)
-    public ResponseEntity<String> splitFileUpload(SplitFileData split) throws JSONException {
-        if (split.isEof()) {
-            Message message = new Message();
-            message.put("message", "success file");
-            return new ResponseEntity(
-                    DefaultRes.res(
-                            StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap("ajax")
-                    ), HttpStatus.OK
-            );
-        } else {
-            if (splitFileStorage.get(split.getFilename()) == null) {
-                ArrayList<SplitFileData> hashMapFileDatas = new ArrayList<>();
-                hashMapFileDatas.add(split);
-                splitFileStorage.put(split.getFilename(), hashMapFileDatas);
-            } else {
-                log.info(split.toString());
-                splitFileStorage.get(split.getFilename()).add(split);
-                splitFileStorage.put(split.getFilename(), splitFileStorage.get(split.getFilename()));
-            }
-            Message message = new Message();
-            message.put("message", "success file");
-            return new ResponseEntity(
-                    DefaultRes.res(
-                            StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap("ajax")
-                    ), HttpStatus.OK
-            );
+
+    public void runQueueSystem(SplitFileData split) throws IOException {
+        if (fos != null) {
+            fos.close();
         }
-    }*/
+        PriorityQueue<SplitFileData> queue = splitFileStorage.get(split.getFilename());
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject = null;
+        try {
+            while (!queue.isEmpty()) {
+                SplitFileData temp = queue.poll();
+                String file_name = split.getFilename().substring(0, temp.getFilename().lastIndexOf(".")) + "_" + TokenGenerator.RandomIntegerToken(4) + "_b" + temp.getIndex() + ".blob";
+                fos = new FileOutputStream(path + file_name);
+                fos.write(temp.getFile_data());
+                jsonObject = new JSONObject();
+                jsonObject.put("index", temp.getIndex());
+                jsonObject.put("file_name", file_name);
+                jsonObject.put("file_type", temp.getFile_type());
+                jsonArray.put(jsonObject);
+                splitFileStorage.remove(split.getFilename());
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            fos.close();
+        } finally {
+            log.info(jsonArray.toString());
+            fos.close();
+            splitFileStorage.remove(split.getFilename());
+        }
+    }
+
+    @GetMapping("/upload/split/download")
+    public void download(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        File file = new File(path + request.getAttribute("file"));
+        HashMap<String, Object> properties = new HashMap<>();
+        properties.put("Content-Disposition", "attachment;filename=" + file.getName());
+        if (new DownloadBuilder().init(rd esponse, true)
+                .file(file)
+                .setResponseProperty(properties).filePush()) {
+            /** File download success after process*/
+        }
+    }
+
+    @GetMapping("/upload/split/bulk/download")
+    public void bulkDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        HashMap<String, Object> properties = new HashMap<>();
+        if (new DownloadBuilder().init(response, true)
+                .file(null)
+                .setResponseProperty(properties).bulkPush()) {
+            /** File download success after process*/
+        }
+    }
 }

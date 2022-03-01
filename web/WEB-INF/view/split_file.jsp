@@ -18,6 +18,8 @@
     <form id="my-form">
         <input type="file" id="file-input"/>
     </form>
+    <span id="progress"></span>
+    <button type="button" onclick="start_upload();">전송</button>
 </div>
 <!-- Optional JavaScript; choose one of the two! -->
 
@@ -37,7 +39,117 @@
 -->
 </body>
 <script>
-    let fileInput = undefined;
+    let reader = {};
+    let file = {};
+    let slice_size = 1024 * 1024 * 8;
+    let next_slice;
+    let blob;
+    let index;
+    let payload;
+    let size_done;
+    let percent_done;
+
+    function start_upload() {
+        reader = new FileReader();
+        file = document.querySelector('#file-input').files[0];
+        upload_file(0);
+    }
+
+    function upload_file(start) {
+        next_slice = start + slice_size + 1;
+        blob = file.slice(start, next_slice);
+        reader.onloadend = function (event) {
+            if (event.target.readyState !== FileReader.DONE) {
+                new Error('File upload does not file type or empty file input')
+                return;
+            }
+            index = Math.floor(start / slice_size);
+            payload = {
+                eof: false,
+                file_data: event.target.result,
+                filename: file.name,
+                file_type: file.type,
+                index: index
+            }
+            console.log(payload.filename, payload.index, payload.file_type);
+            $.ajax({
+                url: '/upload/split/general',
+                type: 'POST',
+                dataType: 'json',
+                cache: false,
+                data: payload,
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR, textStatus, errorThrown);
+                },
+                success: function (data) {
+                    size_done = start + slice_size;
+                    percent_done = Math.floor((size_done / file.size) * 100);
+                    if (next_slice < file.size) {
+                        // Update upload progress
+                        $('#progress').html(`Uploading File -  \${percent_done}%`);
+                        // More to upload, call function recursively
+                        upload_file(next_slice);
+                    } else {
+                        payload = {
+                            eof: true,
+                            filename: file.name,
+                            file_type: file.type,
+                        };
+                        console.log(payload);
+                        $.ajax({
+                            url: '/upload/split/general',
+                            type: 'POST',
+                            dataType: 'json',
+                            cache: false,
+                            data: payload,
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                console.log(jqXHR, textStatus, errorThrown);
+                            },
+                            success: function (data) {
+                                // Update upload progress
+                                $('#progress').html('Upload Complete!');
+                            }
+                        });
+                    }
+                }
+            });
+        };
+        reader.readAsDataURL(blob);
+    }
+
+    /*function startForm() {
+        console.log('startForm');
+        let fileInput = document
+            .getElementById('file-input')
+            .files[0];
+        // begin upload process
+
+        let chunks = sliceFile(fileInput, 10);
+        chunks.forEach((chunk, index) => {
+
+        });
+        console.log('startForm End');
+    }*/
+
+    /*/!**
+     * @param {File|Blob} - file to slice
+     * @param {Number} - chunksAmount
+     * @return {Array} - an array of Blobs
+     **!/
+    function sliceFile(file, chunksAmount) {
+        var byteIndex = 0;
+        var chunks = [];
+        for (var i = 0; i < chunksAmount; i += 1) {
+            var byteEnd = Math.ceil((file.size / chunksAmount) * (i + 1));
+            chunks.push(file.slice(byteIndex, byteEnd));
+            console.log(byteIndex, byteEnd);
+            byteIndex += (byteEnd - byteIndex);
+        }
+        console.log(chunks);
+        return chunks;
+    }*/
+
+    /*let fileInput = undefined;
 
     var chunk_size = 1024 * 1024 * 1;
     var reader = new FileReader();
@@ -96,6 +208,6 @@
         // chunk and read file data
         var chunk = file.slice(offset, offset + range);
         reader.readAsDataURL(chunk);
-    }
+    }*/
 </script>
 </html>

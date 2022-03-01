@@ -116,9 +116,9 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
     }
 
     @Bean
-    public synchronized HashMap<String, ArrayList<SplitFileData>> splitFileStorage() {
+    public synchronized HashMap<String, PriorityQueue<SplitFileData>> splitFileStorage() {
         log.info("SplitFileStorage initialized");
-        return new HashMap<String, ArrayList<SplitFileData>>();
+        return new HashMap<String, PriorityQueue<SplitFileData>>();
     }
 
     @Bean // view resolver

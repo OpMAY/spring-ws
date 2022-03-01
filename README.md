@@ -64,6 +64,18 @@
  - Front에서 하던 Cookie 암호화 작업을 Server에서 하도록 하였습니다.
  - `/encrypt.do`, `/decrypt.do` 컨트롤러에서 REST API 형식으로 암/복호화를 할 수 있습니다.
 
+####10. Bulk File Upload
+ - 대용량 파일 업로드가 가능해졋습니다. `TestController.class 의 splitFileUploadTest function 등 참조` (1GB 이상 서버 과부하 분산)
+ - https://tomcat.apache.org/tomcat-5.5-doc/config/http.html (maxPostSize, maxSavePostSize를 참조해주세요.)
+ - Chunk와 Payload에 대한 지식이 있어야합니다.
+ - 현재 Bulk File Upload는 테스트를 해야하는 코드입니다.
+ - Bulk File Upload는 `AppConfig.class 의 splitFileStorage.bean` 와 같이 사용됩니다.
+ - 11GB 기준 Local 10분입니다.
+ - 데이터 저장 방식에 대한 고민이 필요합니다.
+ - javascript out of memory 문제를 해결했습니다.
+ - java out of memory 문제를 해결했습니다.
+ - 중간에 취소, 네트워크 이상 및 기타 오류에서 업로드를 보장할 수 없습니다.
+ - End Data가 DB에 넣어져야 합니다. (업로드 보장성 추가)
 ##Database Init
 ```
 CREATE DATABASE  IF NOT EXISTS `flowtest` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
