@@ -46,6 +46,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -314,6 +315,8 @@ public class TestController {
     @Value("${PATH}")
     private String path;
     private FileOutputStream fos = null;
+    private StringBuilder stringBuilder;
+    private String mime_type;
 
     @GetMapping("/upload/split/general")
     public ModelAndView getBulkSplitUpload() {
@@ -323,18 +326,29 @@ public class TestController {
     @ResponseBody
     @RequestMapping(value = "/upload/split/general", method = RequestMethod.POST)
     public ResponseEntity<String> splitFileUpload(SplitFileData split) throws JSONException, IOException {
-        log.info(split.toString());
         if (!split.isEof()) {
             if (splitFileStorage.get(split.getFilename()) != null) {
+                stringBuilder = new StringBuilder(new String(split.getFile_data()).trim());
+                split.setMime_type(stringBuilder.substring(5, stringBuilder.indexOf("base64,")));
+                log.info(stringBuilder.substring(0, 50));
+                stringBuilder.delete(0, stringBuilder.indexOf("base64,") + 7);
+                log.info(stringBuilder.substring(0, 50));
+                split.setFile_data(String.valueOf(stringBuilder).getBytes());
                 splitFileStorage.get(split.getFilename()).add(split);
                 if (splitFileStorage.get(split.getFilename()).size() >= 30) {
                     /*TODO DB 저장 추가로 진행*/
                     runQueueSystem(split);
                 }
+                stringBuilder.setLength(0);
             } else {
                 PriorityQueue<SplitFileData> priorityQueue = new PriorityQueue<>();
+                stringBuilder = new StringBuilder(new String(split.getFile_data()).trim());
+                split.setMime_type(stringBuilder.substring(5, stringBuilder.indexOf("base64,")));
+                stringBuilder.delete(0, stringBuilder.indexOf("base64,") + 7);
+                split.setFile_data(String.valueOf(stringBuilder).getBytes());
                 priorityQueue.add(split);
                 splitFileStorage.put(split.getFilename(), priorityQueue);
+                stringBuilder.setLength(0);
             }
         } else {
             /*TODO DB 저장 추가로 진행*/
@@ -365,8 +379,10 @@ public class TestController {
                 jsonObject.put("index", temp.getIndex());
                 jsonObject.put("file_name", file_name);
                 jsonObject.put("file_type", temp.getFile_type());
+                jsonObject.put("mime_type", temp.getMime_type());
                 jsonArray.put(jsonObject);
                 splitFileStorage.remove(split.getFilename());
+                fos.close();
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -380,10 +396,10 @@ public class TestController {
 
     @GetMapping("/upload/split/download")
     public void download(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        File file = new File(path + request.getAttribute("file"));
+        File file = new File(path + request.getParameter("file"));
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("Content-Disposition", "attachment;filename=" + file.getName());
-        if (new DownloadBuilder().init(rd esponse, true)
+        if (new DownloadBuilder().init(response, true)
                 .file(file)
                 .setResponseProperty(properties).filePush()) {
             /** File download success after process*/
@@ -392,11 +408,6 @@ public class TestController {
 
     @GetMapping("/upload/split/bulk/download")
     public void bulkDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        HashMap<String, Object> properties = new HashMap<>();
-        if (new DownloadBuilder().init(response, true)
-                .file(null)
-                .setResponseProperty(properties).bulkPush()) {
-            /** File download success after process*/
-        }
+
     }
 }

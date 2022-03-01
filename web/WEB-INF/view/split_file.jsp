@@ -41,7 +41,7 @@
 <script>
     let reader = {};
     let file = {};
-    let slice_size = 1024 * 1024 * 8;
+    let slice_size = 1024 * 1024 * 10;
     let next_slice;
     let blob;
     let index;

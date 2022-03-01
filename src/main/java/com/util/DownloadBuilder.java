@@ -14,6 +14,7 @@ public class DownloadBuilder {
     private HttpServletResponse response;
     private FileInputStream fileInputStream;
     private ServletOutputStream fileOutputStream;
+    private byte[] byteStream;
     private boolean logging = true;
 
     public DownloadBuilder() {
@@ -33,15 +34,16 @@ public class DownloadBuilder {
         return this;
     }
 
+    public DownloadBuilder file(byte[] file) {
+        this.byteStream = file;
+        return this;
+    }
+
     public DownloadBuilder setResponseProperty(HashMap<String, Object> properties) {
         properties.forEach((key, value) -> {
             this.response.setHeader(key, String.valueOf(value));
         });
         return this;
-    }
-
-    public boolean bulkPush() {
-        return false;
     }
 
     public boolean filePush() throws IOException {

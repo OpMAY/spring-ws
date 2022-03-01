@@ -6,8 +6,8 @@ import lombok.Data;
 public class SplitFileData implements Comparable<SplitFileData> {
     private String filename;
     private int index;
-    private String data;
     private String file_type;
+    private String mime_type;
     private byte[] file_data;
     private boolean eof = false;
 
