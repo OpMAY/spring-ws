@@ -15,6 +15,11 @@
  - jsp 파일 상단에 `<%@ taglib prefix="tf" tagdir="/WEB-INF/tags" %>` 선언 후 사용시 `<tf:formatDatetime value="${user.reg_datetime}"/>` 와 같이 사용하시면 됩니다.
  - `formatDatetime.tag` 파일의 Default pattern을 지정하거나, 사용시에 pattern attribute를 추가하여 변경할 수 있습니다.
 
+#### 4. 사업자 등록증 인증 API
+ - 국세청 홈택스에서 제공하는 사업자 등록증 인증 API 모듈이 추가되었습니다.
+ - `BusinessRegistrationAPI.class` 에서 확인할 수 있습니다.
+ - 국세청 홈택스 페이지에서 서비스 키 발급 후 `key.properties` 파일에 `BUSINESS_REGISTRATION_KEY` 를 등록 후 사용가능합니다. 
+
 ##업데이트
 
 ####0.Build
@@ -65,7 +70,7 @@
  - `/encrypt.do`, `/decrypt.do` 컨트롤러에서 REST API 형식으로 암/복호화를 할 수 있습니다.
 
 ##Database Init
-```
+``` mysql
 CREATE DATABASE  IF NOT EXISTS `flowtest` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `flowtest`;
 -- MySQL dump 10.13  Distrib 8.0.23, for Win64 (x86_64)
