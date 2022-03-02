@@ -22,7 +22,13 @@ import com.util.*;
 import com.util.Encryption.EncryptionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -369,8 +375,6 @@ public class TestController {
     private HashMap<String, PriorityQueue<SplitFileData>> splitFileStorage;
     @Autowired
     private BulkFileService bulkFileService;
-    @Value("${PATH}")
-    private String path;
     private FileOutputStream fos = null;
     private StringBuilder stringBuilder;
     private String mime_type;
