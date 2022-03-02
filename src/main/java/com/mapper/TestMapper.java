@@ -24,4 +24,6 @@ public interface TestMapper {
     List<User> selectUsers();
 
     void insertUser(User user);
+
+    void insertFileBulk(SplitFileData split);
 }

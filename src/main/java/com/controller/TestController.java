@@ -8,25 +8,25 @@ import com.api.lunarsoft.alarm.LunarAlarmAPI;
 import com.api.mail.MailBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.model.SplitFileData;
 import com.model.User;
 import com.model.common.MFile;
 import com.response.DefaultRes;
 import com.response.Message;
 import com.response.ResMessage;
 import com.response.StatusCode;
+import com.service.BulkFileService;
 import com.service.HomeService;
 import com.service.OtherHomeService;
-import com.util.Constant;
+import com.util.*;
 import com.util.Encryption.EncryptionService;
-import com.util.FileUploadUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.fileupload.FileItemIterator;
-import org.apache.commons.fileupload.FileItemStream;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.fileupload.util.Streams;
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -37,11 +37,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -362,5 +363,143 @@ public class TestController {
 
         message.put("status", valid);
         return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap()), HttpStatus.OK);
+    }
+
+    @Autowired
+    private HashMap<String, PriorityQueue<SplitFileData>> splitFileStorage;
+    @Autowired
+    private BulkFileService bulkFileService;
+    @Value("${PATH}")
+    private String path;
+    private FileOutputStream fos = null;
+    private StringBuilder stringBuilder;
+    private String mime_type;
+
+    @GetMapping("/upload/split/general")
+    public ModelAndView getBulkSplitUpload() {
+        return new ModelAndView("split_file");
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/upload/split/general", method = RequestMethod.POST)
+    public ResponseEntity<String> splitFileUpload(SplitFileData split) throws JSONException, IOException {
+        log.info("{}", split.getOrder_index());
+        if (!split.isEof()) {
+            if (splitFileStorage.get(split.getFile_name()) != null) {
+                stringBuilder = new StringBuilder(new String(split.getFile_data()).trim());
+                split.setMime_type(stringBuilder.substring(5, stringBuilder.indexOf("base64,")));
+                stringBuilder.delete(0, stringBuilder.indexOf("base64,") + 7);
+                split.setFile_data(String.valueOf(stringBuilder).getBytes());
+                splitFileStorage.get(split.getFile_name()).add(split);
+                if (splitFileStorage.get(split.getFile_name()).size() >= 20) {
+                    /*TODO DB 저장 추가로 진행*/
+                    runQueueSystem(split);
+                }
+                stringBuilder.setLength(0);
+            } else {
+                PriorityQueue<SplitFileData> priorityQueue = new PriorityQueue<>();
+                stringBuilder = new StringBuilder(new String(split.getFile_data()).trim());
+                split.setMime_type(stringBuilder.substring(5, stringBuilder.indexOf("base64,")));
+                stringBuilder.delete(0, stringBuilder.indexOf("base64,") + 7);
+                split.setFile_data(String.valueOf(stringBuilder).getBytes());
+                priorityQueue.add(split);
+                splitFileStorage.put(split.getFile_name(), priorityQueue);
+                stringBuilder.setLength(0);
+            }
+        } else {
+            /*TODO DB 저장 추가로 진행*/
+            runQueueSystem(split);
+        }
+        Message message = new Message();
+        return new ResponseEntity(
+                DefaultRes.res(
+                        StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap("ajax")
+                ), HttpStatus.OK
+        );
+    }
+
+    /**
+     * runQueueSystem
+     * Version information
+     * 2022.03.02 1 author : kimwoosik
+     * Function Overview
+     * Bulk File Upload Queue System
+     * Database insert to file blob info
+     *
+     * @param split : Client to server file blob object
+     */
+    public void runQueueSystem(SplitFileData split) throws IOException {
+        if (fos != null) {
+            fos.close();
+        }
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject = null;
+        try {
+            if (Folder.mkdirs(path)) {
+                log.info("{}", "path : " + path + " created");
+            }
+            SplitFileData temp = null;
+            String file_name = null;
+            while (splitFileStorage.get(split.getFile_name()) != null && !splitFileStorage.get(split.getFile_name()).isEmpty()) {
+                temp = splitFileStorage.get(split.getFile_name()).poll();
+                file_name = split.getFile_name().substring(0, temp.getFile_name().lastIndexOf(".")) + "_" + TokenGenerator.RandomIntegerToken(4) + "_b" + temp.getOrder_index() + ".blob";
+                fos = new FileOutputStream(path + file_name);
+                fos.write(temp.getFile_data());
+                jsonObject = new JSONObject();
+                jsonObject.put("index", temp.getOrder_index());
+                jsonObject.put("file_name", file_name);
+                jsonObject.put("file_type", temp.getFile_type());
+                jsonObject.put("mime_type", temp.getMime_type());
+                jsonArray.put(jsonObject);
+            }
+            split.setJsonStr(jsonArray.toString());
+            bulkFileService.insertFileBulk(split);
+            log.info(jsonArray.toString());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                fos.close();
+            }
+            if (split.isEof()) {
+                splitFileStorage.remove(split.getFile_name());
+            }
+        }
+    }
+
+    @GetMapping("/upload/split/download")
+    public void download(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        File file = new File(path + request.getParameter("file"));
+        HashMap<String, Object> properties = new HashMap<>();
+        properties.put("Content-Disposition", "attachment;filename=" + file.getName());
+        if (new DownloadBuilder().init(response, true)
+                .file(file)
+                .setResponseProperty(properties).filePush()) {
+            /** File download success after process*/
+        }
+    }
+
+    @GetMapping("/upload/split/bulk/download")
+    public void bulkDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        OutputStream out = null;
+        try {
+            response.setHeader("Content-Disposition", "attachment;filename=" + "download_tests.mp4"); // 다운로드 되거나 로컬에 저장되는 용도로 쓰이는지를 알려주는 헤더
+            JSONArray jsonArray = new JSONArray("[{\"mime_type\":\"application/octet-stream;\",\"file_name\":\"test_5101_b0.blob\",\"file_type\":\"video/mp4\",\"index\":0}]");
+            out = response.getOutputStream();
+            List<String> read = null;
+            for (int i = 0; i < jsonArray.length(); i++) {
+                read = Files.readAllLines(Paths.get(path + jsonArray.getJSONObject(i).getString("file_name")));
+                for (int j = 0; j < read.size(); j++) {
+                    out.write(Base64.getDecoder().decode(read.get(j)));
+                }
+            }
+        } catch (Exception e) {
+            throw new Exception("download error");
+        } finally {
+            if (out != null) {
+                out.flush();
+                out.close();
+            }
+        }
     }
 }
