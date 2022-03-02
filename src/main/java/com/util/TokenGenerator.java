@@ -42,4 +42,21 @@ public class TokenGenerator {
         long token = Math.abs(random.nextLong());
         return String.valueOf(token).substring(0, tokenSize);
     }
+
+    public static String RandomTokenIntAndCapital(int tokenSize) {
+        if (tokenSize >= 1) {
+            Random rnd = new Random();
+            StringBuilder buf = new StringBuilder();
+            for (int i = 0; i < tokenSize; i++) {
+                if (rnd.nextBoolean()) { // 대문자
+                    buf.append((char) ((rnd.nextInt(26)) + 65));
+                } else { // 숫자
+                    buf.append((rnd.nextInt(10)));
+                }
+            }
+            return buf.toString();
+        } else {
+            return null;
+        }
+    }
 }

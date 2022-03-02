@@ -1,5 +1,7 @@
 package com.controller;
 
+import com.api.accountVerify.AccountVerifyAPI;
+import com.api.accountVerify.TokenResponse;
 import com.api.businessRegistration.BusinessRegistrationAPI;
 import com.api.instagram.InstagramAPI;
 import com.api.lunarsoft.alarm.LunarAlarmAPI;
@@ -53,6 +55,7 @@ public class TestController {
     private final HomeService homeService;
     private final OtherHomeService otherHomeService;
     private final BusinessRegistrationAPI businessRegistrationAPI;
+    private final AccountVerifyAPI accountVerifyAPI;
     private final LunarAlarmAPI lunarAlarmAPI;
     private final InstagramAPI instagramAPI;
     private final MailBuilder mailBuilder;
@@ -344,6 +347,20 @@ public class TestController {
         System.out.println("value = " + value);
         boolean result =  businessRegistrationAPI.isValid(value);
         message.put("status", result);
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap()), HttpStatus.OK);
+    }
+
+    @PostMapping("/account")
+    public ResponseEntity<String> accountVerify(@RequestBody TokenResponse user_info) {
+        Message message = new Message();
+
+        TokenResponse accessToken = accountVerifyAPI.getAccessToken();
+        accessToken.setAccount_num(user_info.getAccount_num());
+        accessToken.setBirth_date(user_info.getBirth_date());
+        accessToken.setBank_type(user_info.getBank_type());
+        boolean valid = accountVerifyAPI.isValid(accessToken);
+
+        message.put("status", valid);
         return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap()), HttpStatus.OK);
     }
 }

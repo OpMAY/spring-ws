@@ -20,6 +20,12 @@
  - `BusinessRegistrationAPI.class` 에서 확인할 수 있습니다.
  - 국세청 홈택스 페이지에서 서비스 키 발급 후 `key.properties` 파일에 `BUSINESS_REGISTRATION_KEY` 를 등록 후 사용가능합니다. 
 
+#### 5. 계좌 인증 API
+ - 금융결제원에서 제공하는 계좌 인증 API 모듈이 추가되었습니다.
+ - `AccountVerifyAPI.class` 에서 확인할 수 있습니다.
+ - 금융결제원 페이지에서 서비스 키 & 비밀 키 발급 후 `key.properties` 파일에 `ACCOUNT_VERIFY_CLIENT_ID, 
+   ACCOUNT_VERIFY_CLIENT_SECRET` 를 등록 후 사용가능합니다. 
+
 ##업데이트
 
 ####0.Build
