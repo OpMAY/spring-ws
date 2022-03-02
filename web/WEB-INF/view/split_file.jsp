@@ -49,12 +49,24 @@
     let size_done;
     let percent_done;
 
+    /**
+     * @dates 2022.03.02
+     * @author kimwoosik
+     * @description Client to server file upload start function
+     */
     function start_upload() {
         reader = new FileReader();
         file = document.querySelector('#file-input').files[0];
         upload_file(0);
     }
 
+    /**
+     * @dates 2022.03.02
+     * @author kimwoosik
+     * @description x의 n 거듭제곱을 반환하는 함수
+     * @param {start} file upload의 chunk의 시작지점 (byte 기준)
+     * Use upload_file(chunk start byte)
+     */
     function upload_file(start) {
         next_slice = start + slice_size + 1;
         blob = file.slice(start, next_slice);
@@ -67,9 +79,9 @@
             payload = {
                 eof: false,
                 file_data: event.target.result,
-                filename: file.name,
+                file_name: file.name,
                 file_type: file.type,
-                index: index
+                order_index: index
             }
             console.log(payload.filename, payload.index, payload.file_type);
             $.ajax({
@@ -85,17 +97,19 @@
                     size_done = start + slice_size;
                     percent_done = Math.floor((size_done / file.size) * 100);
                     if (next_slice < file.size) {
-                        // Update upload progress
+                        /** Next Chunk Upload (Recursive)*/
+                        /** Update Percent View*/
                         $('#progress').html(`Uploading File -  \${percent_done}%`);
-                        // More to upload, call function recursively
                         upload_file(next_slice);
                     } else {
+                        /** End Data Send */
                         payload = {
                             eof: true,
-                            filename: file.name,
+                            file_name: file.name,
                             file_type: file.type,
+                            order_index: ++index
                         };
-                        console.log(payload);
+                        /** Send to server end file upload message*/
                         $.ajax({
                             url: '/upload/split/general',
                             type: 'POST',
@@ -116,98 +130,5 @@
         };
         reader.readAsDataURL(blob);
     }
-
-    /*function startForm() {
-        console.log('startForm');
-        let fileInput = document
-            .getElementById('file-input')
-            .files[0];
-        // begin upload process
-
-        let chunks = sliceFile(fileInput, 10);
-        chunks.forEach((chunk, index) => {
-
-        });
-        console.log('startForm End');
-    }*/
-
-    /*/!**
-     * @param {File|Blob} - file to slice
-     * @param {Number} - chunksAmount
-     * @return {Array} - an array of Blobs
-     **!/
-    function sliceFile(file, chunksAmount) {
-        var byteIndex = 0;
-        var chunks = [];
-        for (var i = 0; i < chunksAmount; i += 1) {
-            var byteEnd = Math.ceil((file.size / chunksAmount) * (i + 1));
-            chunks.push(file.slice(byteIndex, byteEnd));
-            console.log(byteIndex, byteEnd);
-            byteIndex += (byteEnd - byteIndex);
-        }
-        console.log(chunks);
-        return chunks;
-    }*/
-
-    /*let fileInput = undefined;
-
-    var chunk_size = 1024 * 1024 * 1;
-    var reader = new FileReader();
-    let checkBase64 = '';
-
-    function startForm() {
-        console.log('startForm');
-        fileInput = document
-            .getElementById('file-input')
-            .files[0];
-        // begin upload process
-        uploadFile(fileInput);
-        console.log('startForm End');
-    }
-
-    function uploadFile(fileInput) {
-        _uploadChunk(fileInput, 0, chunk_size);
-    }
-
-    function _uploadChunk(file, offset, range) {
-        // if no more chunks, send EOF
-        console.log(offset, range);
-        if (offset >= file.size) {
-            console.log('last file upload');
-            $.post('/upload/split/general', {
-                filename: file.name,
-                eof: true
-            });
-            console.log('end', file.name, true);
-            return;
-        }
-
-        // prepare reader with an event listener
-        reader.addEventListener('load', function (e) {
-            var filename = file.name;
-            var index = offset / chunk_size;
-            var data = e.target.result.split(';base64,')[1];
-            // build payload with indexed chunk to be sent
-            var payload = {
-                filename: filename,
-                index: index,
-                data: data,
-                eof: false,
-            };
-            console.log(data,index,filename,payload);
-            // send payload, and buffer next chunk to be uploaded
-            $.post('/upload/split/general',
-                payload,
-                function () {
-                    _uploadChunk(file, offset + range, chunk_size);
-                }
-            );
-            console.log(index, filename, false);
-        }, {once: true}); // register as a once handler!
-
-        // chunk and read file data
-        var chunk = file.slice(offset, offset + range);
-        reader.readAsDataURL(chunk);
-    }*/
 </script>
 </html>

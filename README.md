@@ -65,17 +65,25 @@
  - `/encrypt.do`, `/decrypt.do` 컨트롤러에서 REST API 형식으로 암/복호화를 할 수 있습니다.
 
 ####10. Bulk File Upload
- - 대용량 파일 업로드가 가능해졋습니다. `TestController.class 의 splitFileUploadTest function 등 참조` (1GB 이상 서버 과부하 분산)
- - https://tomcat.apache.org/tomcat-5.5-doc/config/http.html (maxPostSize, maxSavePostSize를 참조해주세요.)
- - Chunk와 Payload에 대한 지식이 있어야합니다.
- - 현재 Bulk File Upload는 테스트를 해야하는 코드입니다.
- - Bulk File Upload는 `AppConfig.class 의 splitFileStorage.bean` 와 같이 사용됩니다.
- - 11GB 기준 Local 10분입니다.
- - 데이터 저장 방식에 대한 고민이 필요합니다.
- - javascript out of memory 문제를 해결했습니다.
- - java out of memory 문제를 해결했습니다.
- - 중간에 취소, 네트워크 이상 및 기타 오류에서 업로드를 보장할 수 없습니다.
- - End Data가 DB에 넣어져야 합니다. (업로드 보장성 추가)
+ - 대용량 파일 업로드가 가능해졋습니다. `TestController.class 의 splitFileUpload function 등 참조` (1GB 이상 서버 과부하 분산)
+ - Bulk File Upload는 `AppConfig.class 의 SplitFileStorage.bean` 와 같이 사용됩니다.
+ - (Caution) 데이터 저장 방식에 대한 고민이 필요합니다.
+ - (DB) End Data가 DB에 넣어져야 합니다. (업로드 보장성 추가)
+ - (DB) `file_bulk` Table이 추가됬습니다. (Database Init 부분 참조)
+ - (INFO) 네트워크 이상 및 기타 오류에서 업로드를 보장할 수 없습니다.
+ - (INFO) 11GB 기준 Local 10분입니다.
+ - (INFO) Chunk와 Payload에 대한 지식이 있어야합니다.
+ - (BUGFIX) javascript out of memory 문제를 해결했습니다.
+ - (BUGFIX) java out of memory 문제를 해결했습니다.
+ - (SETTING) Tomcat의 설정이 필요합니다. (maxPostSize, maxSavePostSize를 참조해주세요.)
+####11. Bulk File Download
+ - 대용량 파일 다운로드가 가능해졋습니다.
+ - (DB) `file_bulk` Table이 필요합니다.
+ - (INFO) 파일을 합치는것이 아닌 Base64 문자열을 바이너리로 바꿔서 버퍼에 write 시키는 방식입니다.
+####12. File Download
+ - 기존의 FileDownload가 DownloadBuilder로 대체 되었습니다. (`TestController.java download()` 함수 참조)
+####13. BulkFileService
+ - `BulkFileService.class`가 추가되었습니다.
 ##Database Init
 ```
 CREATE DATABASE  IF NOT EXISTS `flowtest` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
@@ -194,8 +202,18 @@ LOCK TABLES `user` WRITE;
 INSERT INTO `user` VALUES (2,'{\"no\":0,\"email\":\"zlzldntlr@naver.com\",\"id\":\"zlzldntlr\",\"name\":\"김우식\",\"grant\":\"normal\",\"access_token\":\"token\"}'),(3,'test');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
+CREATE TABLE `file_bulk` (
+  `no` int NOT NULL AUTO_INCREMENT,
+  `order_index` int DEFAULT NULL,
+  `file_name` varchar(255) DEFAULT NULL,
+  `file_type` varchar(255) DEFAULT NULL,
+  `file_info` mediumtext,
+  `mime_type` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`no`)
+) ENGINE=InnoDB AUTO_INCREMENT=241 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
@@ -203,7 +221,6 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
 -- Dump completed on 2022-02-19 23:49:21
 
 ```

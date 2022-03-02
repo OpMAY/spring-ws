@@ -62,4 +62,9 @@ public class TestDao {
         TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
         testMapper.insertUser(user);
     }
+
+    public void insertFileBulk(SplitFileData split) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        testMapper.insertFileBulk(split);
+    }
 }

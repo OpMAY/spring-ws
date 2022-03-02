@@ -48,10 +48,15 @@
         values (#{userTests,typeHandler=com.middleware.JsonArrayObjectTypeHandler});
     </insert>
     <select id="selectUsers" resultType="User">
-        select * from user;
+        select *
+        from user;
     </select>
     <insert id="insertUser" parameterType="User" keyProperty="no" useGeneratedKeys="true">
         insert into user(name, reg_datetime, updated_datetime)
         values (#{name}, now(), now());
+    </insert>
+    <insert id="insertFileBulk" useGeneratedKeys="true" keyProperty="no">
+        insert into file_bulk(order_index, file_name, file_type, file_info, mime_type)
+        VALUES (#{order_index}, #{file_name}, #{file_type}, #{jsonStr}, #{mime_type});
     </insert>
 </mapper>
