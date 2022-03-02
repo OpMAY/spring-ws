@@ -13,3 +13,17 @@
 .point-static {
     cursor: initial;
 }
+
+.chat-item.odd .chat-item-wrapper {
+    justify-content: space-between;
+}
+
+.chat-item {
+    min-width: 50%;
+}
+.chat-item .chat-content {
+    width: 50%;
+}
+.chat-item.odd .chat-content {
+    width: 100%;
+}

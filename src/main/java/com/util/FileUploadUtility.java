@@ -21,7 +21,7 @@ import java.util.UUID;
 @Service
 public class FileUploadUtility {
 
-    @Value("${PATH}")
+    @Value("${UPLOAD_PATH}")
     private String upload_path;
 
     private final FileUploadStrategy fileUploadStrategy;

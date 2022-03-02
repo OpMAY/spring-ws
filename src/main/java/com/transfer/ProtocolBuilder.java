@@ -100,12 +100,11 @@ public class ProtocolBuilder {
      * The part that imports data according to the set class
      * Case : protocolBuilder.openReader("UTF-8", Model.class, false);
      *
-     * @param type          : Class(Model)
+     * @param class_type    : Class(Model)
      * @param logging       : log is on/off
      * @param character_set : character set
      */
-    public <T> Object openReader(String character_set, Class type, boolean logging) throws IOException {
-        Class<?> findClass = type;
+    public <T> Object openReader(String character_set, Class<?> class_type, boolean logging) throws IOException {
 
         int responseCode = conn.getResponseCode();
 
@@ -125,10 +124,10 @@ public class ProtocolBuilder {
             if (logging) {
                 log.info(result);
             }
-            if (findClass.getSimpleName().equals("String") || findClass.getName().equals("java.lang.String") || findClass.getTypeName().equals("java.lang.String")) {
+            if (class_type == String.class) {
                 return result;
             } else {
-                return (T) new Gson().fromJson(result, findClass);
+                return (T) new Gson().fromJson(result, class_type);
             }
         } else {
             if (logging) {

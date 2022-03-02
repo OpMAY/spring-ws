@@ -73,19 +73,59 @@
         <button type="button" onclick="addCookie();">브라우저 삽입</button>
         <button type="button" onclick="getDecryptedCookie();">쿠키정보보기</button>
     </section>
-    <h1>Streaming API 대용량 파일 업로드</h1>
+
     <form action="/upload/bulk" method="post" enctype="multipart/form-data">
         <input type="file" name="file">
         <input type="text" name="test" value="test">
         <button type="submit">대용량 파일 업로드</button>
     </form>
-    <h1>Commons Multipart Upload 대용량 파일 업로드</h1>
-    <form action="/upload/general" method="post" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <button type="submit">일반 파일 업로드</button>
-    </form>
+
+    <section>
+        <div>사업자 등록번호 인증</div>
+        <input type="text" placeholder="사업자 등록번호" id="registration-no">
+        <button onclick="checkBusinessRegistration()">조회하기</button>
+    </section>
+
+    <section>
+        <div>계좌번호 인증</div>
+        <label for="registration-no">계좌번호</label>
+        <input type="text" placeholder="계좌번호" id="account-verify-account-num" name="account_num">
+        <label for="account-verify-bank-type">은행</label>
+        <select id="account-verify-bank-type" name="bank_type">
+            <option value="산업">산업</option>
+            <option value="기업">기업</option>
+            <option value="국민">국민</option>
+            <option value="수협">수협</option>
+            <option value="농협">농협</option>
+            <option value="농협중앙">농협중앙</option>
+            <option value="우리">우리</option>
+            <option value="SC제일">SC제일</option>
+            <option value="씨티">씨티</option>
+            <option value="대구">대구</option>
+            <option value="부산">부산</option>
+            <option value="광주">광주</option>
+            <option value="제주">제주</option>
+            <option value="전북">전북</option>
+            <option value="경남">경남</option>
+            <option value="새마을">새마을</option>
+            <option value="신협">신협</option>
+            <option value="상호저축">상호저축</option>
+            <option value="산림조합">산림조합</option>
+            <option value="우체국">우체국</option>
+            <option value="KEB하나">KEB하나</option>
+            <option value="신한">신한</option>
+            <option value="케이뱅크">케이뱅크</option>
+            <option value="카카오">카카오</option>
+            <option value="오픈">오픈</option>
+        </select>
+        <label for="account-verify-birth-date">생년월일</label>
+        <input type="text" placeholder="생년월일" id="account-verify-birth-date" name="birth_date">
+        <button onclick="verifyAccount()">조회하기</button>
+    </section>
 </main>
 
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+        crossorigin="anonymous"></script>
 <script src="/resources/js/cookie.js"></script>
 <script>
 
@@ -217,6 +257,58 @@
         };
         const result = await fetch('/decrypt.do', options).then(res => res.json()).then(res => res.data.result);
         alert(result);
+    }
+
+    function checkBusinessRegistration() {
+        const value = document.querySelector('#registration-no').value;
+        const data = {
+            value
+        }
+        const options = {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json;'
+            },
+            body: JSON.stringify(data)
+        };
+        fetch('/business-registration', options)
+            .then(res => res.json())
+            .then(res => {
+                if (res.data.status) {
+                    alert('사업자 인증 성공');
+                } else {
+                    alert('사업자 인증 실패');
+                }
+            });
+    }
+
+    function verifyAccount() {
+        const account_num = document.querySelector('#account-verify-account-num').value;
+        const bank_type = document.querySelector('#account-verify-bank-type').value;
+        const birth_date = document.querySelector('#account-verify-birth-date').value;
+        const data = {
+            account_num,
+            bank_type,
+            birth_date
+        }
+        const options = {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json;'
+            },
+            body: JSON.stringify(data)
+        };
+        fetch('/account', options).then(res => res.json())
+            .then(res => {
+                if (res.data.status) {
+                    alert('인증 성공');
+                } else {
+                    alert('인증되지 않는 계좌입니다.');
+                }
+            })
+            .catch(e => {
+                console.error(e);
+            });
     }
 </script>
 </body>
