@@ -28,13 +28,17 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -63,7 +67,6 @@ public class TestController {
     private final LunarAlarmAPI lunarAlarmAPI;
     private final InstagramAPI instagramAPI;
     private final MailBuilder mailBuilder;
-
 
 
     @GetMapping("/get-test.do")
@@ -331,8 +334,8 @@ public class TestController {
                 }
             }
             long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
-            long secDiffTime = (afterTime - beforeTime)/1000; //두 시간에 차 계산
-            System.out.println("시간차이(m) : "+secDiffTime);
+            long secDiffTime = (afterTime - beforeTime) / 1000; //두 시간에 차 계산
+            System.out.println("시간차이(m) : " + secDiffTime);
         } catch (FileUploadException e) {
             e.printStackTrace();
             log.info("postBulkUpload end");
@@ -349,7 +352,7 @@ public class TestController {
         Message message = new Message();
         String value = map.get("value");
         System.out.println("value = " + value);
-        boolean result =  businessRegistrationAPI.isValid(value);
+        boolean result = businessRegistrationAPI.isValid(value);
         message.put("status", result);
         return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap()), HttpStatus.OK);
     }
@@ -508,5 +511,10 @@ public class TestController {
         } else {
             System.out.println("bulk file download fail");
         }
+    }
+
+    @GetMapping("/video.do")
+    public ModelAndView getVideo() {
+        return new ModelAndView("video");
     }
 }
