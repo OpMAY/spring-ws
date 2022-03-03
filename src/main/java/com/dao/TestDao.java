@@ -77,4 +77,9 @@ public class TestDao {
         TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
         return testMapper.selectDataCountByFileName(file_name);
     }
+
+    public SplitFileData selectFileByNo(int split_file_data_no) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        return testMapper.selectFileByNo(split_file_data_no);
+    }
 }

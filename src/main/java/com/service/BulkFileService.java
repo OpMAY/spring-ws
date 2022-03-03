@@ -26,4 +26,8 @@ public class BulkFileService {
     public Integer selectDataCountByFileName(String file_name) {
         return testDao.selectDataCountByFileName(file_name);
     }
+
+    public SplitFileData selectFileByNo(int split_file_data_no) {
+        return testDao.selectFileByNo(split_file_data_no);
+    }
 }

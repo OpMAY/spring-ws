@@ -45,9 +45,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
@@ -498,9 +501,9 @@ public class TestController {
         Integer count = bulkFileService.selectDataCountByFileName(file_name); // 몇개의 줄이 있는지
         boolean complete = true;
         SplitFileData splitFileData;
-        for (int i=0; i<count; i++) {
-            splitFileData = bulkFileService.selectFileByNameAndIndex(file_name, i*CHUNK_AMOUNT+1, (i+1)*CHUNK_AMOUNT);
-            if (!downloadBuilder.bulkFilePush(splitFileData, i == count-1)) { // 실패시 멈춤
+        for (int i = 0; i < count; i++) {
+            splitFileData = bulkFileService.selectFileByNameAndIndex(file_name, i * CHUNK_AMOUNT + 1, (i + 1) * CHUNK_AMOUNT);
+            if (!downloadBuilder.bulkFilePush(splitFileData, i == count - 1)) { // 실패시 멈춤
                 complete = false;
                 break;
             }
@@ -516,5 +519,60 @@ public class TestController {
     @GetMapping("/video.do")
     public ModelAndView getVideo() {
         return new ModelAndView("video");
+    }
+
+    @Autowired
+    private PriorityQueue<SplitFileData> mergeFileStorage;
+
+    @GetMapping("/video.do")
+    public void changeVideo() throws IOException {
+        OutputStream fileOutputStream = null;
+        JSONArray jsonArray = null;
+        List<String> read;
+        SplitFileData splitFileData = null;
+        /** File Upload Queue가 비었을 때 진행 : Scheduling에서 지속적 확인*/
+        if (splitFileStorage.isEmpty()) {
+            if (mergeFileStorage.isEmpty()) {
+                /** File Merge Queue가 비었을 때 실행
+                 * 1. DB 스캔 오래된 file_bulk를 찾는다, end = 1인것들하고 가장 오래된것들, JsonStr 제외하고 찿아온다
+                 * 2. ArrayList<FileSplitData>()를 돌려서 Merge Queue로 넣는다.
+                 * 3. Merge Queue를 돌린다.
+                 * */
+
+            } else {
+                splitFileData = mergeFileStorage.peek();
+                fileOutputStream = new FileOutputStream(new File(path + splitFileData.getFile_name()));
+                /** File Merge Queue가 비지 않았다면 File Merge 그대로 실행*/
+                while (!mergeFileStorage.isEmpty()) {
+                    /** File Upload Queue가 비지 않았다면 진행 불가*/
+                    if (!splitFileStorage.isEmpty()) {
+                        if (fileOutputStream != null) {
+                            fileOutputStream.flush();
+                            fileOutputStream.close();
+                        }
+                        jsonArray = null;
+                        splitFileData = null;
+                        read = null;
+                        break;
+                    } else {
+                        splitFileData = bulkFileService.selectFileByNo(splitFileData.getNo());
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            read = Files.readAllLines(Paths.get(path + jsonArray.getJSONObject(i).getString("file_name")));
+                            for (String s : read) {
+                                fileOutputStream.write(Base64.getDecoder().decode(s));
+                            }
+                        }
+                        mergeFileStorage.poll();
+                    }
+                }
+            }
+            if (fileOutputStream != null) {
+                fileOutputStream.flush();
+                fileOutputStream.close();
+            }
+            jsonArray = null;
+            splitFileData = null;
+            read = null;
+        }
     }
 }
