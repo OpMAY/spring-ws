@@ -82,4 +82,14 @@ public class TestDao {
         TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
         return testMapper.selectFileByNo(split_file_data_no);
     }
+
+    public SplitFileData selectInsertQueue() {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        return testMapper.selectInsertQueue();
+    }
+
+    public ArrayList<SplitFileData> selectFileByName(String file_name) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        return testMapper.selectFileByName(file_name);
+    }
 }

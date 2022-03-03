@@ -32,4 +32,8 @@ public interface TestMapper {
     Integer selectDataCountByFileName(String file_name);
 
     SplitFileData selectFileByNo(@Param("no") int split_file_data_no);
+
+    SplitFileData selectInsertQueue();
+
+    ArrayList<SplitFileData> selectFileByName(@Param("file_name") String file_name);
 }

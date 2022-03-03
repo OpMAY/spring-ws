@@ -56,8 +56,9 @@
         values (#{name}, now(), now());
     </insert>
     <insert id="insertFileBulk" useGeneratedKeys="true" keyProperty="no">
-        insert into file_bulk(order_index, file_name, file_type, file_info, mime_type)
-        VALUES (#{order_index}, #{file_name}, #{file_type}, #{jsonStr}, #{mime_type});
+        insert into file_bulk(order_index, file_name, file_type, file_info, mime_type, reg_date, updated_date, end,
+                              complete)
+        VALUES (#{order_index}, #{file_name}, #{file_type}, #{jsonStr}, #{mime_type}, now(), now(), 0, 0);
     </insert>
     <select id="selectDataCountByFileName" resultType="Integer">
         select count(*)
@@ -75,5 +76,21 @@
         select fb.*, fb.file_info as jsonStr
         from file_bulk as fb
         where no = #{no};
+    </select>
+    <select id="selectInsertQueue" resultType="SplitFileData">
+        select fb.no, fb.end, fb.file_name, fb.order_index, fb.file_type
+        from file_bulk as fb
+        where end = 1
+          and complete = 0
+        order by reg_date asc, order_index asc
+        LIMIT 1;
+    </select>
+    <select id="selectFileByName" resultType="SplitFileData">
+        select fb.no, fb.end, fb.file_name, fb.order_index, fb.file_type
+        from file_bulk as fb
+        where end = 1
+          and complete = 0
+          and file_name = #{file_name}
+        order by reg_date asc, order_index asc
     </select>
 </mapper>

@@ -5,6 +5,8 @@ import com.model.SplitFileData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class BulkFileService {
 
@@ -29,5 +31,16 @@ public class BulkFileService {
 
     public SplitFileData selectFileByNo(int split_file_data_no) {
         return testDao.selectFileByNo(split_file_data_no);
+    }
+
+    public SplitFileData selectInsertQueue() {
+        return testDao.selectInsertQueue();
+    }
+
+    public ArrayList<SplitFileData> selectFileByName(String file_name) {
+        return testDao.selectFileByName(file_name);
+    }
+
+    public void insertEndFileBulk(SplitFileData split) {
     }
 }

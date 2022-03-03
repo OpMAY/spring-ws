@@ -11,6 +11,8 @@ public class SplitFileData implements Comparable<SplitFileData> {
     private String mime_type;
     private byte[] file_data;
     private boolean eof = false;
+    private boolean complete;
+    private boolean end;
     private String jsonStr;
 
     @Override
