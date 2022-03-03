@@ -20,6 +20,7 @@
     </form>
     <span id="progress"></span>
     <button type="button" onclick="start_upload();">전송</button>
+    <button type="button" onclick="download();">다운로드</button>
 </div>
 <!-- Optional JavaScript; choose one of the two! -->
 
@@ -129,6 +130,15 @@
             });
         };
         reader.readAsDataURL(blob);
+    }
+
+    function download() {
+        if (document.querySelector('#file-input').files.length === 0) {
+            alert('파일이 없습니다.');
+            return;
+        }
+        const file_name = document.querySelector('#file-input').files[0].name;
+        window.open('/upload/split/bulk/download?file=' + file_name);
     }
 </script>
 </html>

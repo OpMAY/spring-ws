@@ -1,13 +1,9 @@
 package com.service;
 
 import com.dao.TestDao;
-import com.model.ArrayTest;
 import com.model.SplitFileData;
-import com.model.UserTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 
 @Service
 public class BulkFileService {
@@ -21,5 +17,13 @@ public class BulkFileService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public SplitFileData selectFileByNameAndIndex(String name, Integer start_index, Integer last_index) {
+        return testDao.selectFileByNameAndIndex(name, start_index, last_index);
+    }
+
+    public Integer selectDataCountByFileName(String file_name) {
+        return testDao.selectDataCountByFileName(file_name);
     }
 }

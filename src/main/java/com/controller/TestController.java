@@ -27,7 +27,6 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,8 +44,6 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
@@ -384,32 +381,36 @@ public class TestController {
         return new ModelAndView("split_file");
     }
 
+
+    static final int CHUNK_AMOUNT = 20;
+
+
     @ResponseBody
-    @RequestMapping(value = "/upload/split/general", method = RequestMethod.POST)
+    @PostMapping(value = "/upload/split/general")
     public ResponseEntity<String> splitFileUpload(SplitFileData split) throws JSONException, IOException {
+        final String SPLIT_WORD = "base64,";
         log.info("{}", split.getOrder_index());
         if (!split.isEof()) {
             if (splitFileStorage.get(split.getFile_name()) != null) {
                 stringBuilder = new StringBuilder(new String(split.getFile_data()).trim());
-                split.setMime_type(stringBuilder.substring(5, stringBuilder.indexOf("base64,")));
-                stringBuilder.delete(0, stringBuilder.indexOf("base64,") + 7);
+                split.setMime_type(stringBuilder.substring(5, stringBuilder.indexOf(SPLIT_WORD)));
+                stringBuilder.delete(0, stringBuilder.indexOf(SPLIT_WORD) + SPLIT_WORD.length());
                 split.setFile_data(String.valueOf(stringBuilder).getBytes());
                 splitFileStorage.get(split.getFile_name()).add(split);
-                if (splitFileStorage.get(split.getFile_name()).size() >= 20) {
+                if (splitFileStorage.get(split.getFile_name()).size() >= CHUNK_AMOUNT) {
                     /*TODO DB 저장 추가로 진행*/
                     runQueueSystem(split);
                 }
-                stringBuilder.setLength(0);
             } else {
                 PriorityQueue<SplitFileData> priorityQueue = new PriorityQueue<>();
                 stringBuilder = new StringBuilder(new String(split.getFile_data()).trim());
-                split.setMime_type(stringBuilder.substring(5, stringBuilder.indexOf("base64,")));
-                stringBuilder.delete(0, stringBuilder.indexOf("base64,") + 7);
+                split.setMime_type(stringBuilder.substring(5, stringBuilder.indexOf(SPLIT_WORD)));
+                stringBuilder.delete(0, stringBuilder.indexOf(SPLIT_WORD) + SPLIT_WORD.length());
                 split.setFile_data(String.valueOf(stringBuilder).getBytes());
                 priorityQueue.add(split);
                 splitFileStorage.put(split.getFile_name(), priorityQueue);
-                stringBuilder.setLength(0);
             }
+            stringBuilder.setLength(0);
         } else {
             /*TODO DB 저장 추가로 진행*/
             runQueueSystem(split);
@@ -437,7 +438,7 @@ public class TestController {
             fos.close();
         }
         JSONArray jsonArray = new JSONArray();
-        JSONObject jsonObject = null;
+        JSONObject jsonObject;
         try {
             if (Folder.mkdirs(path)) {
                 log.info("{}", "path : " + path + " created");
@@ -474,36 +475,38 @@ public class TestController {
     @GetMapping("/upload/split/download")
     public void download(HttpServletRequest request, HttpServletResponse response) throws IOException {
         File file = new File(path + request.getParameter("file"));
-        HashMap<String, Object> properties = new HashMap<>();
-        properties.put("Content-Disposition", "attachment;filename=" + file.getName());
+
         if (new DownloadBuilder().init(response, true)
                 .file(file)
-                .setResponseProperty(properties).filePush()) {
+                .header()
+                .filePush()) {
             /** File download success after process*/
         }
     }
 
     @GetMapping("/upload/split/bulk/download")
     public void bulkDownload(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        OutputStream out = null;
-        try {
-            response.setHeader("Content-Disposition", "attachment;filename=" + "download_tests.mp4"); // 다운로드 되거나 로컬에 저장되는 용도로 쓰이는지를 알려주는 헤더
-            JSONArray jsonArray = new JSONArray("[{\"mime_type\":\"application/octet-stream;\",\"file_name\":\"test_5101_b0.blob\",\"file_type\":\"video/mp4\",\"index\":0}]");
-            out = response.getOutputStream();
-            List<String> read = null;
-            for (int i = 0; i < jsonArray.length(); i++) {
-                read = Files.readAllLines(Paths.get(path + jsonArray.getJSONObject(i).getString("file_name")));
-                for (int j = 0; j < read.size(); j++) {
-                    out.write(Base64.getDecoder().decode(read.get(j)));
-                }
+        String file_name = request.getParameter("file");
+        File file = new File(path + file_name);
+        DownloadBuilder downloadBuilder = new DownloadBuilder()
+                .init(response, true)
+                .file(file)
+                .header();
+        Integer count = bulkFileService.selectDataCountByFileName(file_name); // 몇개의 줄이 있는지
+        boolean complete = true;
+        SplitFileData splitFileData;
+        for (int i=0; i<count; i++) {
+            splitFileData = bulkFileService.selectFileByNameAndIndex(file_name, i*CHUNK_AMOUNT+1, (i+1)*CHUNK_AMOUNT);
+            if (!downloadBuilder.bulkFilePush(splitFileData, i == count-1)) { // 실패시 멈춤
+                complete = false;
+                break;
             }
-        } catch (Exception e) {
-            throw new IOException("download error");
-        } finally {
-            if (out != null) {
-                out.flush();
-                out.close();
-            }
+        }
+
+        if (complete) {
+            System.out.println("bulk file download success");
+        } else {
+            System.out.println("bulk file download fail");
         }
     }
 }

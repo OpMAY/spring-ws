@@ -26,4 +26,8 @@ public interface TestMapper {
     void insertUser(User user);
 
     void insertFileBulk(SplitFileData split);
+
+    SplitFileData selectFileByNameAndIndex(@Param("name") String name, @Param("start_index") Integer start_index, @Param("last_index") Integer last_index);
+
+    Integer selectDataCountByFileName(String file_name);
 }

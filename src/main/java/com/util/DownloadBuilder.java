@@ -1,12 +1,18 @@
 package com.util;
 
+import com.model.SplitFileData;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.json.JSONArray;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 
 @Slf4j
 public class DownloadBuilder {
@@ -16,6 +22,9 @@ public class DownloadBuilder {
     private ServletOutputStream fileOutputStream;
     private byte[] byteStream;
     private boolean logging = true;
+    private List<String> read;
+    private String path = "C:/Users/sangwoo/Desktop/spring-a.2/out/artifacts/webapplication_Web_exploded/files/";
+    private JSONArray jsonArray;
 
     public DownloadBuilder() {
 
@@ -62,11 +71,6 @@ public class DownloadBuilder {
                 log.info("file download success");
             }
             return true;
-        } catch (FileNotFoundException e) {
-            if (logging) {
-                log.info("file download failed : " + e.getMessage());
-            }
-            return false;
         } catch (IOException e) {
             if (logging) {
                 log.info("file download failed : " + e.getMessage());
@@ -86,5 +90,40 @@ public class DownloadBuilder {
                 }
             }
         }
+    }
+    public boolean bulkFilePush(SplitFileData splitFileData, boolean is_last) throws IOException {
+        try {
+            if (this.fileOutputStream == null) {
+                this.fileOutputStream = this.response.getOutputStream();
+            }
+            this.jsonArray = new JSONArray(splitFileData.getJsonStr());
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                this.read = Files.readAllLines(Paths.get(path + jsonArray.getJSONObject(i).getString("file_name")));
+                for (String s : this.read) {
+                    this.fileOutputStream.write(Base64.getDecoder().decode(s));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            if (this.fileOutputStream != null) {
+                this.fileOutputStream.flush();
+                this.fileOutputStream.close();
+            }
+            return false;
+        } finally {
+            if (this.fileOutputStream != null && is_last) { // 마지막 파일일때
+                this.fileOutputStream.flush();
+                this.fileOutputStream.close();
+            }
+        }
+        return true;
+    }
+
+    public DownloadBuilder header() throws UnsupportedEncodingException {
+        HashMap<String, Object> properties = new HashMap<>();
+        properties.put("Content-Disposition", "attachment;filename=" + URLEncoder.encode(file.getName(), "UTF-8")); // 다운로드 되거나 로컬에 저장되는 용도로 쓰이는지를 알려주는 헤더
+        properties.forEach((key, value) -> this.response.setHeader(key, String.valueOf(value)));
+        return this;
     }
 }
