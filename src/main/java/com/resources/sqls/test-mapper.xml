@@ -59,4 +59,13 @@
         insert into file_bulk(order_index, file_name, file_type, file_info, mime_type)
         VALUES (#{order_index}, #{file_name}, #{file_type}, #{jsonStr}, #{mime_type});
     </insert>
+    <select id="selectDataCountByFileName" resultType="Integer">
+        select count(*) from file_bulk where file_name=#{name};
+    </select>
+    <select id="selectFileByNameAndIndex" resultType="SplitFileData">
+        select file_name, file_info as jsonStr
+        from file_bulk where file_name=#{name}
+                         and order_index >= #{start_index}
+                         and #{last_index} >= order_index;
+    </select>
 </mapper>

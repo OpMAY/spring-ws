@@ -67,4 +67,14 @@ public class TestDao {
         TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
         testMapper.insertFileBulk(split);
     }
+
+    public SplitFileData selectFileByNameAndIndex(String name, Integer start_index, Integer last_index) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        return testMapper.selectFileByNameAndIndex(name, start_index, last_index);
+    }
+
+    public Integer selectDataCountByFileName(String file_name) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        return testMapper.selectDataCountByFileName(file_name);
+    }
 }
