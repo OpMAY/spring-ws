@@ -472,7 +472,7 @@ public class TestController {
     }
 
     @GetMapping("/upload/split/download")
-    public void download(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void download(HttpServletRequest request, HttpServletResponse response) throws IOException {
         File file = new File(path + request.getParameter("file"));
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("Content-Disposition", "attachment;filename=" + file.getName());
@@ -484,7 +484,7 @@ public class TestController {
     }
 
     @GetMapping("/upload/split/bulk/download")
-    public void bulkDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void bulkDownload(HttpServletRequest request, HttpServletResponse response) throws IOException {
         OutputStream out = null;
         try {
             response.setHeader("Content-Disposition", "attachment;filename=" + "download_tests.mp4"); // 다운로드 되거나 로컬에 저장되는 용도로 쓰이는지를 알려주는 헤더
@@ -498,7 +498,7 @@ public class TestController {
                 }
             }
         } catch (Exception e) {
-            throw new Exception("download error");
+            throw new IOException("download error");
         } finally {
             if (out != null) {
                 out.flush();
