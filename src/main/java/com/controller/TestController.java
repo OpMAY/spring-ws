@@ -627,7 +627,9 @@ public class TestController {
                             }
                         }
                         log.info("16 queue poll");
-                        mergeFileStorage.poll();
+                        if (mergeFileStorage.poll() != null) {
+                            bulkFileService.updateCompleteFileBulk(splitFileData);
+                        }
                     }
                 }
             }
