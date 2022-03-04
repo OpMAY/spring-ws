@@ -36,4 +36,10 @@ public interface TestMapper {
     SplitFileData selectInsertQueue();
 
     ArrayList<SplitFileData> selectFileByName(@Param("file_name") String file_name);
+
+    void insertEndFileBulk(SplitFileData split);
+
+    void updateEndFileBulk(SplitFileData split);
+
+    void updateCompleteFileBulk(SplitFileData splitFileData);
 }

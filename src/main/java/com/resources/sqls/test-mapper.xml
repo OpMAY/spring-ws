@@ -93,4 +93,24 @@
           and file_name = #{file_name}
         order by reg_date asc, order_index asc
     </select>
+    <insert id="insertEndFileBulk" parameterType="SplitFileData" keyProperty="no" useGeneratedKeys="true">
+        INSERT INTO file_bulk(order_index, file_name, file_type, file_info, mime_type, end, updated_date, reg_date,
+                              complete)
+        VALUES (#{order_index}, #{file_name}, #{file_type}, #{jsonStr}, #{mime_type}, 1, now(), now(), 0);
+    </insert>
+    <update id="updateEndFileBulk" parameterType="SplitFileData">
+        update file_bulk
+        set end=1,
+            updated_date=now()
+        where file_name = #{file_name}
+          and end = 0;
+    </update>
+    <update id="updateCompleteFileBulk" parameterType="SplitFileData">
+        update file_bulk
+        set complete    = 1,
+            updated_date=now()
+        where file_name = #{file_name}
+          and end = 1
+          and complete = 0;
+    </update>
 </mapper>

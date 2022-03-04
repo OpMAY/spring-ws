@@ -42,5 +42,14 @@ public class BulkFileService {
     }
 
     public void insertEndFileBulk(SplitFileData split) {
+        testDao.insertEndFileBulk(split);
+    }
+
+    public void updateEndFileBulk(SplitFileData split) {
+        testDao.updateEndFileBulk(split);
+    }
+
+    public void updateCompleteFileBulk(SplitFileData splitFileData) {
+        testDao.updateCompleteFileBulk(splitFileData);
     }
 }

@@ -463,12 +463,22 @@ public class TestController {
                 jsonArray.put(jsonObject);
             }
             split.setJsonStr(jsonArray.toString());
-            bulkFileService.insertFileBulk(split);
-            /*if (split.isEof()) {
-                bulkFileService.selectFileByName(split.getFile_name());
-                bulkFileService.insertEndFileBulk(split);
+            if (split.isEof()) {
+                /** File Upload End Checking*/
+                if (jsonArray.length() != 0) {
+                    /** File End But Data is not inserted
+                     * insert file data and update file row data ended
+                     * */
+                    bulkFileService.insertEndFileBulk(split);
+                } else {
+                    /** File End but Data is Inserted
+                     * update file row data ended*/
+                }
+                bulkFileService.updateEndFileBulk(split);
             } else {
-            }*/
+                /** File Not End*/
+                bulkFileService.insertFileBulk(split);
+            }
             log.info(jsonArray.toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -583,7 +593,9 @@ public class TestController {
                                 }
                             }
                             log.info("11 queue poll");
-                            mergeFileStorage.poll();
+                            if (mergeFileStorage.poll() != null) {
+                                bulkFileService.updateCompleteFileBulk(splitFileData);
+                            }
                         }
                     }
                 }

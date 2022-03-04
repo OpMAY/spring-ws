@@ -115,18 +115,6 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
         converters.add(converter);
     }
 
-    @Bean
-    public synchronized HashMap<String, PriorityQueue<SplitFileData>> splitFileStorage() {
-        log.info("SplitFileStorage initialized");
-        return new HashMap<String, PriorityQueue<SplitFileData>>();
-    }
-
-    @Bean
-    public synchronized PriorityQueue<SplitFileData> mergeFileStorage() {
-        log.info("MergeFileStorage initialized");
-        return new PriorityQueue<SplitFileData>();
-    }
-
     @Bean // view resolver
     public ViewResolver configureViewResolvers() {
         log.info("configureViewResolvers : initializing");

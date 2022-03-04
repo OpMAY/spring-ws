@@ -92,4 +92,19 @@ public class TestDao {
         TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
         return testMapper.selectFileByName(file_name);
     }
+
+    public void insertEndFileBulk(SplitFileData split) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        testMapper.insertEndFileBulk(split);
+    }
+
+    public void updateEndFileBulk(SplitFileData split) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        testMapper.updateEndFileBulk(split);
+    }
+
+    public void updateCompleteFileBulk(SplitFileData splitFileData) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        testMapper.updateCompleteFileBulk(splitFileData);
+    }
 }
