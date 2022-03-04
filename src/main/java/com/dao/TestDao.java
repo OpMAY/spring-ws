@@ -77,4 +77,34 @@ public class TestDao {
         TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
         return testMapper.selectDataCountByFileName(file_name);
     }
+
+    public SplitFileData selectFileByNo(int split_file_data_no) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        return testMapper.selectFileByNo(split_file_data_no);
+    }
+
+    public SplitFileData selectInsertQueue() {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        return testMapper.selectInsertQueue();
+    }
+
+    public ArrayList<SplitFileData> selectFileByName(String file_name) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        return testMapper.selectFileByName(file_name);
+    }
+
+    public void insertEndFileBulk(SplitFileData split) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        testMapper.insertEndFileBulk(split);
+    }
+
+    public void updateEndFileBulk(SplitFileData split) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        testMapper.updateEndFileBulk(split);
+    }
+
+    public void updateCompleteFileBulk(SplitFileData splitFileData) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        testMapper.updateCompleteFileBulk(splitFileData);
+    }
 }

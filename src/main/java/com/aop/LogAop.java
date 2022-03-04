@@ -31,12 +31,12 @@ public class LogAop {
     public Object AroundController(ProceedingJoinPoint joinPoint) throws Throwable {
         try {
             requestLogger.setRequestURL(request.getRequestURI());
-            requestLogger.log(PREFIX_IN, joinPoint);
+            //requestLogger.log(PREFIX_IN, joinPoint);
             Object result = joinPoint.proceed();
-            requestLogger.log(PREFIX_OUT, joinPoint);
+            //requestLogger.log(PREFIX_OUT, joinPoint);
             return result;
         } catch (Exception e) {
-            requestLogger.log(PREFIX_EX, joinPoint);
+            //requestLogger.log(PREFIX_EX, joinPoint);
             throw e;
         }
     }
@@ -44,14 +44,14 @@ public class LogAop {
     @Around("execution(* com.service..*(..))")
     public Object AroundService(ProceedingJoinPoint joinPoint) throws Throwable {
         try {
-            requestLogger.log(PREFIX_IN, joinPoint);
+            //requestLogger.log(PREFIX_IN, joinPoint);
             long start_time = System.currentTimeMillis();
             Object result = joinPoint.proceed();
             long end_time = System.currentTimeMillis();
-            requestLogger.log(end_time - start_time, PREFIX_OUT, joinPoint);
+            //requestLogger.log(end_time - start_time, PREFIX_OUT, joinPoint);
             return result;
         } catch (Exception e) {
-            requestLogger.log(PREFIX_EX, joinPoint);
+            //requestLogger.log(PREFIX_EX, joinPoint);
             throw e;
         }
     }

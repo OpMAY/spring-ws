@@ -26,6 +26,35 @@
  - 금융결제원 페이지에서 서비스 키 & 비밀 키 발급 후 `key.properties` 파일에 `ACCOUNT_VERIFY_CLIENT_ID, 
    ACCOUNT_VERIFY_CLIENT_SECRET` 를 등록 후 사용가능합니다. 
 
+####6. Bulk File Upload
+ - 대용량 파일 업로드가 가능해졋습니다. `TestController.class 의 splitFileUpload function 등 참조` (1GB 이상 서버 과부하 분산)
+ - Bulk File Upload는 `AppConfig.class 의 SplitFileStorage.bean` 와 같이 사용됩니다.
+ - (Caution) 데이터 저장 방식에 대한 고민이 필요합니다.
+ - (DB) End Data가 DB에 넣어져야 합니다. (업로드 보장성 추가)
+ - (DB) `file_bulk` Table이 추가됬습니다. (Database Init 부분 참조)
+ - (INFO) 네트워크 이상 및 기타 오류에서 업로드를 보장할 수 없습니다.
+ - (INFO) 11GB 기준 Local 10분입니다.
+ - (INFO) Chunk와 Payload에 대한 지식이 있어야합니다.
+ - (BUGFIX) javascript out of memory 문제를 해결했습니다.
+ - (BUGFIX) java out of memory 문제를 해결했습니다.
+ - (SETTING) Tomcat의 설정이 필요합니다. (maxPostSize, maxSavePostSize를 참조해주세요.)
+ - (2022-03-04) 해당 로직에 Queue System이 적용되었습니다. `file_bulk` 테이블에 upload 종료인 end와 blob을 file화 작업 종료인 complete를 추가하였습니다.
+
+####7. Bulk File Download
+ - 대용량 파일 다운로드가 가능해졋습니다.
+ - (DB) `file_bulk` Table이 필요합니다.
+ - (INFO) 파일을 합치는것이 아닌 Base64 문자열을 바이너리로 바꿔서 버퍼에 write 시키는 방식입니다.
+
+####8. File Download
+ - 기존의 FileDownload가 DownloadBuilder로 대체 되었습니다. (`TestController.java download()` 함수 참조)
+
+####9. BulkFileService
+ - 대용량 데이터 전용인 `BulkFileService.class`가 추가되었습니다.
+
+####10. Bulk File Queue System
+ - 대용량 데이터 전용 Queue가 생성됩니다. (`QueueConfig`를 참조)
+ - `SplitFileStorage`와`MergeFileStorage` 가 각각 FileUploadQueue와 BlobToFile Queue 입니다.
+
 ##업데이트
 
 ####0.Build
@@ -74,27 +103,6 @@
  - 프로젝트별로 유연하게 사용할 수 있도록 EncryptionService를 인터페이스화 하였습니다.
  - Front에서 하던 Cookie 암호화 작업을 Server에서 하도록 하였습니다.
  - `/encrypt.do`, `/decrypt.do` 컨트롤러에서 REST API 형식으로 암/복호화를 할 수 있습니다.
-
-####10. Bulk File Upload
- - 대용량 파일 업로드가 가능해졋습니다. `TestController.class 의 splitFileUpload function 등 참조` (1GB 이상 서버 과부하 분산)
- - Bulk File Upload는 `AppConfig.class 의 SplitFileStorage.bean` 와 같이 사용됩니다.
- - (Caution) 데이터 저장 방식에 대한 고민이 필요합니다.
- - (DB) End Data가 DB에 넣어져야 합니다. (업로드 보장성 추가)
- - (DB) `file_bulk` Table이 추가됬습니다. (Database Init 부분 참조)
- - (INFO) 네트워크 이상 및 기타 오류에서 업로드를 보장할 수 없습니다.
- - (INFO) 11GB 기준 Local 10분입니다.
- - (INFO) Chunk와 Payload에 대한 지식이 있어야합니다.
- - (BUGFIX) javascript out of memory 문제를 해결했습니다.
- - (BUGFIX) java out of memory 문제를 해결했습니다.
- - (SETTING) Tomcat의 설정이 필요합니다. (maxPostSize, maxSavePostSize를 참조해주세요.)
-####11. Bulk File Download
- - 대용량 파일 다운로드가 가능해졋습니다.
- - (DB) `file_bulk` Table이 필요합니다.
- - (INFO) 파일을 합치는것이 아닌 Base64 문자열을 바이너리로 바꿔서 버퍼에 write 시키는 방식입니다.
-####12. File Download
- - 기존의 FileDownload가 DownloadBuilder로 대체 되었습니다. (`TestController.java download()` 함수 참조)
-####13. BulkFileService
- - `BulkFileService.class`가 추가되었습니다.
 ##Database Init
 ``` mysql
 CREATE DATABASE  IF NOT EXISTS `flowtest` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
@@ -221,8 +229,12 @@ CREATE TABLE `file_bulk` (
   `file_type` varchar(255) DEFAULT NULL,
   `file_info` mediumtext,
   `mime_type` varchar(255) DEFAULT NULL,
+  `end` tinyint(1) DEFAULT NULL,
+  `updated_date` datetime DEFAULT NULL,
+  `reg_date` datetime DEFAULT NULL,
+  `complete` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`no`)
-) ENGINE=InnoDB AUTO_INCREMENT=241 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB AUTO_INCREMENT=252 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

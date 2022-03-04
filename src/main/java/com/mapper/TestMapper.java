@@ -30,4 +30,16 @@ public interface TestMapper {
     SplitFileData selectFileByNameAndIndex(@Param("name") String name, @Param("start_index") Integer start_index, @Param("last_index") Integer last_index);
 
     Integer selectDataCountByFileName(String file_name);
+
+    SplitFileData selectFileByNo(@Param("no") int split_file_data_no);
+
+    SplitFileData selectInsertQueue();
+
+    ArrayList<SplitFileData> selectFileByName(@Param("file_name") String file_name);
+
+    void insertEndFileBulk(SplitFileData split);
+
+    void updateEndFileBulk(SplitFileData split);
+
+    void updateCompleteFileBulk(SplitFileData splitFileData);
 }

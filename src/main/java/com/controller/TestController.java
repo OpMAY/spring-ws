@@ -28,22 +28,29 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
@@ -63,7 +70,6 @@ public class TestController {
     private final LunarAlarmAPI lunarAlarmAPI;
     private final InstagramAPI instagramAPI;
     private final MailBuilder mailBuilder;
-
 
 
     @GetMapping("/get-test.do")
@@ -331,8 +337,8 @@ public class TestController {
                 }
             }
             long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
-            long secDiffTime = (afterTime - beforeTime)/1000; //두 시간에 차 계산
-            System.out.println("시간차이(m) : "+secDiffTime);
+            long secDiffTime = (afterTime - beforeTime) / 1000; //두 시간에 차 계산
+            System.out.println("시간차이(m) : " + secDiffTime);
         } catch (FileUploadException e) {
             e.printStackTrace();
             log.info("postBulkUpload end");
@@ -349,7 +355,7 @@ public class TestController {
         Message message = new Message();
         String value = map.get("value");
         System.out.println("value = " + value);
-        boolean result =  businessRegistrationAPI.isValid(value);
+        boolean result = businessRegistrationAPI.isValid(value);
         message.put("status", result);
         return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap()), HttpStatus.OK);
     }
@@ -384,12 +390,11 @@ public class TestController {
 
     static final int CHUNK_AMOUNT = 20;
 
+    final String SPLIT_WORD = "base64,";
 
     @ResponseBody
     @PostMapping(value = "/upload/split/general")
     public ResponseEntity<String> splitFileUpload(SplitFileData split) throws JSONException, IOException {
-        final String SPLIT_WORD = "base64,";
-        log.info("{}", split.getOrder_index());
         if (!split.isEof()) {
             if (splitFileStorage.get(split.getFile_name()) != null) {
                 stringBuilder = new StringBuilder(new String(split.getFile_data()).trim());
@@ -458,7 +463,22 @@ public class TestController {
                 jsonArray.put(jsonObject);
             }
             split.setJsonStr(jsonArray.toString());
-            bulkFileService.insertFileBulk(split);
+            if (split.isEof()) {
+                /** File Upload End Checking*/
+                if (jsonArray.length() != 0) {
+                    /** File End But Data is not inserted
+                     * insert file data and update file row data ended
+                     * */
+                    bulkFileService.insertEndFileBulk(split);
+                } else {
+                    /** File End but Data is Inserted
+                     * update file row data ended*/
+                }
+                bulkFileService.updateEndFileBulk(split);
+            } else {
+                /** File Not End*/
+                bulkFileService.insertFileBulk(split);
+            }
             log.info(jsonArray.toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -495,9 +515,9 @@ public class TestController {
         Integer count = bulkFileService.selectDataCountByFileName(file_name); // 몇개의 줄이 있는지
         boolean complete = true;
         SplitFileData splitFileData;
-        for (int i=0; i<count; i++) {
-            splitFileData = bulkFileService.selectFileByNameAndIndex(file_name, i*CHUNK_AMOUNT+1, (i+1)*CHUNK_AMOUNT);
-            if (!downloadBuilder.bulkFilePush(splitFileData, i == count-1)) { // 실패시 멈춤
+        for (int i = 0; i < count; i++) {
+            splitFileData = bulkFileService.selectFileByNameAndIndex(file_name, i * CHUNK_AMOUNT + 1, (i + 1) * CHUNK_AMOUNT);
+            if (!downloadBuilder.bulkFilePush(splitFileData, i == count - 1)) { // 실패시 멈춤
                 complete = false;
                 break;
             }
@@ -507,6 +527,121 @@ public class TestController {
             System.out.println("bulk file download success");
         } else {
             System.out.println("bulk file download fail");
+        }
+    }
+
+    @GetMapping("/video.do")
+    public ModelAndView getVideo() {
+        return new ModelAndView("video");
+    }
+
+    @Autowired
+    private PriorityQueue<SplitFileData> mergeFileStorage;
+
+    @GetMapping("/changevideo.do")
+    public void changeVideo() throws IOException {
+        log.info("1 ChangeVideo Start");
+        OutputStream fileOutputStream = null;
+        JSONArray jsonArray = null;
+        List<String> read;
+        SplitFileData splitFileData = null;
+        /** File Upload Queue가 비었을 때 진행 : Scheduling에서 지속적 확인*/
+        if (splitFileStorage.isEmpty()) {
+            log.info("2 SplitFileStorage is empty start db scan");
+            if (mergeFileStorage.isEmpty()) {
+                log.info("3 MergeFileStorage is empty");
+                /** File Merge Queue가 비었을 때 실행
+                 * 1. DB 스캔 오래된 file_bulk를 찾는다, end = 1인것들하고 가장 오래된것들, JsonStr 제외하고 찿아온다
+                 * 2. ArrayList<SplitFileData>()를 돌려서 Merge Queue로 넣는다.
+                 * 3. Merge Queue를 돌린다.
+                 * */
+                SplitFileData data = bulkFileService.selectInsertQueue();
+                ArrayList<SplitFileData> splits = bulkFileService.selectFileByName(data.getFile_name());
+                log.info("4 MergeFileStorage insert start");
+                for (SplitFileData queueItem : splits) {
+                    log.info("5 MergeFileStorage insert item");
+                    mergeFileStorage.add(queueItem);
+                }
+                /** File Merge Queue가 비지 않았다면 File Merge 그대로 실행*/
+                if (!mergeFileStorage.isEmpty()) {
+                    log.info("6 MergeFileStorage is peek");
+                    splitFileData = mergeFileStorage.peek();
+                    fileOutputStream = new FileOutputStream(new File(path + splitFileData.getFile_name()));
+                    /** File Merge Queue가 비지 않았다면 File Merge 그대로 실행*/
+                    while (!mergeFileStorage.isEmpty()) {
+                        log.info("7 splitFileStorage while start");
+                        /** File Upload Queue가 비지 않았다면 진행 불가*/
+                        if (!splitFileStorage.isEmpty()) {
+                            log.info("8 splitFileStorage is empty close init");
+                            if (fileOutputStream != null) {
+                                fileOutputStream.flush();
+                                fileOutputStream.close();
+                            }
+                            jsonArray = null;
+                            splitFileData = null;
+                            read = null;
+                            log.info("9 Break");
+                            break;
+                        } else {
+                            log.info("10 splitFileStorage is not empty write file start for 1~20 blob");
+                            splitFileData = bulkFileService.selectFileByNo(splitFileData.getNo());
+                            jsonArray = new JSONArray(splitFileData.getJsonStr());
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                read = Files.readAllLines(Paths.get(path + jsonArray.getJSONObject(i).getString("file_name")));
+                                for (String s : read) {
+                                    fileOutputStream.write(Base64.getDecoder().decode(s));
+                                }
+                            }
+                            log.info("11 queue poll");
+                            if (mergeFileStorage.poll() != null) {
+                                bulkFileService.updateCompleteFileBulk(splitFileData);
+                            }
+                        }
+                    }
+                }
+            } else {
+                log.info("12 MergeFileStorage is not Empty");
+                splitFileData = mergeFileStorage.peek();
+                fileOutputStream = new FileOutputStream(new File(path + splitFileData.getFile_name()));
+                /** File Merge Queue가 비지 않았다면 File Merge 그대로 실행*/
+                while (!mergeFileStorage.isEmpty()) {
+                    /** File Upload Queue가 비지 않았다면 진행 불가*/
+                    if (!splitFileStorage.isEmpty()) {
+                        log.info("13 splitFileStorage is empty close init");
+                        if (fileOutputStream != null) {
+                            fileOutputStream.flush();
+                            fileOutputStream.close();
+                        }
+                        jsonArray = null;
+                        splitFileData = null;
+                        read = null;
+                        log.info("14 Break");
+                        break;
+                    } else {
+                        log.info("15 splitFileStorage is not empty write file start for 1~20 blob");
+                        splitFileData = bulkFileService.selectFileByNo(splitFileData.getNo());
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            read = Files.readAllLines(Paths.get(path + jsonArray.getJSONObject(i).getString("file_name")));
+                            for (String s : read) {
+                                fileOutputStream.write(Base64.getDecoder().decode(s));
+                            }
+                        }
+                        log.info("16 queue poll");
+                        if (mergeFileStorage.poll() != null) {
+                            bulkFileService.updateCompleteFileBulk(splitFileData);
+                        }
+                    }
+                }
+            }
+            if (fileOutputStream != null) {
+                fileOutputStream.flush();
+                fileOutputStream.close();
+            }
+            jsonArray = null;
+            splitFileData = null;
+            read = null;
+        } else {
+            log.info("17 SplitFileStorage is not empty ChangeVideo End");
         }
     }
 }

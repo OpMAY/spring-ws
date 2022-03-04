@@ -56,16 +56,61 @@
         values (#{name}, now(), now());
     </insert>
     <insert id="insertFileBulk" useGeneratedKeys="true" keyProperty="no">
-        insert into file_bulk(order_index, file_name, file_type, file_info, mime_type)
-        VALUES (#{order_index}, #{file_name}, #{file_type}, #{jsonStr}, #{mime_type});
+        insert into file_bulk(order_index, file_name, file_type, file_info, mime_type, reg_date, updated_date, end,
+                              complete)
+        VALUES (#{order_index}, #{file_name}, #{file_type}, #{jsonStr}, #{mime_type}, now(), now(), 0, 0);
     </insert>
     <select id="selectDataCountByFileName" resultType="Integer">
-        select count(*) from file_bulk where file_name=#{name};
+        select count(*)
+        from file_bulk
+        where file_name = #{name};
     </select>
     <select id="selectFileByNameAndIndex" resultType="SplitFileData">
         select file_name, file_info as jsonStr
-        from file_bulk where file_name=#{name}
-                         and order_index >= #{start_index}
-                         and #{last_index} >= order_index;
+        from file_bulk
+        where file_name = #{name}
+          and order_index >= #{start_index}
+          and #{last_index} >= order_index;
     </select>
+    <select id="selectFileByNo" resultType="SplitFileData">
+        select fb.*, fb.file_info as jsonStr
+        from file_bulk as fb
+        where no = #{no};
+    </select>
+    <select id="selectInsertQueue" resultType="SplitFileData">
+        select fb.no, fb.end, fb.file_name, fb.order_index, fb.file_type
+        from file_bulk as fb
+        where end = 1
+          and complete = 0
+        order by reg_date asc, order_index asc
+        LIMIT 1;
+    </select>
+    <select id="selectFileByName" resultType="SplitFileData">
+        select fb.no, fb.end, fb.file_name, fb.order_index, fb.file_type
+        from file_bulk as fb
+        where end = 1
+          and complete = 0
+          and file_name = #{file_name}
+        order by reg_date asc, order_index asc
+    </select>
+    <insert id="insertEndFileBulk" parameterType="SplitFileData" keyProperty="no" useGeneratedKeys="true">
+        INSERT INTO file_bulk(order_index, file_name, file_type, file_info, mime_type, end, updated_date, reg_date,
+                              complete)
+        VALUES (#{order_index}, #{file_name}, #{file_type}, #{jsonStr}, #{mime_type}, 1, now(), now(), 0);
+    </insert>
+    <update id="updateEndFileBulk" parameterType="SplitFileData">
+        update file_bulk
+        set end=1,
+            updated_date=now()
+        where file_name = #{file_name}
+          and end = 0;
+    </update>
+    <update id="updateCompleteFileBulk" parameterType="SplitFileData">
+        update file_bulk
+        set complete    = 1,
+            updated_date=now()
+        where file_name = #{file_name}
+          and end = 1
+          and complete = 0;
+    </update>
 </mapper>
