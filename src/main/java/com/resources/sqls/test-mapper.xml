@@ -113,4 +113,9 @@
           and end = 1
           and complete = 0;
     </update>
+    <select id="selectFileAllByName" parameterType="String" resultType="SplitFileData">
+        select fb.*, fb.file_info as jsonStr
+        from file_bulk as fb
+        where file_name = #{file_name}
+    </select>
 </mapper>

@@ -107,4 +107,9 @@ public class TestDao {
         TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
         testMapper.updateCompleteFileBulk(splitFileData);
     }
+
+    public ArrayList<SplitFileData> selectFileAllByName(String file_name) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        return testMapper.selectFileAllByName(file_name);
+    }
 }

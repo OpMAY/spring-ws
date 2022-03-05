@@ -46,6 +46,7 @@ public class PropertyConfig implements ApplicationContextInitializer<Configurabl
             properties = propertySource.getSource();
             properties.forEach((key, value) -> {
                 try {
+                    log.info(key + " = " + encryptionService.decryptAES((String) value));
                     en_properties.put(key, encryptionService.decryptAES((String) value));
                 } catch (Exception e) {
                     e.printStackTrace();

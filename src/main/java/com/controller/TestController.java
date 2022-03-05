@@ -6,6 +6,7 @@ import com.api.businessRegistration.BusinessRegistrationAPI;
 import com.api.instagram.InstagramAPI;
 import com.api.lunarsoft.alarm.LunarAlarmAPI;
 import com.api.mail.MailBuilder;
+import com.aws.CDNService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.model.SplitFileData;
@@ -388,7 +389,7 @@ public class TestController {
     }
 
 
-    static final int CHUNK_AMOUNT = 20;
+    static final int CHUNK_AMOUNT = 10;
 
     final String SPLIT_WORD = "base64,";
 
@@ -545,6 +546,8 @@ public class TestController {
         JSONArray jsonArray = null;
         List<String> read;
         SplitFileData splitFileData = null;
+        SplitFileData data = null;
+        ArrayList<SplitFileData> splits = null;
         /** File Upload Queue가 비었을 때 진행 : Scheduling에서 지속적 확인*/
         if (splitFileStorage.isEmpty()) {
             log.info("2 SplitFileStorage is empty start db scan");
@@ -555,8 +558,8 @@ public class TestController {
                  * 2. ArrayList<SplitFileData>()를 돌려서 Merge Queue로 넣는다.
                  * 3. Merge Queue를 돌린다.
                  * */
-                SplitFileData data = bulkFileService.selectInsertQueue();
-                ArrayList<SplitFileData> splits = bulkFileService.selectFileByName(data.getFile_name());
+                data = bulkFileService.selectInsertQueue();
+                splits = bulkFileService.selectFileByName(data.getFile_name());
                 log.info("4 MergeFileStorage insert start");
                 for (SplitFileData queueItem : splits) {
                     log.info("5 MergeFileStorage insert item");
@@ -637,11 +640,30 @@ public class TestController {
                 fileOutputStream.flush();
                 fileOutputStream.close();
             }
+            if (splits != null) {
+                splits.clear();
+            }
+            data = null;
             jsonArray = null;
             splitFileData = null;
             read = null;
         } else {
             log.info("17 SplitFileStorage is not empty ChangeVideo End");
         }
+    }
+
+    @Autowired
+    private CDNService cdnService;
+
+    @ResponseBody
+    @GetMapping(value = "/upload/aws.do")
+    public ResponseEntity<String> uploadAWS() {
+        Message message = new Message();
+        cdnService.awsBufferUploadTest(path);
+        return new ResponseEntity(
+                DefaultRes.res(
+                        StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap("ajax")
+                ), HttpStatus.OK
+        );
     }
 }

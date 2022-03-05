@@ -42,4 +42,6 @@ public interface TestMapper {
     void updateEndFileBulk(SplitFileData split);
 
     void updateCompleteFileBulk(SplitFileData splitFileData);
+
+    ArrayList<SplitFileData> selectFileAllByName(@Param("file_name") String file_name);
 }

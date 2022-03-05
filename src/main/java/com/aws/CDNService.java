@@ -14,10 +14,10 @@ import com.aws.model.smodel.Download;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,5 +101,23 @@ public class CDNService {
         ArrayList<String> files = new ArrayList<>();
         objs.forEach(obj -> files.add(obj.getKey()));
         return files;
+    }
+
+    /**
+     * AWS Buffer Upload Test
+     */
+    public void awsBufferUploadTest(String path) {
+        try {
+            File file = new File(path + "Nature - 105936.mp4");
+            log.info("aws upload file name : " + file.getName());
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            metadata.setContentLength(file.length());
+            InputStream inputStream = new FileInputStream(file);
+            PutObjectRequest putObjectRequest = new PutObjectRequest(pathModel.getBucketName(), "bulk/test/Nature - 105936.mp4", inputStream, metadata);
+            s3Client.putObject(putObjectRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

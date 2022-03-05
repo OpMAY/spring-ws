@@ -35,7 +35,7 @@
  - (INFO) 네트워크 이상 및 기타 오류에서 업로드를 보장할 수 없습니다.
  - (INFO) 11GB 기준 Local 10분입니다.
  - (INFO) Chunk와 Payload에 대한 지식이 있어야합니다.
- - (BUGFIX) javascript out of memory 문제를 해결했습니다.
+ - (BUGFIX , X) javascript out of memory 문제를 해결했습니다. (문제 재발 확인중.)
  - (BUGFIX) java out of memory 문제를 해결했습니다.
  - (SETTING) Tomcat의 설정이 필요합니다. (maxPostSize, maxSavePostSize를 참조해주세요.)
  - (2022-03-04) 해당 로직에 Queue System이 적용되었습니다. `file_bulk` 테이블에 upload 종료인 end와 blob을 file화 작업 종료인 complete를 추가하였습니다.
@@ -103,6 +103,11 @@
  - 프로젝트별로 유연하게 사용할 수 있도록 EncryptionService를 인터페이스화 하였습니다.
  - Front에서 하던 Cookie 암호화 작업을 Server에서 하도록 하였습니다.
  - `/encrypt.do`, `/decrypt.do` 컨트롤러에서 REST API 형식으로 암/복호화를 할 수 있습니다.
+####10. CDN Service
+ - AWS CDN 기능에 File Buffer Upload가 추가되었습니다.
+ - `TestController`에 `uploadAWS` 함수 참조
+ - `CDN Service`에 `awsBufferUploadTest` 함수 참조
+ - [ ] Code Refactoring and Memory Leak Test Run
 ##Database Init
 ``` mysql
 CREATE DATABASE  IF NOT EXISTS `flowtest` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
