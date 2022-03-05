@@ -52,4 +52,8 @@ public class BulkFileService {
     public void updateCompleteFileBulk(SplitFileData splitFileData) {
         testDao.updateCompleteFileBulk(splitFileData);
     }
+
+    public ArrayList<SplitFileData> selectFileAllByName(String file_name) {
+        return testDao.selectFileAllByName(file_name);
+    }
 }

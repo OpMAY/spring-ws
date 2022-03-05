@@ -15,7 +15,7 @@
 <body>
 <div class="container mt-5 mb-5">
     <video controlsList="nodownload" id="video" width="100%"
-           src="https://okiwi-test2.s3.ap-northeast-2.amazonaws.com/video/frag_bunny.mp4" controls>
+           src="https://okiwi-test2.s3.ap-northeast-2.amazonaws.com/bulk/test/Nature+-+105936.mp4" controls>
     </video>
 </div>
 <!-- Optional JavaScript; choose one of the two! -->

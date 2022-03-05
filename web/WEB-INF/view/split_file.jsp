@@ -32,6 +32,7 @@
         integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
         crossorigin="anonymous"></script>
 <script src="../../resources/dev-suggest/bootstrap-4.5.0-dist/js/jquery.js"></script>
+<script src="../../resources/js/common.js"></script>
 <!-- Option 2: Separate Popper and Bootstrap JS -->
 <!--
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -49,6 +50,8 @@
     let payload;
     let size_done;
     let percent_done;
+    let token;
+    let divide = '_';
 
     /**
      * @dates 2022.03.02
@@ -56,6 +59,7 @@
      * @description Client to server file upload start function
      */
     function start_upload() {
+        token = tokenGenerator(8);
         reader = new FileReader();
         file = document.querySelector('#file-input').files[0];
         upload_file(0);
@@ -80,7 +84,7 @@
             payload = {
                 eof: false,
                 file_data: event.target.result,
-                file_name: file.name,
+                file_name: token + divide + file.name,
                 file_type: file.type,
                 order_index: index
             }
@@ -106,7 +110,7 @@
                         /** End Data Send */
                         payload = {
                             eof: true,
-                            file_name: file.name,
+                            file_name: token + divide + file.name,
                             file_type: file.type,
                             order_index: ++index
                         };
