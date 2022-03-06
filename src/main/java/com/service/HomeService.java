@@ -1,7 +1,10 @@
 package com.service;
 
 import com.dao.TestDao;
-import com.model.*;
+import com.model.ArrayTest;
+import com.model.Test;
+import com.model.UserContainer;
+import com.model.UserTest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

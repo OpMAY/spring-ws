@@ -1,6 +1,5 @@
 package com.api;
 
-import com.model.User;
 import com.api.sns.google.GoogleAPI;
 import com.api.sns.google.GoogleAccess;
 import com.api.sns.google.GoogleInfo;
@@ -10,6 +9,7 @@ import com.api.sns.kakao.KakaoInfo;
 import com.api.sns.naver.NaverAPI;
 import com.api.sns.naver.NaverAccess;
 import com.api.sns.naver.NaverInfo;
+import com.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

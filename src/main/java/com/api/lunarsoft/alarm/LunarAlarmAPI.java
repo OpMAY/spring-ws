@@ -3,7 +3,6 @@ package com.api.lunarsoft.alarm;
 import com.api.lunarsoft.alarm.custom.SignUp;
 import com.google.gson.Gson;
 import com.transfer.ProtocolBuilder;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
