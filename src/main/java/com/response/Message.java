@@ -5,7 +5,10 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 @Data
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)

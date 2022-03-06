@@ -12,7 +12,7 @@ import java.util.UUID;
 
 /**
  * request logger는 Bean의 Scope를 "request"로 설정함에 따라 각 request 마다 uuid를 생성하여 로그를 출력해줍니다. <br>
- * Log Form: [uuid][time(서비스의 경우)] class.method
+ * Log Form: [uuid][time(서비스의 경우)] returnType class.method()
  */
 
 
@@ -33,11 +33,11 @@ public class RequestLogger {
     }
 
     public void log(String prefix, ProceedingJoinPoint joinPoint) {
-        log.info("[{}][{}]{}{}.{}", uuid, requestURL, prefix, joinPoint.getThis().toString().split("@")[0], joinPoint.getSignature().getName());
+        log.info("[{}][{}]{}{}", uuid, requestURL, prefix, joinPoint.getSignature());
     }
 
     public void log(long time, String prefix, ProceedingJoinPoint joinPoint) {
-        log.info("[{}][{}][{}]{}{}.{}", uuid, requestURL, time, prefix, joinPoint.getThis().toString().split("@")[0], joinPoint.getSignature().getName());
+        log.info("[{}][{}][{}]{}{}", uuid, requestURL, time, prefix, joinPoint.getSignature());
     }
 
     @PostConstruct

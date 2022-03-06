@@ -2,7 +2,6 @@ package com.exception;
 
 
 import com.response.DefaultRes;
-import com.response.ResMessage;
 import com.response.StatusCode;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
