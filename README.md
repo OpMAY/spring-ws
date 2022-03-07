@@ -58,6 +58,11 @@
 ####11. Video Player
  - `video.js`를 이용한 video player가 추가됩니다.(`video.jsp` 참조)
  - Video Player에 Hotkeys가 추가되었습니다.
+
+####12. Email Auth
+ - 로컬 인증 중 이메일 인증이 추가되었습니다. (`email.jsp`,`TestController`에 `postAuthEmail` 참조)
+ - 기존 `MailBuilder.class`를 사용하였습니다.
+ 
 ##업데이트
 
 ####0.Build
