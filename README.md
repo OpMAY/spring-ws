@@ -55,6 +55,9 @@
  - 대용량 데이터 전용 Queue가 생성됩니다. (`QueueConfig`를 참조)
  - `SplitFileStorage`와`MergeFileStorage` 가 각각 FileUploadQueue와 BlobToFile Queue 입니다.
 
+####11. Video Player
+ - `video.js`를 이용한 video player가 추가됩니다.(`video.jsp` 참조)
+ - Video Player에 Hotkeys가 추가되었습니다.
 ##업데이트
 
 ####0.Build
