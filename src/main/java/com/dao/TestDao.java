@@ -1,7 +1,9 @@
 package com.dao;
 
+import com.controller.TestController;
 import com.mapper.TestMapper;
 import com.model.*;
+import com.model.mybatis.ArrayTestModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
@@ -111,5 +113,15 @@ public class TestDao {
     public ArrayList<SplitFileData> selectFileAllByName(String file_name) {
         TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
         return testMapper.selectFileAllByName(file_name);
+    }
+
+    public void arrayTestModelInsertTest(ArrayTestModel arrayTestModel) {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        testMapper.arrayTestModelInsertTest(arrayTestModel);
+    }
+
+    public ArrayList<ArrayTestModel> arrayTestModelSelectTest() {
+        TestMapper testMapper = sqlSession.getMapper(TestMapper.class);
+        return testMapper.arrayTestModelSelectTest();
     }
 }

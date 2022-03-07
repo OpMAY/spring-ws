@@ -118,4 +118,17 @@
         from file_bulk as fb
         where file_name = #{file_name}
     </select>
+    <insert id="arrayTestModelInsertTest" parameterType="ArrayTestModel">
+        insert into insert_array_test(name, tags)
+        VALUES (#{name}, #{tags, typeHandler=com.middleware.StringArrayListTypeHandler});
+    </insert>
+    <resultMap id="array_test_model" type="com.model.mybatis.ArrayTestModel">
+        <result column="no" property="no"/>
+        <result column="tags" property="tags" javaType="com.model.mybatis.ArrayTestModel"
+                typeHandler="com.middleware.StringArrayListTypeHandler"/>
+    </resultMap>
+    <select id="arrayTestModelSelectTest" resultType="ArrayTestModel" resultMap="array_test_model">
+        select *
+        from insert_array_test;
+    </select>
 </mapper>
