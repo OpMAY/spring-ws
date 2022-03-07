@@ -7,6 +7,8 @@ import com.api.instagram.InstagramAPI;
 import com.api.lunarsoft.alarm.LunarAlarmAPI;
 import com.api.mail.MailBuilder;
 import com.aws.CDNService;
+import com.exception.GrantAccessDeniedException;
+import com.exception.enums.BusinessExceptionType;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.model.SplitFileData;
@@ -29,24 +31,19 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -539,6 +536,19 @@ public class TestController {
     @Autowired
     private PriorityQueue<SplitFileData> mergeFileStorage;
 
+    /**
+     * changeVideo
+     * Version information
+     * 2022.03.07 1 author : kimwoosik
+     * Function Overview
+     * Blobs to file create function
+     * Constraint
+     * this function will be SplitFileStorage queue is empty
+     * scheduling work
+     * and file_bulk table row attributes end = 1, complete = 0, and blobs internal server storage has exist
+     * After Change
+     * file_bulk table row attribute complete = 1
+     */
     @GetMapping("/changevideo.do")
     public void changeVideo() throws IOException {
         log.info("1 ChangeVideo Start");
@@ -655,11 +665,49 @@ public class TestController {
     @Autowired
     private CDNService cdnService;
 
+    /**
+     * uploadAWS
+     * Version information
+     * 2022.03.07 1 author : kimwoosik
+     * Function Overview
+     * AWS file upload to buffer
+     * Constraint
+     * Internal server storage file has exist
+     * and scheduling work
+     */
     @ResponseBody
     @GetMapping(value = "/upload/aws.do")
     public ResponseEntity<String> uploadAWS() {
         Message message = new Message();
         cdnService.awsBufferUploadTest(path);
+        return new ResponseEntity(
+                DefaultRes.res(
+                        StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap("ajax")
+                ), HttpStatus.OK
+        );
+    }
+
+    @GetMapping(value = "/auth/email.do")
+    public ModelAndView getAuthEmail(HttpServletRequest request) {
+        return new ModelAndView("auth/email");
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/auth/email")
+    public ResponseEntity<String> postAuthEmail(String email) throws MessagingException {
+        String email_token = TokenGenerator.RandomIntegerToken(10);
+        Message message = new Message();
+        if (mailBuilder.setSession()
+                .setTo(email)
+                .setMailTitle("Authorization Test Email")
+                .setMailContent("<h1>Token : " + email_token + "</h1>")
+                .send()) {
+            /** Mail Send Success */
+            message.put("status", true);
+        } else {
+            /** Mail Send Failed*/
+            message.put("status", false);
+        }
         return new ResponseEntity(
                 DefaultRes.res(
                         StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap("ajax")
