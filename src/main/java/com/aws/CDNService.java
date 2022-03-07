@@ -106,17 +106,16 @@ public class CDNService {
     /**
      * AWS Buffer Upload Test
      */
-    public void awsBufferUploadTest(String path) {
-        try {
-            File file = new File(path + "Nature - 105936.mp4");
+    public void awsBufferUploadTest(String path, String file_name) {
+        File file = new File(path + file_name);
+        try (InputStream inputStream = new FileInputStream(file)) {
             log.info("aws upload file name : " + file.getName());
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
             metadata.setContentLength(file.length());
-            InputStream inputStream = new FileInputStream(file);
             PutObjectRequest putObjectRequest = new PutObjectRequest(pathModel.getBucketName(), "bulk/test/Nature - 105936.mp4", inputStream, metadata);
             s3Client.putObject(putObjectRequest);
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

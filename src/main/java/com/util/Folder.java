@@ -1,8 +1,11 @@
 package com.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.File;
 import java.util.ArrayList;
 
+@Slf4j
 public class Folder {
     /**
      * @param : full_path (C:\Users\zlzld\OneDrive\Desktop\projects\sustable\spring-master\out\artifacts\webapplication_Web_exploded\files\test.txt)
@@ -322,5 +325,14 @@ public class Folder {
      */
     public static String getFileType(File file) {
         return file.getName().substring(file.getName().lastIndexOf(".") + 1);
+    }
+
+    public static void deleteFile(String file_path) {
+        File target = new File(file_path);
+        if (target.delete()) {
+            log.info("File Deleted : {}", target.getName());
+        } else {
+            log.info("Failed to delete file : {}", target.getName());
+        }
     }
 }
