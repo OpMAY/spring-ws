@@ -74,7 +74,7 @@
                         alert('Un authorized')
                     }
                 }).catch(e => {
-                new Error(e);
+                new Error('Email authorization error');
             });
         });
     });
