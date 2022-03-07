@@ -62,7 +62,11 @@
 ####12. Email Auth
  - 로컬 인증 중 이메일 인증이 추가되었습니다. (`email.jsp`,`TestController`에 `postAuthEmail` 참조)
  - 기존 `MailBuilder.class`를 사용하였습니다.
- 
+
+####13. StringArrayListTypeHandler
+ - Mybatis Middleware 인 `StringArrayListTypeHandler.class`가 추가되었습니다. (`test-mapper.xml`과 `TestController.class`의 `postTypeHandlerTest` 참조)
+ - ArrayList<String> 타입에서만 적용되며 db는 ArrayList.toString()으로 자동으로 집어 넣고 꺼내올때는 ArrayList<String> 형식으로 가져오게됩니다.
+ - 추가에 따른 DB 변동이 있었습니다.
 ##업데이트
 
 ####0.Build
@@ -248,6 +252,13 @@ CREATE TABLE `file_bulk` (
   `complete` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`no`)
 ) ENGINE=InnoDB AUTO_INCREMENT=252 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `insert_array_test` (
+  `no` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `tags` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`no`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

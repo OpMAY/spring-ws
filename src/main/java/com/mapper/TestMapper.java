@@ -1,6 +1,8 @@
 package com.mapper;
 
+import com.controller.TestController;
 import com.model.*;
+import com.model.mybatis.ArrayTestModel;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.ArrayList;
@@ -44,4 +46,8 @@ public interface TestMapper {
     void updateCompleteFileBulk(SplitFileData splitFileData);
 
     ArrayList<SplitFileData> selectFileAllByName(@Param("file_name") String file_name);
+
+    void arrayTestModelInsertTest(ArrayTestModel arrayTestModel);
+
+    ArrayList<ArrayTestModel> arrayTestModelSelectTest();
 }

@@ -14,15 +14,18 @@ import com.google.gson.JsonParser;
 import com.model.SplitFileData;
 import com.model.User;
 import com.model.common.MFile;
+import com.model.mybatis.ArrayTestModel;
 import com.response.DefaultRes;
 import com.response.Message;
 import com.response.ResMessage;
 import com.response.StatusCode;
 import com.service.BulkFileService;
 import com.service.HomeService;
+import com.service.MybatisService;
 import com.service.OtherHomeService;
 import com.util.*;
 import com.util.Encryption.EncryptionService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.FileItemIterator;
@@ -713,5 +716,22 @@ public class TestController {
                         StatusCode.OK, ResMessage.TEST_SUCCESS, message.getHashMap("ajax")
                 ), HttpStatus.OK
         );
+    }
+
+    @GetMapping(value = "/mybatis/typehandler.do")
+    public ModelAndView getTypeHandlerTest() {
+        return new ModelAndView("mybatis/type_handler");
+    }
+
+    @Autowired
+    private MybatisService mybatisService;
+
+    @PostMapping(value = "/mybatis/typehandler.do")
+    public ModelAndView postTypeHandlerTest(ArrayTestModel arrayTestModel) {
+        log.info(arrayTestModel.toString());
+        mybatisService.arrayTestModelInsertTest(arrayTestModel);
+        ArrayList<ArrayTestModel> arrayTestModels = mybatisService.arrayTestModelSelectTest();
+        log.info(arrayTestModels.toString());
+        return new ModelAndView("mybatis/type_handler");
     }
 }
