@@ -1,6 +1,5 @@
 package com.mapper;
 
-import com.controller.TestController;
 import com.model.*;
 import com.model.mybatis.ArrayTestModel;
 import org.apache.ibatis.annotations.Param;
