@@ -19,12 +19,12 @@ public class QueueConfig {
     @Bean
     public synchronized HashMap<String, PriorityQueue<SplitFileData>> splitFileStorage() {
         log.info("SplitFileStorage initialized");
-        return new HashMap<String, PriorityQueue<SplitFileData>>();
+        return new HashMap<>();
     }
 
     @Bean
     public synchronized PriorityQueue<SplitFileData> mergeFileStorage() {
         log.info("MergeFileStorage initialized");
-        return new PriorityQueue<SplitFileData>();
+        return new PriorityQueue<>();
     }
 }
