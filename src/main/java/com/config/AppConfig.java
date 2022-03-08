@@ -3,7 +3,6 @@ package com.config;
 import com.filter.GeneralFilter;
 import com.filter.SessionFilter;
 import com.interceptor.BaseInterceptor;
-import com.model.SplitFileData;
 import com.util.FileDownload;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
@@ -40,7 +39,10 @@ import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRegistration;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.List;
 
 @Slf4j
 @Configuration
