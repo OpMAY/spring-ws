@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-public interface Log {
+public interface LoggingInterceptor {
     public Map<String, Object> getHeaders(HttpServletRequest request);
 
     String getPayload(String contentType, InputStream inputStream) throws IOException;

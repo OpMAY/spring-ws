@@ -13,5 +13,4 @@ public class Response {
     private Integer match_cnt;
     private String status_code;
     private List<Data> data;
-
 }

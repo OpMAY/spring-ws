@@ -29,7 +29,7 @@ import java.util.*;
  * Post 및 Get URL 및 Method 및 Body 데이터 로깅
  */
 @Slf4j
-public class LogInterceptor extends HandlerInterceptorAdapter implements Log {
+public class LogInterceptor extends HandlerInterceptorAdapter implements LoggingInterceptor {
     @PostConstruct
     public void LogInterceptor() {
         log.debug("Log Interceptor Post Initialize");

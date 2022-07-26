@@ -12,9 +12,11 @@ import java.util.HashMap;
 @Component
 public class BusinessRegistrationAPI {
 
-    @Value("${BUSINESS_REGISTRATION_KEY}")
+    @Value("${BUSINESS.REGISTRATION.KEY}")
     private String SERVICE_KEY;
-    private static final String BASE_URL = "https://api.odcloud.kr/api/nts-businessman/v1/status";
+    @Value("${BUSINESS.REGISTRATION.URL}")
+    private String BASE_URL;
+
     private static final String OK_CODE = "01";
 
 
