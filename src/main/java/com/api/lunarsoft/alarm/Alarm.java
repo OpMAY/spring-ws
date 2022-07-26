@@ -1,8 +1,12 @@
 package com.api.lunarsoft.alarm;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
 
-@Data
+@ToString
+@Getter
+@AllArgsConstructor
 public abstract class Alarm {
     private String shop_name = "shop_name";
     private String url = "host_url";
