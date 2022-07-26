@@ -10,28 +10,25 @@ import lombok.Data;
 public class DefaultRes<T> {
 
     private int status;
-    private String message;
     private T data;
 
-    public DefaultRes(final int status, final String message) {
-        this.status = status;
-        this.message = message;
-        this.data = null;
-    }
-
     public static <T> DefaultRes<T> res(final int status) {
-        return res(status, null);
-    }
-
-    public static <T> DefaultRes<T> res(final int status, final String message) {
-        return res(status, message, null);
-    }
-
-    public static <T> DefaultRes<T> res(final int status, final String message, final T object) {
         return DefaultRes.<T>builder()
-                .data(object)
                 .status(status)
-                .message(message)
+                .build();
+    }
+
+    public static DefaultRes<Object> res(final int status, Message message) {
+        return DefaultRes.builder()
+                .data(message.getHashMap())
+                .status(status)
+                .build();
+    }
+
+    public static DefaultRes<Object> res(final int status, Message message, boolean isLog) {
+        return DefaultRes.builder()
+                .data(message.getHashMap(isLog))
+                .status(status)
                 .build();
     }
 }

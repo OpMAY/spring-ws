@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import static com.util.Constant.*;
 
@@ -21,8 +22,9 @@ public class Time {
      * "yyyy_MM_dd_HH_mm_ss"
      */
     public static String TimeFormatter(String format) {
+        String basicFormat = "yyyy-MM-dd HH:mm:ss";
         Date now = new Date();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat(Objects.isNull(format) ? basicFormat : format);
         return dateFormat.format(now);
     }
 

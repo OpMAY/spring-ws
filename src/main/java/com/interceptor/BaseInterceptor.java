@@ -1,5 +1,6 @@
 package com.interceptor;
 
+import com.util.TokenGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -32,12 +33,23 @@ public class BaseInterceptor extends HandlerInterceptorAdapter {
 
     @PostConstruct
     public void BaseInterceptor() {
-        log.debug("Base Interceptor Post Constructor");
+        log.debug("Base Interceptor Post Initialize");
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.debug("Base Interceptor preHandle");
+        /**
+         * Clear Setting
+         * @Date 2022-07-20
+         * @Author kimwoosik
+         * Resources의 .js 파일들 및 .css 파일들의 version을 붙여서 새롭게 갱신하기 위한 코드
+         * 수정될 수 있는 또는 특정한 역활을 하는 .js 파일들 및 .css 파일들의 옆에 들어가야한다.
+         * @Description
+         * ../../../resources/css/theme/theme.css?vc=${RESOURCES_VERSION}
+         *../../../resources/js/theme/theme.js?vc=${RESOURCES_VERSION}
+         * */
+        request.setAttribute("RESOURCES_VERSION", TokenGenerator.RandomIntegerToken(7));
         return super.preHandle(request, response, handler);
     }
 

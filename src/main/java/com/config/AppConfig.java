@@ -3,6 +3,8 @@ package com.config;
 import com.filter.GeneralFilter;
 import com.filter.SessionFilter;
 import com.interceptor.BaseInterceptor;
+import com.interceptor.LogInterceptor;
+import com.util.Constant;
 import com.util.FileDownload;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
@@ -64,11 +66,6 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
         dispatcher.addMapping("/");
         dispatcher.setInitParameter("throwExceptionIfNoHandlerFound", "true");
 
-        // for redirect http => https
-//        HttpConstraintElement httpConstraintElement = new HttpConstraintElement(ServletSecurity.TransportGuarantee.CONFIDENTIAL);
-//        ServletSecurityElement servletSecurityElement = new ServletSecurityElement(httpConstraintElement);
-//        dispatcher.setServletSecurity(servletSecurityElement);
-
         // root config
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         container.addListener(new ContextLoaderListener(context));
@@ -85,17 +82,37 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
         FilterRegistration.Dynamic sessionFilter = container.addFilter("sessionFilter", new SessionFilter()); // session filter 등록
         sessionFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.do");
 
-        container.addListener(new SessionConfig());
+        /**
+         * Clear Setting
+         * @Date 2022-07-20
+         * @Author kimwoosik
+         * @Description
+         * Session 유지 시간 설정
+         * 배포시 설정 변경
+         * */
+        container.addListener(new SessionConfig(Constant.SESSION_INTERVAL));
+
+        /**
+         * Clear Setting
+         * @Date 2022-07-20
+         * @Author kimwoosik
+         * @Description
+         * 로컬에서는 지우고 Deploy Branch에는 활성화
+         * Http의 url들을 -> Https의 url들로 우회시키는 로직
+         * @Prerequisites
+         * Tomcat의 SSL 설정 및 SSL 인증 확인 또는 AWS의 LoadBalancer 활성화
+         * */
+        /*HttpConstraintElement httpConstraintElement = new HttpConstraintElement(ServletSecurity.TransportGuarantee.CONFIDENTIAL);
+        ServletSecurityElement servletSecurityElement = new ServletSecurityElement(httpConstraintElement);
+        dispatcher.setServletSecurity(servletSecurityElement);*/
         log.info("WebInitializer : finished");
     }
-
-    private final int POOL_SIZE = 5;
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
         log.info("Schedule initializing");
         ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
-        threadPoolTaskScheduler.setPoolSize(POOL_SIZE);
+        threadPoolTaskScheduler.setPoolSize(Constant.DatabaseSetting.POOL_SIZE);
         threadPoolTaskScheduler.setThreadNamePrefix("scheduled-task-pool-");
         threadPoolTaskScheduler.initialize();
         scheduledTaskRegistrar.setTaskScheduler(threadPoolTaskScheduler);
@@ -164,9 +181,21 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
         log.info("addResourceHandlers : initialized");
     }
 
+    /**
+     * PR
+     * @Date 2022-07-26
+     * @Author kimwoosik
+     * @Description
+     * LogInterceptor Add
+     * Order Setting
+     * */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new BaseInterceptor())
+        registry.addInterceptor(new LogInterceptor()).order(0)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/resources/**")
+                .excludePathPatterns("/files/**");
+        registry.addInterceptor(new BaseInterceptor()).order(1)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/resources/**")
                 .excludePathPatterns("/files/**");

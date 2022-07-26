@@ -25,14 +25,27 @@ public class PropertyConfig implements ApplicationContextInitializer<Configurabl
             ResourcePropertySource propertySource = new ResourcePropertySource(new ClassPathResource("/config.properties"));
             properties = propertySource.getSource();
             properties.forEach((key, value) -> {
-                if (key.contains("DATABASE." + Constant.DATABASE_SOURCE)) {
-                    if (key.contains("USERNAME")) {
-                        db_properties.put("DATABASE_USERNAME", value);
-                    } else if (key.contains("PASSWORD")) {
-                        db_properties.put("DATABASE_PASSWORD", value);
-                    } else if (key.contains("URL")) {
-                        db_properties.put("DATABASE_URL", value);
+                /**
+                 * PR
+                 * @Date 2022-07-26
+                 * @Author kimwoosik
+                 * @Description
+                 * Database USERNAME, PASSWORD, URL Encrypt -> Decrypt
+                 * */
+                try {
+                    if (key.contains("DATABASE." + Constant.DatabaseSetting.DATABASE_SOURCE)) {
+                        log.info("DATABASE Property Origin -> {},{}", key, value);
+                        log.info("DATABASE Property Decrypt -> {},{}", key, encryptionService.decryptAES((String) value));
+                        if (key.contains("USERNAME")) {
+                            db_properties.put("DATABASE_USERNAME", encryptionService.decryptAES((String) value));
+                        } else if (key.contains("PASSWORD")) {
+                            db_properties.put("DATABASE_PASSWORD", encryptionService.decryptAES((String) value));
+                        } else if (key.contains("URL")) {
+                            db_properties.put("DATABASE_URL", encryptionService.decryptAES((String) value));
+                        }
                     }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             });
             ctx.getEnvironment().getPropertySources().addLast(new MapPropertySource("db_props", db_properties));

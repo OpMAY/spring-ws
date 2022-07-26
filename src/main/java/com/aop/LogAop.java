@@ -25,8 +25,6 @@ public class LogAop {
     private void allController() {}
     @Pointcut("execution(* com.service..*(..))")
     private void allService() {}
-    @Pointcut("execution(* com.controller.WebSocketController.*(..))")
-    private void WebSocketController() {}
 
     /**
      * Execution Expression Samples <br>
@@ -34,7 +32,7 @@ public class LogAop {
      * ex) (*) (hello.core.service.). (*)(..) <br>
      * {@code @annotation(org.springframework.web.bind.annotation.GetMapping)} 해당 어노테이션이 달린 메소드들 매핑
      */
-    @Around("allController() && !WebSocketController()")
+    @Around("allController()")
     public Object AroundController(ProceedingJoinPoint joinPoint) throws Throwable {
         try {
             requestLogger.setRequestURL(request.getRequestURI());

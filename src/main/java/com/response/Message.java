@@ -38,7 +38,15 @@ public class Message {
         return false;
     }
 
-    public Map<String, Object> getHashMap(String fn) throws JSONException {
+    public Map<String, Object> getHashMap(boolean isLog) throws JSONException {
+        if (isLog == true) {
+            Iterator<String> keys = map.keySet().iterator();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                String value = map.get(key).toString();
+                log.info("Message Map Value -> {},{}", key, value);
+            }
+        }
         return map;
     }
 

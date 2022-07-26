@@ -1,9 +1,50 @@
 package com.util;
 
 public class Constant {
+    /**
+     * PR
+     *
+     * @Date 2022-07-26
+     * @Author kimwoosik
+     * @Description
+     * Database Setting Static Class
+     */
+    public static class DatabaseSetting {
+        public static final String DATABASE_SOURCE = "LOCAL1";
+        /**
+         * PR
+         *
+         * @Date 2022-07-26
+         * @Author kimwoosik
+         * @Description Database Connection Pool Size
+         */
+        public static final int POOL_SIZE = 5;
+    }
 
-    public static String VERSION = "0.1a";
-    public static String GRANT_SAMPLE = "general";
+    /**
+     * PR
+     *
+     * @Date 2022-07-26
+     * @Author kimwoosik
+     * @Description Session 설정 시간 변수
+     */
+    public static int SESSION_INTERVAL = 9999;
+    public static final String VERSION = "0.1a";
+
+    /**
+     * PR
+     *
+     * @Date 2022-07-26
+     * @Author kimwoosik
+     * @Description LogInterceptor Logging
+     */
+    public static class LogSetting {
+        public static final boolean HEADER_LOG = true;
+        public static final boolean PARAMETER_LOG = true;
+        public static final boolean PAYLOAD_LOG = true;
+        public static final boolean REQUEST_BODY_LOG = true;
+        public static final boolean RESPONSE_BODY_LOG = true;
+    }
 
     /**
      * Time Constant
@@ -18,6 +59,4 @@ public class Constant {
     public static class CDN_PATH {
         public static final String TEST = "test/";
     }
-
-    public static final String DATABASE_SOURCE = "LOCAL1";
 }

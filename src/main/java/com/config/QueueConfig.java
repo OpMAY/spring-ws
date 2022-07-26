@@ -8,6 +8,14 @@ import org.springframework.context.annotation.Configuration;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
+
+/**
+ * Server Queue 개선
+ *
+ * @Author kimwoosik
+ * @Date 2022-07-26
+ * @Description Email Token 및 각종 인증 토큰의 정보를 가지고 있는 Queue
+ */
 @Configuration
 @Slf4j
 public class QueueConfig {
@@ -19,11 +27,5 @@ public class QueueConfig {
     public synchronized HashMap<String, PriorityQueue<SplitFileData>> splitFileStorage() {
         log.info("SplitFileStorage initialized");
         return new HashMap<>();
-    }
-
-    @Bean
-    public synchronized PriorityQueue<SplitFileData> mergeFileStorage() {
-        log.info("MergeFileStorage initialized");
-        return new PriorityQueue<>();
     }
 }
