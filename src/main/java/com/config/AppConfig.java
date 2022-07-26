@@ -4,6 +4,7 @@ import com.filter.GeneralFilter;
 import com.filter.SessionFilter;
 import com.interceptor.BaseInterceptor;
 import com.interceptor.LogInterceptor;
+import com.interceptor.RecoverInterceptor;
 import com.util.Constant;
 import com.util.FileDownload;
 import lombok.extern.slf4j.Slf4j;
@@ -183,19 +184,25 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
 
     /**
      * PR
-     * @Date 2022-07-26
+     *
+     * @Date 2022-07-26, 2022-07-27
      * @Author kimwoosik
-     * @Description
-     * LogInterceptor Add
+     * @Description LogInterceptor Add
      * Order Setting
-     * */
+     * -------------------------------
+     * RecoverInterceptor Add
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LogInterceptor()).order(0)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/resources/**")
                 .excludePathPatterns("/files/**");
-        registry.addInterceptor(new BaseInterceptor()).order(1)
+        registry.addInterceptor(new RecoverInterceptor()).order(1)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/resources/**")
+                .excludePathPatterns("/files/**");
+        registry.addInterceptor(new BaseInterceptor()).order(2)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/resources/**")
                 .excludePathPatterns("/files/**");
