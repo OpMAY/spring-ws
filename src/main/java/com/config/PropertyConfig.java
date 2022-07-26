@@ -20,6 +20,7 @@ public class PropertyConfig implements ApplicationContextInitializer<Configurabl
         Map<String, Object> properties = null;
         Map<String, Object> en_properties = new HashMap<>();
         Map<String, Object> db_properties = new HashMap<>();
+        Map<String, Object> ented_properties = new HashMap<>();
         EncryptionService encryptionService = new EncryptionService();
         try {
             ResourcePropertySource propertySource = new ResourcePropertySource(new ClassPathResource("/config.properties"));
@@ -50,6 +51,30 @@ public class PropertyConfig implements ApplicationContextInitializer<Configurabl
             });
             ctx.getEnvironment().getPropertySources().addLast(new MapPropertySource("db_props", db_properties));
             log.info("Added DB Props Properties");
+
+            propertySource = new ResourcePropertySource(new ClassPathResource("/config.properties"));
+            properties = propertySource.getSource();
+            properties.forEach((key, value) -> {
+                /**
+                 * PR
+                 * @Date 2022-07-26
+                 * @Author kimwoosik
+                 * @Description
+                 * Encrypted Property -> Decrypt
+                 * In config.properties
+                 * */
+                try {
+                    if (key.contains("ENCRYPTED")) {
+                        log.info("Encrypted Property Origin -> {},{}", key, value);
+                        log.info("Encrypted Property Decrypt -> {},{}", key.substring(key.indexOf("ENCRYPTED") + 10), encryptionService.decryptAES((String) value));
+                        ented_properties.put(key.substring(key.indexOf("ENCRYPTED") + 10), encryptionService.decryptAES((String) value));
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            ctx.getEnvironment().getPropertySources().addLast(new MapPropertySource("ented_props", ented_properties));
+            log.info("Added Encrypted Props Properties");
 
             propertySource = new ResourcePropertySource(new ClassPathResource("/config.properties"));
             ctx.getEnvironment().getPropertySources().addLast(propertySource);
