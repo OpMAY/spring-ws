@@ -1,6 +1,7 @@
 package com.transfer;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
@@ -10,7 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.*;
 
 @Getter
 @Slf4j
@@ -103,7 +104,7 @@ public class ProtocolBuilder {
      * @param logging       : log is on/off
      * @param character_set : character set
      */
-    public <T> Object openReader(String character_set, Class<?> class_type, boolean logging) throws IOException {
+    public <T> T openReader(String character_set, Class<T> class_type, boolean logging) throws IOException {
 
         int responseCode = conn.getResponseCode();
 
@@ -124,15 +125,58 @@ public class ProtocolBuilder {
                 log.info(result);
             }
             if (class_type == String.class) {
-                return result;
+                return (T) result;
             } else {
                 return (T) new Gson().fromJson(result, class_type);
             }
         } else {
             if (logging) {
-                log.info("filed request : " + result);
+                log.info("failed request : {}", result);
             }
             return null;
+        }
+    }
+
+    /**
+     * Version information
+     * 2022.07.27 1 author : @OpMAY
+     * Method Overview
+     * The part that imports data according to the set class
+     * Case : protocolBuilder.openArrayReader("UTF-8", Model.class, false);
+     * + Array Response Adaptable
+     *
+     * @param class_type    : Class(Model)
+     * @param logging       : log is on/off
+     * @param character_set : character set
+     */
+    public <T> ArrayList<T> openArrayReader(String character_set, Class<T> class_type, boolean logging) throws IOException {
+
+        int responseCode = conn.getResponseCode();
+
+        BufferedReader br = null;
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            br = new BufferedReader(new InputStreamReader(conn.getInputStream(), character_set));
+        } else {
+            br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+        }
+        String line = "";
+        String result = "";
+
+        while ((line = br.readLine()) != null)
+            result += line;
+
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            if (logging) {
+                log.info(result);
+            }
+            return new Gson().fromJson(result, new TypeToken<ArrayList<T>>() {
+            }.getType());
+
+        } else {
+            if (logging) {
+                log.info("failed request : {}", result);
+            }
+            return (ArrayList<T>) Collections.emptyList();
         }
     }
 
@@ -168,7 +212,7 @@ public class ProtocolBuilder {
             return result;
         } else {
             if (logging) {
-                log.info("filed request : " + result);
+                log.info("failed request : {}", result);
             }
             return null;
         }
