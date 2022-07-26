@@ -4,6 +4,15 @@ public class Constant {
     /**
      * PR
      *
+     * @Date 2022-07-27
+     * @Author kimwoosik
+     * @Description
+     * Server Token Life Time
+     */
+    public static final int TOKEN_END_MINUTES = 30;
+    /**
+     * PR
+     *
      * @Date 2022-07-26
      * @Author kimwoosik
      * @Description

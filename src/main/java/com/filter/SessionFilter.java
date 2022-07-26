@@ -2,6 +2,8 @@ package com.filter;
 
 import com.util.Constant;
 import com.util.Encryption.EncryptionService;
+import com.util.Encryption.JWTEnum;
+import com.util.JWTToken;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.*;
@@ -30,14 +32,14 @@ public class SessionFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse res = (HttpServletResponse) servletResponse;
 
-        if (req.getSession().getAttribute("jwt") != null) {
+        if (req.getSession().getAttribute(JWTEnum.JWTToken.name()) != null) {
             /**Login 했을 때의 Session 필터링*/
-            HashMap<String, Object> hashMap = new EncryptionService().decryptJWT(req.getSession().getAttribute("jwt").toString());
-            String version = (String) hashMap.get("version");
+            HashMap<String, Object> hashMap = new EncryptionService().decryptJWT(req.getSession().getAttribute(JWTEnum.JWTToken.name()).toString());
+            String version = (String) hashMap.get(JWTEnum.VERSION.name());
             if (Objects.equals(version, Constant.VERSION))
                 filterChain.doFilter(servletRequest, servletResponse);
             else {
-                req.getSession().removeAttribute("jwt");
+                req.getSession().removeAttribute(JWTEnum.JWTToken.name());
                 filterChain.doFilter(servletRequest, servletResponse);
                 /*res.sendRedirect(contextPath + "/");*/
             }

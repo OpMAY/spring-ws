@@ -20,8 +20,9 @@ public class Message {
         this.map = new HashMap<>();
     }
 
-    public <T> void put(String key, T object) {
+    public <T> Message put(String key, T object) {
         map.put(key, object);
+        return this;
     }
 
     public <T> boolean pop(String key) {

@@ -1,7 +1,8 @@
 package com.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.model.common.TimeRecordable;
+import com.model.common.Time;
+import com.model.jwt.RootUser;
 import lombok.*;
 
 @RequiredArgsConstructor
@@ -9,7 +10,8 @@ import lombok.*;
 @AllArgsConstructor
 @JsonIgnoreProperties
 @NoArgsConstructor
-public class User extends TimeRecordable {
+@ToString(callSuper = true)
+public class User extends RootUser {
     private int no;
     @NonNull
     private String email;

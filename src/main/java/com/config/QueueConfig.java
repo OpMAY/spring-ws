@@ -1,13 +1,11 @@
 package com.config;
 
-import com.model.SplitFileData;
+import com.model.queue.Token;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
-import java.util.PriorityQueue;
-
 
 /**
  * Server Queue 개선
@@ -24,7 +22,7 @@ public class QueueConfig {
     }
 
     @Bean
-    public synchronized HashMap<String, PriorityQueue<SplitFileData>> splitFileStorage() {
+    public synchronized HashMap<String, Token> TokenQueue() {
         log.info("SplitFileStorage initialized");
         return new HashMap<>();
     }

@@ -1,5 +1,6 @@
 package com.exception;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.springframework.context.annotation.ComponentScan;
@@ -28,7 +29,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(JSONException.class)
     protected ModelAndView handleJSONException(HttpServletRequest request, JSONException e) {
         e.printStackTrace();
-        log.info("handleJSONException");
+        log.error("handleJSONException");
         modelAndView = new ModelAndView("error/error");
         return modelAndView;
     }
@@ -38,9 +39,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(InterruptedException.class)
     protected void handleInterruptedException(HttpServletRequest request, InterruptedException e) {
-        if (isAjaxRequest(request)) {
-            new AjaxExceptionAdvice().handleInterruptedException(e);
-        }
+        log.error("handleInterruptedException");
         e.printStackTrace();
     }
 
@@ -49,12 +48,9 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(NoHandlerFoundException.class)
     protected ModelAndView handleNoHandlerFoundException(HttpServletRequest request, NoHandlerFoundException e) {
-        if (isAjaxRequest(request)) {
-            new AjaxExceptionAdvice().handleNoHandlerFoundException(e);
-        }
         if (!e.getMessage().contains("/favicon.ico")) {
             e.printStackTrace();
-            log.info("handleNoHandlerFoundException");
+            log.error("handleNoHandlerFoundException");
         }
         modelAndView = new ModelAndView("error/error");
         return modelAndView;
@@ -66,10 +62,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(GrantAccessDeniedException.class)
     protected ModelAndView handleGrantAccessDeniedException(HttpServletRequest request, GrantAccessDeniedException e) {
         e.printStackTrace();
-        if (isAjaxRequest(request)) {
-            new AjaxExceptionAdvice().handleGrantAccessDeniedException(e);
-        }
-        log.info("handleGrantAccessDeniedException");
+        log.error("handleGrantAccessDeniedException");
         modelAndView = new ModelAndView("error/error");
         return modelAndView;
     }
@@ -82,10 +75,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ModelAndView handleMethodArgumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException e) {
         e.printStackTrace();
-        if (isAjaxRequest(request)) {
-            new AjaxExceptionAdvice().handleMethodArgumentNotValidException(e);
-        }
-        log.info("handleMethodArgumentNotValidException");
+        log.error("handleMethodArgumentNotValidException");
         modelAndView = new ModelAndView("error/error");
         return modelAndView;
     }
@@ -97,10 +87,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(BindException.class)
     protected ModelAndView handleBindException(HttpServletRequest request, BindException e) {
         e.printStackTrace();
-        if (isAjaxRequest(request)) {
-            new AjaxExceptionAdvice().handleBindException(e);
-        }
-        log.info("handleBindException");
+        log.error("handleBindException");
         modelAndView = new ModelAndView("error/error");
         return modelAndView;
     }
@@ -112,10 +99,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ModelAndView handleMethodArgumentTypeMismatchException(HttpServletRequest request, MethodArgumentTypeMismatchException e) {
         e.printStackTrace();
-        if (isAjaxRequest(request)) {
-            new AjaxExceptionAdvice().handleMethodArgumentTypeMismatchException(e);
-        }
-        log.info("handleMethodArgumentTypeMismatchException");
+        log.error("handleMethodArgumentTypeMismatchException");
         modelAndView = new ModelAndView("error/error");
         return modelAndView;
     }
@@ -126,7 +110,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     protected ModelAndView handleHttpRequestMethodNotSupportedException(HttpServletRequest request, HttpRequestMethodNotSupportedException e) {
         e.printStackTrace();
-        log.info("handleHttpRequestMethodNotSupportedException");
+        log.error("handleHttpRequestMethodNotSupportedException");
         modelAndView = new ModelAndView("error/error");
         return modelAndView;
     }
@@ -137,7 +121,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(AccessDeniedException.class)
     protected ModelAndView handleAccessDeniedException(HttpServletRequest request, AccessDeniedException e) {
         e.printStackTrace();
-        log.info("handleAccessDeniedException");
+        log.error("handleAccessDeniedException");
         modelAndView = new ModelAndView("error/error");
         return modelAndView;
     }
@@ -145,10 +129,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(NullPointerException.class)
     protected ModelAndView handleNullPointerException(HttpServletRequest request, Exception e) {
         e.printStackTrace();
-        if (isAjaxRequest(request)) {
-            new AjaxExceptionAdvice().handleNullPointerException(e);
-        }
-        log.info("NullPointerException");
+        log.error("NullPointerException");
         modelAndView = new ModelAndView("error/error");
         return modelAndView;
     }
@@ -156,10 +137,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(Exception.class)
     protected ModelAndView handleException(HttpServletRequest request, Exception e) {
         e.printStackTrace();
-        if (isAjaxRequest(request)) {
-            new AjaxExceptionAdvice().handleException(e);
-        }
-        log.info("Global General Exception");
+        log.error("Global General Exception");
         modelAndView = new ModelAndView("error/error");
         return modelAndView;
     }
@@ -167,17 +145,24 @@ public class ExceptionAdvice {
     @ExceptionHandler(RuntimeException.class)
     protected ModelAndView handleRuntimeException(HttpServletRequest request, Exception e) {
         e.printStackTrace();
-        log.info("handleRuntimeException");
+        log.error("handleRuntimeException");
         modelAndView = new ModelAndView("error/error");
         return modelAndView;
     }
 
-    private boolean isAjaxRequest(HttpServletRequest request) {
-        String header = request.getHeader("x-requested-with");
-        log.info("Ajax Request : " + request.getHeader("x-requested-with"));
-        if ("XMLHttpRequest".equals(header)) {
-            return true;
-        }
-        return false;
+    @ExceptionHandler(TokenInvalidException.class)
+    protected ModelAndView handleTokenInvalidException(HttpServletRequest request, Exception e) {
+        e.printStackTrace();
+        log.error("handleTokenInvalidException");
+        modelAndView = new ModelAndView("error/error");
+        return modelAndView;
+    }
+
+    @ExceptionHandler(JWTVerificationException.class)
+    protected ModelAndView handleJWTVerificationException(HttpServletRequest request, Exception e) {
+        e.printStackTrace();
+        log.error("handleJWTVerificationException");
+        modelAndView = new ModelAndView("error/error");
+        return modelAndView;
     }
 }
