@@ -1,9 +1,10 @@
 package com.model.common;
 
+import lombok.Data;
 import lombok.Getter;
 
-@Getter
-public abstract class FileUploadable extends TimeRecordable {
+@Data
+public abstract class FileUploadable extends Time {
 
     private MFile file;
 }

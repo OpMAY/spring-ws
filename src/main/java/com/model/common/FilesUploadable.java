@@ -1,11 +1,12 @@
 package com.model.common;
 
+import lombok.Data;
 import lombok.Getter;
 
 import java.util.List;
 
-@Getter
-public abstract class FilesUploadable extends TimeRecordable {
+@Data
+public abstract class FilesUploadable extends Time {
 
     private List<MFile> files;
 }
