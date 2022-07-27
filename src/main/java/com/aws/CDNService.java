@@ -45,7 +45,7 @@ public class CDNService {
                 this.s3Client.createBucket(awsInfo.getBucketName());
                 this.s3Client.getBucketLocation(new GetBucketLocationRequest(awsInfo.getBucketName()));
             }
-        } catch (AmazonClientException e) {
+        } catch (Exception e) {
             // The call was transmitted successfully, but Amazon S3 couldn't process
             // it and returned an error response.
             e.printStackTrace();
