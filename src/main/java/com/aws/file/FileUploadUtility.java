@@ -37,6 +37,7 @@ public class FileUploadUtility {
      */
     @Autowired
     public FileUploadUtility(@Qualifier("AWSFileUploadStrategy") FileUploadStrategy fileUploadStrategy) {
+        log.info("FileUploadUtility -> {}", upload_path);
         this.fileUploadStrategy = fileUploadStrategy;
     }
 
