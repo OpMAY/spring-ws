@@ -1,14 +1,17 @@
-package com.util.fileUploadStrategy;
+package com.aws.file;
 
 import com.aws.CDNService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.HashMap;
 
 @Slf4j
 @Component
+@Qualifier("AWSFileUploadStrategy")
 public class AWSFileUploadStrategy implements FileUploadStrategy {
 
     @Value("${S3}")

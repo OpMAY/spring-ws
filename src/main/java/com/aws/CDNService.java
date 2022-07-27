@@ -9,8 +9,8 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
-import com.aws.model.AWSModel;
-import com.aws.model.smodel.Download;
+import com.aws.model.AWSInfo;
+import com.aws.model.Download;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,25 +27,23 @@ import java.util.List;
 @Slf4j
 @Component
 public class CDNService {
-
-    private final AWSModel pathModel;
+    private final AWSInfo awsInfo;
     private AmazonS3 s3Client;
 
     @Autowired
-    public CDNService(AWSModel pathModel) {
-        this.pathModel = pathModel;
-
+    public CDNService(AWSInfo awsInfo) {
+        this.awsInfo = awsInfo;
         try {
-            AWSCredentials credentials = new BasicAWSCredentials(pathModel.getAccessKey(), pathModel.getSecretKey());
+            AWSCredentials credentials = new BasicAWSCredentials(awsInfo.getAccessKey(), awsInfo.getSecretKey());
             this.s3Client = AmazonS3ClientBuilder
                     .standard()
                     .withCredentials(new AWSStaticCredentialsProvider(credentials))
                     .withRegion(Regions.AP_NORTHEAST_2)
                     .build();
-            if (!this.s3Client.doesBucketExistV2(pathModel.getBucketName())) {
+            if (!this.s3Client.doesBucketExistV2(awsInfo.getBucketName())) {
                 // Verify that the bucket was created by retrieving it and checking its location.
-                this.s3Client.createBucket(pathModel.getBucketName());
-                this.s3Client.getBucketLocation(new GetBucketLocationRequest(pathModel.getBucketName()));
+                this.s3Client.createBucket(awsInfo.getBucketName());
+                this.s3Client.getBucketLocation(new GetBucketLocationRequest(awsInfo.getBucketName()));
             }
         } catch (AmazonClientException e) {
             // The call was transmitted successfully, but Amazon S3 couldn't process
@@ -55,15 +53,33 @@ public class CDNService {
     }
 
     /**
-     * @param cdn_full_path Upload file path + file name
+     * @param cdn_path Upload file path + file name
      * @param file          file to upload
      * @return true / false
      */
-    public boolean upload(String cdn_full_path, File file) {
+    public boolean upload(String cdn_path, File file) {
         try {
-            s3Client.putObject(pathModel.getBucketName(), cdn_full_path, file);
+            s3Client.putObject(awsInfo.getBucketName(), cdn_path, file);
             return true;
         } catch (SdkClientException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * AWS Buffer Upload Test
+     */
+    public boolean bufferUpload(String cdn_path, File file) {
+        try (InputStream inputStream = new FileInputStream(file)) {
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            metadata.setContentLength(file.length());
+            PutObjectRequest putObjectRequest = null;
+            putObjectRequest = new PutObjectRequest(awsInfo.getBucketName(), cdn_path + "/" + file.getName(), inputStream, metadata);
+            s3Client.putObject(putObjectRequest);
+            return true;
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
@@ -75,8 +91,8 @@ public class CDNService {
      */
     public File download(Download download) {
         try {
-            File file = new File(download.getCreated_local_path() + download.getCdn_fname());
-            S3Object s3object = s3Client.getObject(pathModel.getBucketName(), download.getCdn_fpath() + "/" + download.getCdn_fname());
+            File file = new File(download.getCreated_local_path() + download.getFile_name());
+            S3Object s3object = s3Client.getObject(awsInfo.getBucketName(), download.getFile_path() + "/" + download.getFile_name());
             S3ObjectInputStream inputStream = s3object.getObjectContent();
             FileUtils.copyInputStreamToFile(inputStream, file);  //#2 - 스트림을 파일로 저장함
             return file;
@@ -87,39 +103,22 @@ public class CDNService {
     }
 
     public boolean delete(String awsCdnFilePath) {
-        s3Client.deleteObject(new DeleteObjectRequest(pathModel.getBucketName(), awsCdnFilePath));
+        s3Client.deleteObject(new DeleteObjectRequest(awsInfo.getBucketName(), awsCdnFilePath));
         return true;
     }
 
     public boolean deletes(String[] awsCdnFilePaths) {
-        DeleteObjectsRequest delObjReq = new DeleteObjectsRequest(pathModel.getBucketName()).withKeys(awsCdnFilePaths);
+        DeleteObjectsRequest delObjReq = new DeleteObjectsRequest(awsInfo.getBucketName()).withKeys(awsCdnFilePaths);
         s3Client.deleteObjects(delObjReq);
         return true;
     }
 
     private ArrayList<String> getBucketFiles() {
-        ListObjectsV2Result result = s3Client.listObjectsV2(pathModel.getBucketName());
+        ListObjectsV2Result result = s3Client.listObjectsV2(awsInfo.getBucketName());
         List<S3ObjectSummary> objs = result.getObjectSummaries();
 
         ArrayList<String> files = new ArrayList<>();
         objs.forEach(obj -> files.add(obj.getKey()));
         return files;
-    }
-
-    /**
-     * AWS Buffer Upload Test
-     */
-    public void awsBufferUploadTest(String path, String file_name) {
-        File file = new File(path + file_name);
-        try (InputStream inputStream = new FileInputStream(file)) {
-            log.info("aws upload file name : " + file.getName());
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-            metadata.setContentLength(file.length());
-            PutObjectRequest putObjectRequest = new PutObjectRequest(pathModel.getBucketName(), "bulk/test/Nature - 105936.mp4", inputStream, metadata);
-            s3Client.putObject(putObjectRequest);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

@@ -1,4 +1,4 @@
-package com.util.fileUploadStrategy;
+package com.aws.file;
 
 import java.io.File;
 
