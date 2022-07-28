@@ -1,6 +1,6 @@
 package com.api.bootpay.v2;
 
-import com.model.bootpay.v1.ResDefault;
+import com.api.bootpay.v1.ResDefault;
 import lombok.Data;
 
 @Data

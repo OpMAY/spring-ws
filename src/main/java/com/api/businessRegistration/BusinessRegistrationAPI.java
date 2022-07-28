@@ -1,5 +1,6 @@
 package com.api.businessRegistration;
 
+import com.response.ResponseEnum;
 import com.transfer.ProtocolBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.HashMap;
+
+import static com.response.ResponseEnum.*;
 
 @Component
 public class BusinessRegistrationAPI {
@@ -20,7 +23,7 @@ public class BusinessRegistrationAPI {
     private static final String OK_CODE = "01";
 
 
-    public boolean isValid(String registration_no) {
+    public ResponseEnum isValid(String registration_no) {
         try {
             HashMap<String, String> properties = new HashMap<>();
             properties.put("Content-Type", "application/json");
@@ -39,10 +42,11 @@ public class BusinessRegistrationAPI {
             protocolBuilder.openWriter(jsonObject);
 
             Response response = (Response) protocolBuilder.openReader("UTF-8", Response.class, true);
-            return response.getData().get(0).getB_stt_cd().equals(OK_CODE);
+            if (response.getData().get(0).getB_stt_cd().equals(OK_CODE)) return SUCCESS;
         } catch (IOException e) {
             e.printStackTrace();
+            return ERROR;
         }
-        return false;
+        return FAIL;
     }
 }
