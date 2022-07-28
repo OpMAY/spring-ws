@@ -198,10 +198,10 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
                 .addPathPatterns("/**")
                 .excludePathPatterns("/resources/**")
                 .excludePathPatterns("/files/**");
-        registry.addInterceptor(new RecoverInterceptor()).order(1)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/resources/**")
-                .excludePathPatterns("/files/**");
+//        registry.addInterceptor(new RecoverInterceptor()).order(1)
+//                .addPathPatterns("/**")
+//                .excludePathPatterns("/resources/**")
+//                .excludePathPatterns("/files/**");
         registry.addInterceptor(new BaseInterceptor()).order(2)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/resources/**")

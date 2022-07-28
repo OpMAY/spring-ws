@@ -1,9 +1,11 @@
 package com.restcontroller;
 
+import com.api.LoginAPI;
 import com.api.mail.MailBuilder;
 import com.api.mail.MailFooter;
 import com.api.mail.MailLogo;
 import com.api.mail.MailType;
+import com.model.User;
 import com.model.queue.ServerTokenType;
 import com.model.queue.Token;
 import com.response.DefaultRes;
@@ -18,13 +20,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 public class TestRestController {
-
+    private final LoginAPI loginAPI;
     private final MailBuilder mailBuilder;
 
     @RequestMapping("test/loginterceptor")
@@ -72,5 +77,15 @@ public class TestRestController {
                 .put("data", "success")
                 .put("queue", serverTokenService.toString());
         return new ResponseEntity(DefaultRes.res(200, message, true), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/oauth/callback", method = RequestMethod.GET)
+    public ResponseEntity kakaoLoginCallBack(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User user = loginAPI.apiLoginInit(request);
+        log.info("user result : {}", user);
+        if(user != null) {
+            response.sendRedirect("/test/login");
+        }
+        return new ResponseEntity(DefaultRes.res(200), HttpStatus.OK);
     }
 }

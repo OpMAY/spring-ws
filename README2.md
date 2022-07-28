@@ -23,3 +23,18 @@
 
 1. 형식 casting 없이 바로 사용할 수 있게 변경
 2. Response가 ArrayList로 예상될 때 사용할 수 있는 openArrayReader()함수 추가
+
+## 4. Login Api (2022.07.27)
+###(KAKAO, NAVER, GOOGLE) 
+
+1. LoginApi.java 내에서 기본 User model에 프로필 이미지까지 등록
+2. 각 SNS 별 javascript basic js 파일 생성 
+   1. KAKAO -> /resources/js/loginapi/kakao-login.js
+   2. NAVER -> /resources/js/loginapi/naver-login.js
+   3. GOOGLE -> /resources/js/loginapi/google-login.js
+   - 특이사항 : js 라이브러리 파일을 따로 작성하지 않아도 사용할 수 있게 작성
+   - NAVER -> CALL BACK URL의 형태에 (?)로 parameter가 붙는게 아니라 (#)으로 붙어버려서 parameter 정보를 담아올 수 없음 (수정 필요 사항)
+     - naver-login.js에 TODO로 원인 규명
+   - test.jsp에 예시 규명
+   - backend와 연동하는 함수 + front 단에서만 해결할 수 있는 함수로 구성
+3. backend : google-login (state != null => state == null) 

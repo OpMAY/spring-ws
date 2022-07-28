@@ -17,6 +17,9 @@ import java.util.HashMap;
 public class KakaoAPI {
     @Value("${KAKAO.CLIENT_ID}")
     private String KAKAO_CLIENT_ID;
+    @Value("${KAKAO.CLIENT_SECRET}")
+    private String KAKAO_CLIENT_SECRET;
+
     private final String KAKAO_OAUTH_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
     private final String KAKAO_USER_INFO_REQUEST_URL = "https://kapi.kakao.com/v2/user/me";
     private final String KAKAO_LOGOUT_REQUEST_URL = "https://kapi.kakao.com/v1/user/logout";
@@ -43,11 +46,12 @@ public class KakaoAPI {
             HashMap<String, Object> params = new HashMap<>();
             params.put("grant_type", "authorization_code");
             params.put("client_id", KAKAO_CLIENT_ID);
+            params.put("client_secret", KAKAO_CLIENT_SECRET);
             params.put("redirect_uri", req.getRequestURL());
             params.put("code", authorize_code);
 
             protocolBuilder.openWriter(params);
-            kakaoAccess = (KakaoAccess) protocolBuilder.openReader("UTF-8", KakaoAccess.class, true);
+            kakaoAccess = protocolBuilder.openReader("UTF-8", KakaoAccess.class, true);
             return kakaoAccess;
         } catch (ProtocolException e) {
             e.printStackTrace();
@@ -74,7 +78,7 @@ public class KakaoAPI {
                     .conn()
                     .setRequestMethod("POST")
                     .setRequestProperty(properties);
-            kakaoInfo = (KakaoInfo) protocolBuilder.openReader("UTF-8", KakaoInfo.class, true);
+            kakaoInfo = protocolBuilder.openReader("UTF-8", KakaoInfo.class, true);
             return kakaoInfo;
         } catch (ProtocolException e) {
             e.printStackTrace();

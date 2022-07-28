@@ -32,7 +32,7 @@ public class RecoverInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.debug("Recover Interceptor preHandle");
+        log.debug("Recover Interceptor preHandle : {}" , recovers);
         if (recovers.contains(request.getRequestURI())) {
             response.sendRedirect("/error/error.do");
             return false;
