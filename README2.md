@@ -38,3 +38,9 @@
    - test.jsp에 예시 규명
    - backend와 연동하는 함수 + front 단에서만 해결할 수 있는 함수로 구성
 3. backend : google-login (state != null => state == null) 
+
+## 5. BootPay (2022.07.27 ~ 2022.07.28)
+
+1. BootPay v1, v2 모두 추가
+   1. 현재 카카오페이는 v1만 사용 가능
+   2. 그 외 모두 v2
