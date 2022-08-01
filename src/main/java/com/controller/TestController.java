@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.aws.file.FileUploadUtility;
 import com.util.Encryption.EncryptionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,8 @@ public class TestController {
     private String GOOGLE_KEY;
     @Value("${GOOGLE.CLIENT_SECRET}")
     private String GOOGLE_SECRET;
+
+    private final FileUploadUtility fileUploadUtility;
 
     public static void main(String[] args) {
         try {
