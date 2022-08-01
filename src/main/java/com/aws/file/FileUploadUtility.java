@@ -2,14 +2,18 @@ package com.aws.file;
 
 import com.aws.model.PartFile;
 import com.model.common.MFile;
+import com.util.Constant;
 import com.util.Folder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.MapPropertySource;
+import org.springframework.core.env.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
@@ -22,8 +26,7 @@ import java.util.*;
 @Service
 public class FileUploadUtility {
 
-    @Value("${UPLOAD_PATH}")
-    private String upload_path;
+    private final String upload_path;
 
     private final FileUploadStrategy fileUploadStrategy;
 
@@ -36,14 +39,17 @@ public class FileUploadUtility {
      * LocalFileUploadStrategy or awsFileUploadStrategy 중 선택
      */
     @Autowired
-    public FileUploadUtility(@Qualifier("AWSFileUploadStrategy") FileUploadStrategy fileUploadStrategy) {
+    public FileUploadUtility(@Qualifier("AWSFileUploadStrategy") FileUploadStrategy fileUploadStrategy,
+                             ConfigurableWebApplicationContext ctx) {
+        // Property Config 에서 무조건 걸어주기 떄문에 properties 세팅만 잘 되어있다면 오류 발생 X
+        upload_path = (String) ctx.getEnvironment().getPropertySources().get("path_props").getProperty("UPLOAD_PATH");
         log.info("FileUploadUtility -> {}", upload_path);
         this.fileUploadStrategy = fileUploadStrategy;
     }
 
     public MFile uploadFile(MultipartFile file, String cdn_path) {
         try {
-            if (file == null || (file != null || file.getSize() == 0)) {
+            if (file == null || file.getSize() == 0) {
                 return null;
             }
             Folder.mkdirs(upload_path);
