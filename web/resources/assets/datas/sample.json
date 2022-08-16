@@ -1,0 +1,23 @@
+[
+  {
+    "Name": "Otto Clay",
+    "Age": 61,
+    "Country": 6,
+    "Address": "Ap #897-1459 Quam Avenue",
+    "Married": false
+  },
+  {
+    "Name": "Connor Johnston",
+    "Age": 73,
+    "Country": 7,
+    "Address": "Ap #370-4647 Dis Av.",
+    "Married": false
+  },
+  {
+    "Name": "Lacey Hess",
+    "Age": 29,
+    "Country": 7,
+    "Address": "Ap #365-8835 Integer St.",
+    "Married": false
+  }
+]

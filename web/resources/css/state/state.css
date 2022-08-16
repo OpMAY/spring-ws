@@ -1,0 +1,11 @@
+.card-main.is-active {
+    border: var(--border-1px) var(--impact-primary);
+}
+
+.card-main.is-hover:hover {
+    border: var(--border-1px) var(--impact-primary);
+}
+
+.card-main.is-focus:focus {
+    border: var(--border-1px) var(--impact-primary);
+}
