@@ -1,0 +1,30 @@
+{
+  "name": "spring-a.2",
+  "version": "1.0.0",
+  "description": "Spring Architecture version a.2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "doc": "jsdoc -c jsdoc.config.json .",
+    "lint": "eslint ./web/resources/js/**/*.js --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "eslint-config-google": "^0.14.0",
+    "jsdoc": "^3.6.11"
+  },
+  "devDependencies": {
+    "eslint": "^8.22.0",
+    "eslint-config-google": "^0.14.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimwoosick/spring-a.2.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kimwoosick/spring-a.2/issues"
+  },
+  "homepage": "https://github.com/kimwoosick/spring-a.2#readme"
+}

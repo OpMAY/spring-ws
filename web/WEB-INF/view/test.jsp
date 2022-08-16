@@ -40,8 +40,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
         crossorigin="anonymous"></script>
-<script src="../../resources/js/loginapi/naver-login.js" type="text/javascript"></script>
-<script src="../../resources/js/loginapi/kakao-login.js" type="text/javascript"></script>
-<script src="../../resources/js/loginapi/google-login.js" type="text/javascript"></script>
+<script src="../../resources/js/module/api/naver/naver-login.js" type="text/javascript"></script>
+<script src="../../resources/js/module/api/kakao/kakao-login.js" type="text/javascript"></script>
+<script src="../../resources/js/module/api/google/google-login.js" type="text/javascript"></script>
 </body>
 </html>

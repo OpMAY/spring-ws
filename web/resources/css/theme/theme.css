@@ -1,0 +1,339 @@
+/*변수 지정*/
+:root {
+    /* Sample Theme Color */
+    --basic: #F2F2F2;
+    --basic-white: #F2F2F2;
+    --basic-black: #F2F2F2;
+
+    --brand-primary: #F2F2F2;
+    --brand-secondary: #F2F2F2;
+
+    --impact-primary: #F2F2F2;
+    --impact-secondary: #F2F2F2;
+
+    /* Sample Shadow */
+    --shadow: 10px 5px 5px red;
+    --shadow-black: 10px 5px 5px rgba(0, 0, 0, 0.5);
+    --shadow-white: 10px 5px 5px rgba(255, 255, 255, 0.5);
+
+    /* Sample Border */
+    --border-1px: 1px solid;
+    --border-2px: 2px solid;
+
+    /* Sample Font Variables */
+    --font-10: 10px;
+    --font-12: 12px;
+    --font-14: 14px;
+    --font-16: 16px;
+    --font-17: 17px;
+    --font-18: 18px;
+    --font-19: 19px;
+    --font-20: 20px;
+    --font-21: 21px;
+    --font-22: 22px;
+    --font-23: 23px;
+    --font-24: 24px;
+    --font-25: 25px;
+    --font-26: 26px;
+    --font-27: 27px;
+    --font-28: 28px;
+    --font-29: 29px;
+    --font-30: 30px;
+    --font-31: 31px;
+    --font-32: 32px;
+    --font-33: 33px;
+    --font-34: 34px;
+    --font-35: 35px;
+    --font-36: 36px;
+    --font-37: 37px;
+    --font-48: 48px;
+
+    /* Sample Font Line Height Variables */
+    --line-12: 12px;
+    --line-16: 16px;
+    --line-20: 20px;
+    --line-24: 24px;
+    --line-28: 28px;
+    --line-32: 32px;
+    --line-36: 36px;
+    --line-40: 40px;
+    --line-48: 48px;
+    --line-48: 56px;
+    --line-1x: 1;
+    --line-1_5x: 1.5;
+    --line-2x: 2;
+}
+
+/* Import Font (Font Face Type, Google Fonts) */
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+/* Font Face Type */
+@font-face {
+    font-family: 'Spoqa Han Sans Neo';
+    font-weight: 700;
+    src: local('Spoqa Han Sans Neo Bold'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Bold.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Bold.woff') format('woff'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Spoqa Han Sans Neo';
+    font-weight: 600;
+    src: local('Spoqa Han Sans Neo Bold'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Bold.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Bold.woff') format('woff'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Spoqa Han Sans Neo';
+    font-weight: 500;
+    src: local('Spoqa Han Sans Neo Medium'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Medium.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Medium.woff') format('woff'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Spoqa Han Sans Neo';
+    font-weight: 400;
+    src: local('Spoqa Han Sans Neo Regular'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Regular.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Regular.woff') format('woff'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Spoqa Han Sans Neo';
+    font-weight: 300;
+    src: local('Spoqa Han Sans Neo Light'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Light.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Light.woff') format('woff'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Spoqa Han Sans Neo';
+    font-weight: 200;
+    src: local('Spoqa Han Sans Neo Thin'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Thin.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Thin.woff') format('woff'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Thin.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Spoqa Han Sans Neo';
+    font-weight: 100;
+    src: local('Spoqa Han Sans Neo Thin'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Thin.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Thin.woff') format('woff'),
+    url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Thin.ttf') format('truetype');
+}
+
+/* Accept Font Family */
+* {
+    font-family: Spoqa Han Sans Neo, 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Roboto', Roboto, 'sans-serif', sans-serif;
+}
+
+/* Accept Font Family in Text Writer */
+/* 입력부분은 텍스트가 무조건 있어야하기 때문에 폰트 지원 안되는 글자는 따로 Font Family를 지정해준다. */
+button, input, optgroup, select, textarea {
+    font-family: Spoqa Han Sans Neo, 'Spoqa Han Sans Neo', 'Roboto', Roboto, 'sans-serif', sans-serif;
+}
+
+/* Common Tag And Class */
+/* Tag Style */
+div {
+    display: block;
+    width: 100%;
+}
+
+p {
+    margin-bottom: 0;
+}
+
+b {
+    font-weight: bold;
+}
+
+/* Font Set Class */
+/* light Set */
+.light-h1, .light-h2, .light-h3, .light-h4, .light-h5, light-h6 {
+    font-weight: 300;
+}
+
+.light-h1 {
+    line-height: var(--line-40);
+    font-size: var(--font-32);
+}
+
+.light-h2 {
+    line-height: var(--line-36);
+    font-size: var(--font-28);
+}
+
+.light-h3 {
+    line-height: var(--line-32);
+    font-size: var(--font-24);
+}
+
+.light-h4 {
+    line-height: var(--line-28);
+    font-size: var(--font-20);
+}
+
+.light-h5 {
+    line-height: var(--line-24);
+    font-size: var(--font-16);
+}
+
+.light-h6 {
+    line-height: var(--line-20);
+    font-size: var(--font-14);
+}
+
+/* Regular Set */
+.regular-h1, .regular-h2, .regular-h3, .regular-h4, .regular-h5, regular-h6 {
+    font-weight: 400;
+}
+
+.regular-h1 {
+    line-height: var(--line-40);
+    font-size: var(--font-32);
+}
+
+.regular-h2 {
+    line-height: var(--line-36);
+    font-size: var(--font-28);
+}
+
+.regular-h3 {
+    line-height: var(--line-32);
+    font-size: var(--font-24);
+}
+
+.regular-h4 {
+    line-height: var(--line-28);
+    font-size: var(--font-20);
+}
+
+.regular-h5 {
+    line-height: var(--line-24);
+    font-size: var(--font-16);
+}
+
+.regular-h6 {
+    line-height: var(--line-20);
+    font-size: var(--font-14);
+}
+
+/* Medium Set */
+.medium-h1, .medium-h2, .medium-h3, .medium-h4, .medium-h5, medium-h6 {
+    font-weight: 500;
+}
+
+.medium-h1 {
+    line-height: var(--line-40);
+    font-size: var(--font-32);
+}
+
+.medium-h2 {
+    line-height: var(--line-36);
+    font-size: var(--font-28);
+}
+
+.medium-h3 {
+    line-height: var(--line-32);
+    font-size: var(--font-24);
+}
+
+.medium-h4 {
+    line-height: var(--line-28);
+    font-size: var(--font-20);
+}
+
+.medium-h5 {
+    line-height: var(--line-24);
+    font-size: var(--font-16);
+}
+
+.medium-h6 {
+    line-height: var(--line-20);
+    font-size: var(--font-14);
+}
+
+/* Bold Set */
+.bold-h1, .bold-h2, .bold-h3, .bold-h4, .bold-h5, bold-h6 {
+    font-weight: 700;
+}
+
+.bold-h1 {
+    line-height: var(--line-40);
+    font-size: var(--font-32);
+}
+
+.bold-h2 {
+    line-height: var(--line-36);
+    font-size: var(--font-28);
+}
+
+.bold-h3 {
+    line-height: var(--line-32);
+    font-size: var(--font-24);
+}
+
+.bold-h4 {
+    line-height: var(--line-28);
+    font-size: var(--font-20);
+}
+
+.bold-h5 {
+    line-height: var(--line-24);
+    font-size: var(--font-16);
+}
+
+.bold-h6 {
+    line-height: var(--line-20);
+    font-size: var(--font-14);
+}
+
+/* Color Class */
+/* Suffix c- */
+.c-impact-primary {
+    color: var(--impact-primary);
+}
+
+.c-impact-secondary {
+    color: var(--impact-secondary);
+}
+
+/* Background Color Class */
+/* Suffix bg- */
+.bg-brand-primary {
+    background-color: var(--brand-primary);
+}
+
+.bg-brand-secondary {
+    background-color: var(--brand-secondary);
+}
+
+/* Margin Class */
+.mt-48 {
+    margin-top: 48px;
+}
+
+.mt-24 {
+    margin-top: 24px;
+}
+
+/* Padding Class */
+
+.pt-48 {
+    padding-top: 48px;
+}
+
+.pt-24 {
+    padding-top: 24px;
+}

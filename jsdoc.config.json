@@ -1,0 +1,40 @@
+{
+  "plugins": [
+    "plugins/markdown"
+  ],
+  "recurseDepth": 10,
+  "source": {
+    "include": [
+      "./web/resources/js"
+    ],
+    "includePattern": ".(jsx|js|ts|tsx)$",
+    "exclude": [
+      "node_modules/",
+      "./web/resources/suggest",
+      "./web/resources/js/plugin",
+      "./web/resources/js/summernote",
+      "./out",
+      "./target",
+      "./.idea",
+      "./.github"
+    ]
+  },
+  "sourceType": "module",
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": [
+      "jsdoc",
+      "closure"
+    ]
+  },
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false
+  },
+  "opts": {
+    "recurse": true,
+    "templates": "templates/default",
+    "encoding": "utf8",
+    "destination": "./docs/js_rest/"
+  }
+}
