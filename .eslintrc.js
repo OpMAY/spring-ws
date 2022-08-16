@@ -15,5 +15,5 @@ module.exports = {
         'no-unused-vars': 2,
         'no-console': 1
     },
-    'ignorePatterns': ['**/resources/js/plugin/**/*.js','**/resources/js/plugin/summernote/*.js'],
+    'ignorePatterns': ['**/resources/js/plugin/**/*.js'],
 };
