@@ -1,17 +1,31 @@
-const SIZE_5MB = 1024 * 1024 * 5; // 5MB
-const SIZE_10MB = 1024 * 1024 * 10; // 10MB
-const CHUNK_SIZE = SIZE_5MB;
-const BUCKET_NAME = 'gugong';
+import 'js/plugin/aws/aws-sdk-2.1101.0.min';
+
+//FILE CHUNK SIZE (5MB)
+const CHUNK_SIZE = 1024 * 1024 * 5;
+//AWS BUCKET NAME
+const BUCKET_NAME = 'BUCKET_NAME';
+//LOCAL OR AWS MODE SELECT
 const UPLOAD_MODE = Object.freeze({
     LOCAL: 'LOCAL',
     AWS: 'AWS'
 })
+//INITIALIZE MODE
 const MULTIPART_UPLOAD_MODE = UPLOAD_MODE.AWS;
 
 let s3; // SDK Object
 let detect_leave = false;
 
+/**
+ * FileUploadInfo,
+ * File upload 기능을 사용할 떄의 생성자
+ * @requires [getUUID]
+ * */
 class FileUploadInfo {
+
+    /**
+     * Create File FileUploadInfo Constructor
+     * @param {File} file - File Object
+     * */
     constructor(file) {
         this.file = file;
         this.byte_flag = 0;
@@ -24,22 +38,36 @@ class FileUploadInfo {
 
 let fnOnLeave = () => {
 }
+
+/**
+ * Window.OnBeforeUnLoad,
+ * Window 객체가 Unload 되기 직전에 실행되는 이벤트 함수,
+ * 이벤트를 사용하면 사용자가 페이지를 떠날 때 정말로 떠날 것인지 묻는 확인 대화 상자를 표시할 수 있는 함수
+ * */
 window.onbeforeunload = () => {
     if (detect_leave) return true;
 };
+
+/**
+ * Window.OnUnLoad,
+ * Window 객체가 Unload 될때 실행되는 이벤트 함수,
+ * 즉 페이지 나갈때 실행되는 함수
+ *
+ * @requires [fnOnLeave]
+ * */
 window.onunload = () => {
     fnOnLeave();
-};// 나가면 실행되는
-/* 사용 예시
-*<script src="https://sdk.amazonaws.com/js/aws-sdk-2.1101.0.min.js"></script>
-*$(document).ready(()=>{
-*    initAWSS3SDK();
-*});
-**/
+};
 
-function initAWSS3SDK() {
-    const AWS_REGION = 'ap-northeast-2';
-    const IDENTITY_POOL_ID = 'ap-northeast-2:6ec05f63-7d98-4614-964b-dd77eb385337'; // aws cognito 자격증명 풀 ID
+/**
+ * InitializeAWSS3,
+ * AWS S3 File Upload 초기화 함수
+ *
+ * @requires [aws-sdk-2.1101.0.min.js]
+ * @param {string} AWS_REGION AWS S3 지역
+ * @param {string} IDENTITY_POOL_ID aws cognito 자격증명 풀 ID
+ * */
+function initializeAWSS3(AWS_REGION='ap-northeast-2',IDENTITY_POOL_ID='ap-northeast-2:6ec05f63-7d98-4614-964b-dd77eb385337') {
     AWS.config.region = AWS_REGION;
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
         IdentityPoolId: IDENTITY_POOL_ID,
@@ -49,59 +77,118 @@ function initAWSS3SDK() {
     });
 }
 
-function cancelMultipartUpload(callback) {
+/**
+ * CancelMultipartUpload,
+ * 파일 업로드 중 취소할때 사용하는 함수
+ *
+ * @param {function} cancelCallback 취소시 실행시킬 콜백 함수
+ * */
+function cancelMultipartUpload(cancelCallback) {
     if (confirm('전송중인 파일이 삭제됩니다. 중단하시겠습니까?')) {
         console.log('전송을 중단합니다.');
-        multipart_upload_canceled = true;
-        callback();
+        cancelCallback();
     }
 }
 
+/**
+ * HandleMultipartUploadFail,
+ * Multipart Upload 실패시 실행되는 함수
+ *
+ * @requires [unobservePageLeave]
+ * */
 function handleMultipartUploadFail() {
-    console.log(part_index + '번째 파트 전송중 실패');
+    console.log(this.part_index + '번째 파트 전송중 실패');
     unobservePageLeave();
 }
 
+/**
+ * HandleMultipartUploadCancel,
+ * Multipart Upload 중단시 실행되는 함수
+ *
+ * @requires [unobservePageLeave]
+ * */
 function handleMultipartUploadCancel() {
-    console.log(part_index + '번째 파트 전송중 중단');
+    console.log(this.part_index + '번째 파트 전송중 중단');
     unobservePageLeave();
 }
 
+/**
+ * HandleMultipartUploadComplete,
+ * Multipart Upload 완전히 성공시 실행되는 함수
+ *
+ * @requires [unobservePageLeave]
+ * */
 function handleMultipartUploadComplete() {
     console.log('전송완료');
     unobservePageLeave();
-    viewAlert({content: '업로드 완료'});
 }
 
-function handlePartUploadSuccess(progress_percent) {
-    console.log(progress_percent + '% 진행');
-    viewAlert({content: progress_percent + '% 진행'});
+/**
+ * HandlePartUploadSuccess,
+ * Multipart Upload 성공시 실행되는 함수,
+ * 해당 함수는 Chunk가 성공적으로 업로드 될때마다 실행되는 함수
+ *
+ * @param {number} progress_percent 백분율의 값
+ * */
+function handlePartUploadSuccess(percent) {
+    console.log(percent + '% 진행');
 }
 
+/**
+ * ObservePageLeave,
+ * Observe API 콜백 등록하는 함수
+ *
+ * @requires [fnOnLeave]
+ * @param {function} callback Observe API 등록할 함수
+ * */
 function observePageLeave(callback) {
     detect_leave = true;
     fnOnLeave = callback;
 }
 
+/**
+ * UnObservePageLeave,
+ * Observe API 등록된 콜백을 해제하는 함수
+ *
+ * @requires [fnOnLeave]
+ * */
 function unobservePageLeave() {
     detect_leave = false;
     fnOnLeave = () => {
     };
 }
 
-function awsMultipartUpload(dir_path, file, front_complete_callback, progress_callback) {
+/**
+ * AwsMultipartUpload,
+ * 파일을 CHUNK로 분할하여 AWS에 업로드 시키는 함수,
+ *
+ * @requires [observePageLeave, abortMultipartUpload, partUpload, handleMultipartUploadFail, handlePartUploadSuccess, completeMultipartUpload, uploadBlob]
+ * @param {string} dir_path AWS 디렉토리
+ * @param {File} file 업로드 할려는 파일
+ * @param {function} completeCallback 성공시 UI를 수정하는 콜백 함수
+ * @param {function} progressCallback 파일 업로드 진행시 진행상황 UI를 수정하는 콜백 함수
+ *  */
+function awsMultipartUpload(path, file, completeCallback, progressCallback) {
     let fileUploadInfo = new FileUploadInfo(file);
 
     observePageLeave(abortMultipartUpload);
 
     const eTagParts = []; // etags for complete
-    const Multipart_Object_Key = dir_path + fileUploadInfo.uuid + fileUploadInfo.file.name;
+    const Multipart_Object_Key = path + fileUploadInfo.uuid + fileUploadInfo.file.name;
     const params = {
         Bucket: BUCKET_NAME,
         Key: Multipart_Object_Key
     };
     s3.createMultipartUpload(params, partUpload);
 
+    /**
+     * PartUpload,
+     * AWS에 CHUNK를 업로드한 이후에 콜백 함수
+     *
+     * @requires [abortMultipartUpload, handleMultipartUploadFail, handlePartUploadSuccess, completeMultipartUpload, abortMultipartUpload, handleMultipartUploadCancel, uploadBlob]
+     * @param {Object} err AWS가 돌려주는 Error 오브젝트
+     * @param {Object} data AWS가 돌려주는 Data 오브젝트
+     *  */
     function partUpload(err, data) {
         if (err) { // an error occurred
             console.log(err, err.stack);
@@ -115,7 +202,7 @@ function awsMultipartUpload(dir_path, file, front_complete_callback, progress_ca
         } else { // 파일 전송시
             const progress_percent = Math.floor(((fileUploadInfo.byte_flag - CHUNK_SIZE) / fileUploadInfo.file.size) * 100);
             handlePartUploadSuccess(progress_percent);
-            progress_callback(progress_percent, fileUploadInfo.byte_flag);
+            completeCallback(progress_percent, fileUploadInfo.byte_flag);
         }
         if (data.ETag) { // 성공한 request 의 ETag 담기
             eTagParts.push({
@@ -142,6 +229,13 @@ function awsMultipartUpload(dir_path, file, front_complete_callback, progress_ca
          UploadId: "ibZBv_75gd9r8lH_gqXatLdxMVpAlj6ZQjEs.OwyF3953YdwbcQnMA2BLGn8Lx12fQNICtMw5KyteFeHw.Sjng--"
         }
         */
+        /**
+         * UploadBlob,
+         * CHUNK를 업로드하는 함수
+         *
+         * @requires [partUpload]
+         * @param {blob} blob 파일의 일부분 CHUNK(BLOB)
+         *  */
         function uploadBlob(blob) {
             const reader = new FileReader();
             reader.readAsDataURL(blob);
@@ -160,6 +254,7 @@ function awsMultipartUpload(dir_path, file, front_complete_callback, progress_ca
         }
     }
 
+    //TODO ADD COMMENT
     function completeMultipartUpload(err, data) {
         if (err) { // an error occurred
             console.log(err, err.stack);
@@ -187,7 +282,7 @@ function awsMultipartUpload(dir_path, file, front_complete_callback, progress_ca
             else { // successful response
                 console.log(data);
                 handleMultipartUploadComplete();
-                front_complete_callback(data.Location);
+                completeCallback(data.Location);
             }
             /* ex)
             data = {
@@ -243,7 +338,7 @@ function localMultipartUpload(file, front_complete_callback, progress_callback) 
             if (success && !fileUploadInfo.canceled) { // 전송 성공
                 const progress_percent = Math.floor((fileUploadInfo.byte_flag / file.size) * 100);
                 handlePartUploadSuccess(progress_percent);
-                progress_callback(progress_percent, fileUploadInfo.byte_flag);
+                progressCallback(progress_percent, fileUploadInfo.byte_flag);
 
                 fileUploadInfo.byte_flag += CHUNK_SIZE;
                 fileUploadInfo.part_index += 1;
@@ -301,15 +396,15 @@ function localMultipartUpload(file, front_complete_callback, progress_callback) 
 
 function multipartUpload({
                              file,
-                             front_complete_callback = () => {
+                             completeCallback = () => {
                              },
-                             progress_callback = () => {
+                             progressCallback = () => {
                              },
-                             dir_path
+                             path
                          }) {
     if (MULTIPART_UPLOAD_MODE === UPLOAD_MODE.LOCAL) {
-        localMultipartUpload(file, front_complete_callback, progress_callback);
+        localMultipartUpload(file, completeCallback, progressCallback);
     } else if (MULTIPART_UPLOAD_MODE === UPLOAD_MODE.AWS) {
-        awsMultipartUpload(dir_path, file, front_complete_callback, progress_callback);
+        awsMultipartUpload(path, file, completeCallback, progressCallback);
     }
 }
