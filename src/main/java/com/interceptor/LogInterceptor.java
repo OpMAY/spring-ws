@@ -51,9 +51,9 @@ public class LogInterceptor extends HandlerInterceptorAdapter implements Logging
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         log.debug("Log Interceptor afterCompletion");
         ContentCachingRequestWrapper requestWrapper = (ContentCachingRequestWrapper) request;
-        ContentCachingResponseWrapper responseWrapper =  (ContentCachingResponseWrapper) response;
         if (Constant.LogSetting.HEADER_LOG)
             log.info("request header: {}", getHeaders(requestWrapper));
+
         if (Constant.LogSetting.PARAMETER_LOG)
             log.info("request parameter: {}", getParameterMap(requestWrapper.getParameterMap()));
 
@@ -63,8 +63,6 @@ public class LogInterceptor extends HandlerInterceptorAdapter implements Logging
         if (Constant.LogSetting.REQUEST_BODY_LOG)
             log.info("request body: {}", getRequestBody(requestWrapper));
 
-        if (Constant.LogSetting.RESPONSE_BODY_LOG)
-            log.info("response body: {}", getResponseBody(responseWrapper));
         super.afterCompletion(request, response, handler, ex);
     }
 

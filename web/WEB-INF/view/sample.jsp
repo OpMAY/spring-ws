@@ -117,8 +117,8 @@
      * */
     $(document).ready(function () {
         console.log('Static JS is ready');
-        let data = {
-            name: 'name test', age: 10, reason:'asdf'
+       /* let data = {
+            name: 'name test', age: 10
         }
         const options = {
             method: 'POST',
@@ -133,7 +133,7 @@
                 console.log(result);
             }).catch(e => {
             console.error(e);
-        });
+        });*/
     });
 </script>
 </body>

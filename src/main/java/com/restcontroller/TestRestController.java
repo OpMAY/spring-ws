@@ -20,6 +20,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
@@ -98,13 +99,13 @@ public class TestRestController {
     private final TestValidator validator;
 
     @RequestMapping(value = "/test/validator", method = RequestMethod.POST)
-    public ResponseEntity validatorTest(@RequestBody Test test) {
+    public ResponseEntity validatorTest(@RequestBody Test test, BindingResult result) {
         log.info(test.toString());
-        /*validator.validate(test, result);
+        validator.validate(test, result);
         if (result.hasErrors()) {
             log.info("Error Accrued -> {}", result.toString());
             return new ResponseEntity(DefaultRes.res(200), HttpStatus.OK);
-        }*/
+        }
         return new ResponseEntity(DefaultRes.res(200,new Message()), HttpStatus.OK);
     }
 }
