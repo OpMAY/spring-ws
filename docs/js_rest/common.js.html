@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: module/api/kakao/kakao-login.js</title>
+    <title>JSDoc: Source: common.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: module/api/kakao/kakao-login.js</h1>
+    <h1 class="page-title">Source: common.js</h1>
 
     
 
@@ -26,61 +26,101 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>// KAKAO Module
-
-/**
- * Kakao Login JS
- * -> ### 표시 한 곳에 Element ID만 맞춰서 설정하시면 됩니다.
- * kakaoJSLoginFunction => 팝업 창으로 로그인 하여 프론트 단에 바로 로그인 정보 호출할 때
- * kakaoRestLoginFunction => oauth 로 Request 띄워서 call back url에 연동하여 로그인 정보 호출할 때
- * **/
-
-const kakaoKey = $('#KAKAO_JAVASCRIPT').val();
+            <pre class="prettyprint source linenums"><code>'use strict';
 $(document).ready(function() {
-  if (typeof Kakao === 'undefined') {
-    // CALL naver login script
-    $.getScript('https://developers.kakao.com/sdk/js/kakao.js', function() {
-      // Stuff to do after someScript has loaded
-      kakaoInit();
-      document.getElementById('kakao-popup').addEventListener('click', function() {
-        kakaoJSLoginFunction();
-      });
-      $('#kakao').data('key', $('#KAKAO_KEY').val());
-      document.getElementById('kakao').addEventListener('click', function() {
-        kakaoRestLoginFunction($('#kakao').data().key);
-      });
-    });
-  }
+  console.log('common.js execute');
 });
 
-const kakaoInit = () => {
-  // Require Javascript Key
-  Kakao.init(kakaoKey);
-};
-
-const kakaoJSLoginFunction = () => {
-  // Javascript 단에서만 동작
-  Kakao.Auth.login({
-    success: function(authObj) {
-      console.log('success : ', authObj);
-      // DO Something..
-    },
-    fail: function(err) {
-      alert('failed to login: ' + JSON.stringify(err));
-    },
+/**
+ * LoginSubmit,
+ * 로그인폼 validation 함수
+ * @requires [inspection]
+ * @return {boolean}
+ * */
+const loginSubmit = () => {
+  return inspection({
+    selector: '[name="email"]',
+    regex_type: 'email',
+    empty_text: '이메일을 입력해주세요.',
+    failed_text: '이메일을 정확히 입력해주세요.',
+  }) &amp;&amp; inspection({
+    selector: '[name="password"]',
+    regex_type: 'password',
+    empty_text: '패스워드를 입력해주세요.',
+    failed_text: '패스워드를 정확히 입력해주세요. (8자 이상 20자 이하, 영문, 숫자, 특수문자(@$!%*#?&amp;^) 모두 포함)',
   });
 };
 
-const kakaoRestLoginFunction = (key) => {
-  // Back 단에서 동작
-  /** Kakao*/
-  /** href="https://kauth.kakao.com/oauth/authorize?client_id=###&amp;redirect_uri=http://###/auth/login.do&amp;response_type=code"*/
-  const h = 'https://kauth.kakao.com/oauth/authorize';
-  const c = key;
-  const r = window.location.protocol + '//' + window.location.host + '/oauth/callback';
-  const t = 'code';
-  location.href = h + '?' + 'client_id=' + c + '&amp;redirect_uri=' + r + '&amp;response_type=' + t;
+/**
+ * FindIdSubmit,
+ * 아이디찾기 폼 validation 함수
+ * @requires [inspection]
+ * @return {boolean}
+ * */
+const findIdSubmit = () => {
+  return inspection({
+    selector: '[name="name"]',
+    regex_type: 'name',
+    empty_text: '이름을 입력해주세요.',
+    failed_text: '이름을 정확히 입력해주세요. (2~20자 영어, 한글, 숫자, 띄어쓰기)',
+  }) &amp;&amp; inspection({
+    selector: '[name="phone"]',
+    regex_type: 'phone',
+    empty_text: '휴대폰 번호를 입력해주세요.',
+    failed_text: '휴대폰 번호를 정확히 입력해주세요. (3자리, 3~4자리, 4자리, 띄어쓰기나 \'-\' 허용)',
+  });
 };
+
+/**
+ * FindPsSubmit,
+ * 패스워드찾기 폼 validation 함수
+ * @requires [inspection]
+ * @return {boolean}
+ * */
+const findPsSubmit = () => {
+  return inspection({
+    selector: '[name="email"]',
+    regex_type: 'email',
+
+    empty_text: '이메일을 입력해주세요.',
+    failed_text: '이메일을 정확히 입력해주세요.',
+  }) &amp;&amp; inspection({
+    selector: '[name="email_token"]',
+    regex_type: 'verify_code',
+    empty_text: '인증 코드를 입력해주세요.',
+    failed_text: '인증 코드를 정확히 입력해주세요. (10자리)',
+  });
+};
+
+/**
+ * VerifyMailSubmit,
+ * 이메일 인증 폼 validation 함수
+ * @requires [inspection]
+ * @return {boolean}
+ * */
+const verifyMailSubmit = () => {
+  return inspection({
+    selector: '[name="email"]',
+    regex_type: 'email',
+    empty_text: '이메일을 입력해주세요.',
+    failed_text: '이메일을 정확히 입력해주세요.',
+  });
+};
+
+/**
+ * VerifyPhoneSubmit,
+ * 휴대폰 인증 폼 validation 함수
+ * @requires [inspection]
+ * @return {boolean}
+ * */
+const verifyPhoneSubmit = () => {
+  return inspection({
+    selector: '[name="phone"]',
+    regex_type: 'phone',
+    empty_text: '휴대폰 번호를 입력해주세요.',
+    failed_text: '휴대폰 번호를 정확히 입력해주세요. (3자리, 3~4자리, 4자리, 띄어쓰기나 \'-\' 허용)',
+  });
+}
 </code></pre>
         </article>
     </section>

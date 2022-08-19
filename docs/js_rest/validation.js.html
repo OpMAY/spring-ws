@@ -26,7 +26,13 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>function findRegex(type) {
+            <pre class="prettyprint source linenums"><code>/**
+ * FindRegex,
+ * regex 형태를 찾아주는 함수
+ *
+ * @param {string} type 찾을 regex 타입
+ * */
+function findRegex(type) {
   switch (type) {
     case 'email' :
       return /^[0-9a-zA-Z_.-]{1,30}@[0-9a-zA-Z_-]{1,10}\.[0-9a-zA-Z_-]{0,10}$/; // 최대 50자, 이메일형식
@@ -101,19 +107,22 @@
 }
 
 /**
- * selector or element or value 중 하나로 검사할 값을 찾아서 검사한다.
- * @param selector - css selector
- * @param element - 지정 element 없으면 selector 로 element 지정
- * @param value - 지정 값이 없으면 selector 로 element 지정
- * @param regex_check - 정규식 체크 여부
- * @param regex_type - 정규식 타입 (string)
- * @param empty_text - 빈값일때 노출 텍스트
- * @param failed_text - 정규식 실패시 노출 텍스트
- * @param isFocus - 체크 후 focus 여부
- * @param empty_check - 빈값 체크 여부
- * @param empty - 빈값일때 callback
- * @param failed - 정규식 통과 실패시 callback
- * @param success - 모든 검사 통과 후 반환 직전 callback
+ * Inspection,
+ * validation을 해주는 함수,
+ * selector or element or value 중 하나로 검사할 값을 찾아서 검사하는 함수
+ * @requires [viewAlert, findRegex]
+ * @param {string} selector - css selector
+ * @param {HTMLElement | Element | Document} element - 지정 element 없으면 selector 로 element 지정
+ * @param {string | number | Object} value - 지정 값이 없으면 selector 로 element 지정
+ * @param {boolean} regex_check - 정규식 체크 여부, default = true
+ * @param {string} regex_type - 정규식 타입
+ * @param {string} empty_text - 빈값일때 노출 텍스트
+ * @param {string} failed_text - 정규식 실패시 노출 텍스트
+ * @param {boolean} isFocus - 체크 후 focus 여부, default = true
+ * @param {boolean} empty_check - 빈값 체크 여부, default = true
+ * @param {function} empty - 빈값일때 callback, default 정의되어있음
+ * @param {function} failed - 정규식 통과 실패시 callback
+ * @param {function} success - 모든 검사 통과 후 반환 직전 callback
  * @return {boolean} - 통과 여부
  */
 function inspection
@@ -181,13 +190,13 @@ function inspection
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="FileUploadInfo.html">FileUploadInfo</a></li><li><a href="Time.html">Time</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addComma">addComma</a></li><li><a href="global.html#autoDashPhoneNumber">autoDashPhoneNumber</a></li><li><a href="global.html#awsMultipartUpload">awsMultipartUpload</a></li><li><a href="global.html#callBackURI2">callBackURI2</a></li><li><a href="global.html#cancelMultipartUpload">cancelMultipartUpload</a></li><li><a href="global.html#deleteChild">deleteChild</a></li><li><a href="global.html#deleteCookie">deleteCookie</a></li><li><a href="global.html#FetchGetURLBuilder">FetchGetURLBuilder</a></li><li><a href="global.html#focusInputLastCarret">focusInputLastCarret</a></li><li><a href="global.html#getCookie">getCookie</a></li><li><a href="global.html#getUUID">getUUID</a></li><li><a href="global.html#handleMultipartUploadCancel">handleMultipartUploadCancel</a></li><li><a href="global.html#handleMultipartUploadComplete">handleMultipartUploadComplete</a></li><li><a href="global.html#handleMultipartUploadFail">handleMultipartUploadFail</a></li><li><a href="global.html#handlePartUploadSuccess">handlePartUploadSuccess</a></li><li><a href="global.html#initializeAWSS3">initializeAWSS3</a></li><li><a href="global.html#inspection">inspection</a></li><li><a href="global.html#inspectNumberInput">inspectNumberInput</a></li><li><a href="global.html#kakaoKey">kakaoKey</a></li><li><a href="global.html#localMultipartUpload">localMultipartUpload</a></li><li><a href="global.html#mobilePlaceHolderChanger">mobilePlaceHolderChanger</a></li><li><a href="global.html#MODAL_PADDING">MODAL_PADDING</a></li><li><a href="global.html#moveToScroll">moveToScroll</a></li><li><a href="global.html#multipartUpload">multipartUpload</a></li><li><a href="global.html#observePageLeave">observePageLeave</a></li><li><a href="global.html#setCookie">setCookie</a></li><li><a href="global.html#tokenGenerator">tokenGenerator</a></li><li><a href="global.html#unobservePageLeave">unobservePageLeave</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Time.html">Time</a></li></ul><h3>Classes</h3><ul><li><a href="FileUploadInfo.html">FileUploadInfo</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addComma">addComma</a></li><li><a href="global.html#awsMultipartUpload">awsMultipartUpload</a></li><li><a href="global.html#callBackURI2">callBackURI2</a></li><li><a href="global.html#cancelMultipartUpload">cancelMultipartUpload</a></li><li><a href="global.html#checkImageType">checkImageType</a></li><li><a href="global.html#deleteCookie">deleteCookie</a></li><li><a href="global.html#fetchGetURLBuilder">fetchGetURLBuilder</a></li><li><a href="global.html#findIdSubmit">findIdSubmit</a></li><li><a href="global.html#findPsSubmit">findPsSubmit</a></li><li><a href="global.html#findRegex">findRegex</a></li><li><a href="global.html#getCookie">getCookie</a></li><li><a href="global.html#handleMultipartUploadCancel">handleMultipartUploadCancel</a></li><li><a href="global.html#handleMultipartUploadComplete">handleMultipartUploadComplete</a></li><li><a href="global.html#handleMultipartUploadFail">handleMultipartUploadFail</a></li><li><a href="global.html#handlePartUploadSuccess">handlePartUploadSuccess</a></li><li><a href="global.html#initializeAWSS3">initializeAWSS3</a></li><li><a href="global.html#inspection">inspection</a></li><li><a href="global.html#kakaoKey">kakaoKey</a></li><li><a href="global.html#localMultipartUpload">localMultipartUpload</a></li><li><a href="global.html#loginSubmit">loginSubmit</a></li><li><a href="global.html#modalHiddenEvent">modalHiddenEvent</a></li><li><a href="global.html#modalShownEvent">modalShownEvent</a></li><li><a href="global.html#moveToScroll">moveToScroll</a></li><li><a href="global.html#multipartUpload">multipartUpload</a></li><li><a href="global.html#observePageLeave">observePageLeave</a></li><li><a href="global.html#replaceAll">replaceAll</a></li><li><a href="global.html#setCookie">setCookie</a></li><li><a href="global.html#tokenGenerator">tokenGenerator</a></li><li><a href="global.html#unobservePageLeave">unobservePageLeave</a></li><li><a href="global.html#verifyMailSubmit">verifyMailSubmit</a></li><li><a href="global.html#verifyPhoneSubmit">verifyPhoneSubmit</a></li><li><a href="global.html#viewAlert">viewAlert</a></li><li><a href="global.html#viewModal">viewModal</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Fri Aug 19 2022 13:49:27 GMT+0900 (대한민국 표준시)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Fri Aug 19 2022 16:39:50 GMT+0900 (대한민국 표준시)
 </footer>
 
 <script> prettyPrint(); </script>

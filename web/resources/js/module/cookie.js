@@ -9,14 +9,14 @@
  * @example
  * setCookie({key: key,value: value,day: 10});
  * */
-const setCookie = function ({key, value, day = 1}) {
-    if ((key !== undefined && key != null) && (value !== undefined && value !== null)) {
-        const date = new Date();
-        date.setTime(date.getTime() + day * 60 * 60 * 24 * 1000);
-        document.cookie = `${key}=${value};expires=${date.toUTCString()};path=/`;
-    } else {
-        throw new Error(`${key} or ${value} cookie is empty data`);
-    }
+const setCookie = function({key, value, day = 1}) {
+  if ((key !== undefined && key != null) && (value !== undefined && value !== null)) {
+    const date = new Date();
+    date.setTime(date.getTime() + day * 60 * 60 * 24 * 1000);
+    document.cookie = `${key}=${value};expires=${date.toUTCString()};path=/`;
+  } else {
+    throw new Error(`${key} or ${value} cookie is empty data`);
+  }
 };
 
 /**
@@ -28,13 +28,13 @@ const setCookie = function ({key, value, day = 1}) {
  * @example
  * getCookie(key);
  * */
-const getCookie = function (key) {
-    if (key !== undefined && key != null) {
-        const value = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
-        return value ? value[2] : null;
-    } else {
-        throw new Error(`cookie key is not exist key(${key}`);
-    }
+const getCookie = function(key) {
+  if (key !== undefined && key != null) {
+    const value = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+    return value ? value[2] : null;
+  } else {
+    throw new Error(`cookie key is not exist key(${key}`);
+  }
 };
 
 /**
@@ -46,11 +46,11 @@ const getCookie = function (key) {
  * @example
  * deleteCookie(key);
  * */
-const deleteCookie = function (key) {
-    if (key !== undefined && key != null) {
-        const date = new Date();
-        document.cookie = `${key}= ;expires=${date.toUTCString()};path=/`;
-    } else {
-        throw new Error(`deleteCookie key is not exist key ${key}`);
-    }
+const deleteCookie = function(key) {
+  if (key !== undefined && key != null) {
+    const date = new Date();
+    document.cookie = `${key}= ;expires=${date.toUTCString()};path=/`;
+  } else {
+    throw new Error(`deleteCookie key is not exist key ${key}`);
+  }
 };
