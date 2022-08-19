@@ -27,41 +27,59 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * setCookie(name,value,day)
+ * SetCookie,
+ * 쿠키를 설정하는 함수
+ * @param {string} key 쿠키에서의 키 설정
+ * @param {string | JSON} value 쿠키에서의 해당 키에대한 값 설정
+ * @param {number} day 해당 쿠키를 얼마나 유지할건지에 대한 숫자 (DAY 기준)
+ *
+ * @example
+ * setCookie({key,value,10});
  * */
-var setCookie = function ({name, value, day = 1}) {
-    if ((name !== undefined &amp;&amp; name !== null) &amp;&amp; (value !== undefined &amp;&amp; value !== null)) {
-        var date = new Date();
+const setCookie = function ({key, value, day = 1}) {
+    if ((key !== undefined &amp;&amp; key != null) &amp;&amp; (value !== undefined &amp;&amp; value !== null)) {
+        const date = new Date();
         date.setTime(date.getTime() + day * 60 * 60 * 24 * 1000);
-        document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
+        document.cookie = `${key}=${value};expires=${date.toUTCString()};path=/`;
     } else {
-        throw new Error(`${name} or ${value} cookie is empty data`);
+        throw new Error(`${key} or ${value} cookie is empty data`);
     }
 };
 
 /**
- *  var object = getCookie(name);
+ * GetCookie,
+ * 설정한 쿠키를 가져오는 함수
+ * @param {string} key 가져올 쿠키의 키값
+ *
+ * @example
+ * getCookie(key);
  * */
-var getCookie = function (name) {
-    if (name !== undefined &amp;&amp; name !== null) {
-        var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+const getCookie = function (key) {
+    if (key !== undefined &amp;&amp; key != null) {
+        const value = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
         return value ? value[2] : null;
     } else {
-        throw new Error(`cookie key is not exist key(${name}`);
+        throw new Error(`cookie key is not exist key(${key}`);
     }
 };
 
 /**
- *  deleteCookie(name);
+ * DeleteCookie,
+ * 설정한 쿠키를 제거하는 함수
+ * @param {string} key 제거할 쿠키의 키값
+ *
+ * @example
+ * deleteCookie(key);
  * */
-var deleteCookie = function (name) {
-    if (name !== undefined &amp;&amp; name !== null) {
-        var date = new Date();
-        document.cookie = `${name}= ;expires=${date.toUTCString()};path=/`;
+const deleteCookie = function (key) {
+    if (key !== undefined &amp;&amp; key != null) {
+        const date = new Date();
+        document.cookie = `${key}= ;expires=${date.toUTCString()};path=/`;
     } else {
-        throw new Error(`deleteCookie key is not exist key ${name}`);
+        throw new Error(`deleteCookie key is not exist key ${key}`);
     }
-};</code></pre>
+};
+</code></pre>
         </article>
     </section>
 
@@ -71,13 +89,13 @@ var deleteCookie = function (name) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#callBackURI2">callBackURI2</a></li><li><a href="global.html#deleteCookie">deleteCookie</a></li><li><a href="global.html#getCookie">getCookie</a></li><li><a href="global.html#kakaoKey">kakaoKey</a></li><li><a href="global.html#setCookie">setCookie</a></li><li><a href="global.html#test">test</a></li><li><a href="global.html#test1">test1</a></li><li><a href="global.html#test2">test2</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="FileUploadInfo.html">FileUploadInfo</a></li><li><a href="Time.html">Time</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addComma">addComma</a></li><li><a href="global.html#autoDashPhoneNumber">autoDashPhoneNumber</a></li><li><a href="global.html#awsMultipartUpload">awsMultipartUpload</a></li><li><a href="global.html#callBackURI2">callBackURI2</a></li><li><a href="global.html#cancelMultipartUpload">cancelMultipartUpload</a></li><li><a href="global.html#deleteChild">deleteChild</a></li><li><a href="global.html#deleteCookie">deleteCookie</a></li><li><a href="global.html#FetchGetURLBuilder">FetchGetURLBuilder</a></li><li><a href="global.html#focusInputLastCarret">focusInputLastCarret</a></li><li><a href="global.html#getCookie">getCookie</a></li><li><a href="global.html#getUUID">getUUID</a></li><li><a href="global.html#handleMultipartUploadCancel">handleMultipartUploadCancel</a></li><li><a href="global.html#handleMultipartUploadComplete">handleMultipartUploadComplete</a></li><li><a href="global.html#handleMultipartUploadFail">handleMultipartUploadFail</a></li><li><a href="global.html#handlePartUploadSuccess">handlePartUploadSuccess</a></li><li><a href="global.html#initializeAWSS3">initializeAWSS3</a></li><li><a href="global.html#inspection">inspection</a></li><li><a href="global.html#inspectNumberInput">inspectNumberInput</a></li><li><a href="global.html#kakaoKey">kakaoKey</a></li><li><a href="global.html#localMultipartUpload">localMultipartUpload</a></li><li><a href="global.html#mobilePlaceHolderChanger">mobilePlaceHolderChanger</a></li><li><a href="global.html#MODAL_PADDING">MODAL_PADDING</a></li><li><a href="global.html#moveToScroll">moveToScroll</a></li><li><a href="global.html#multipartUpload">multipartUpload</a></li><li><a href="global.html#observePageLeave">observePageLeave</a></li><li><a href="global.html#setCookie">setCookie</a></li><li><a href="global.html#tokenGenerator">tokenGenerator</a></li><li><a href="global.html#unobservePageLeave">unobservePageLeave</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Wed Aug 17 2022 02:17:25 GMT+0900 (대한민국 표준시)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Fri Aug 19 2022 13:49:27 GMT+0900 (대한민국 표준시)
 </footer>
 
 <script> prettyPrint(); </script>

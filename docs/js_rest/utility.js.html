@@ -1,4 +1,32 @@
-'use strict';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: utility.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: utility.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
 $(document).ready(function () {
     console.log('utility.js execute');
 });
@@ -28,7 +56,7 @@ function addComma(num) {
     point = num.length % 3;
     len = num.length;
     str = num.substring(0, point);
-    while (point < len) {
+    while (point &lt; len) {
         if (str !== "") str += ",";
         str += num.substring(point, point + 3);
         point += 3;
@@ -40,7 +68,7 @@ function addComma(num) {
  * moveToScroll({move_id(id or class), top, speed(scroll speed), isClass(id is class?)});
  * */
 function moveToScroll({move_id, top = 0, speed = 400, isClass = false}) {
-    if (move_id !== undefined && move_id !== null) {
+    if (move_id !== undefined &amp;&amp; move_id !== null) {
         var offset;
         if (!isClass) {
             offset = $('#' + move_id).offset();
@@ -55,7 +83,7 @@ function moveToScroll({move_id, top = 0, speed = 400, isClass = false}) {
 }
 
 function replaceAll(str, search, replace) {
-    if (search !== undefined && replace !== undefined && str !== undefined)
+    if (search !== undefined &amp;&amp; replace !== undefined &amp;&amp; str !== undefined)
         return str.split(search).join(replace);
     else
         throw new Error(`parameter is undefined str : ${str}, search : ${search}, replace : ${replace}`);
@@ -64,12 +92,12 @@ function replaceAll(str, search, replace) {
 /**
  * TokenGenerator,
  * 토큰을 생성해주는 함수
- * @param {number} length 만들려는 토큰의 자릿수, default = 10
- * @return {String} 자릿수 만큼의 String을 리턴, default = 10
+ * @param {number} length 만들려는 토큰의 자릿수
+ * @return {String} 자릿수 만큼의 String을 리턴
  * */
-const tokenGenerator = (length = 11) => {
-    return Math.random().toString(36).substring(2, length); // "twozs5xfni"
-}
+const tokenGenerator = ((length = 11) => {
+    return Math.random().toString(36).substr(2, length); // "twozs5xfni"
+});
 
 /**
  * GetURLBuilder,
@@ -77,12 +105,12 @@ const tokenGenerator = (length = 11) => {
  *
  * @param {string} baseUrl ex) url
  * @param {Object}  object ex) {key: 'value', k: 'v'}
- * @return {string} url?key=value&h&v
+ * @return {string} url?key=value&amp;h&amp;v
  */
 function FetchGetURLBuilder(baseUrl, object) {
     let result = baseUrl + '?';
     Object.keys(object).forEach((key) => {
-        result += key + '=' + object[key] + '&';
+        result += key + '=' + object[key] + '&amp;';
     });
     return result.substring(0, result.length - 1);
 }
@@ -127,11 +155,11 @@ class Time {
         if (datetime === undefined || datetime === null) return '방금 전';
         try {
             const time_gap = new Date().getTime() - this.getLocalDateTime(datetime);
-            if (time_gap < 1000 * 60) { // 1분 이내
+            if (time_gap &lt; 1000 * 60) { // 1분 이내
                 return '방금 전';
-            } else if (time_gap < 1000 * 60 * 60) { // 60분 이내
+            } else if (time_gap &lt; 1000 * 60 * 60) { // 60분 이내
                 return Math.floor(time_gap / (1000 * 60)) + '분 전';
-            } else if (time_gap < 1000 * 60 * 60 * 12) { // 12시간 이내
+            } else if (time_gap &lt; 1000 * 60 * 60 * 12) { // 12시간 이내
                 return Math.floor(time_gap / (1000 * 60 * 60)) + '시간 전';
             } else {
                 return this.formatLocalDatetime(datetime);
@@ -170,7 +198,7 @@ class Time {
  */
 function focusInputLastCarret({id = undefined, selector = undefined, root = document.getElementsByTagName('body')[0]}) {
     const inputField = id !== undefined ? root.getElementById(id) : root.querySelector(selector);
-    if (inputField != null && inputField.value.length != 0) {
+    if (inputField != null &amp;&amp; inputField.value.length != 0) {
         if (inputField.createTextRange) {
             const FieldRange = inputField.createTextRange();
             FieldRange.moveStart('character', inputField.value.length);
@@ -199,7 +227,7 @@ const deleteChild = (element) => {
 
 function toFileSizeString(size) {
     let file_size = size / 1024 / 1024;
-    if (file_size < 1) {
+    if (file_size &lt; 1) {
         file_size *= 1024;
         file_size = Math.ceil(file_size);
         file_size += 'KB';
@@ -218,7 +246,7 @@ function toFileSizeString(size) {
  */
 function getUUID() { // UUID v4 generator in JavaScript (RFC4122 compliant)
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-        let r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 3 | 8);
+        let r = Math.random() * 16 | 0, v = c === 'x' ? r : (r &amp; 3 | 8);
         return v.toString(16);
     });
 }
@@ -233,7 +261,7 @@ function inspectNumberInput(elem) {
     if (elem.value.length === 0) elem.value = 0;
 
     const max = elem.dataset.max ? Number(elem.dataset.max) : 9_999_999_999;
-    if (max < Number(elem.value.replace(/\D/g, ''))) // max 값보다 value 가 크면
+    if (max &lt; Number(elem.value.replace(/\D/g, ''))) // max 값보다 value 가 크면
         elem.value = comma(max); // 최대값 설정
 }
 
@@ -243,19 +271,19 @@ function inspectPureNumberInput(elem) {
     if (elem.value.length === 0) elem.value = 0;
 
     const max = elem.dataset.max ? Number(elem.dataset.max) : 9_999_999_999;
-    if (max < Number(elem.value.replace(/\D/g, ''))) // max 값보다 value 가 크면
+    if (max &lt; Number(elem.value.replace(/\D/g, ''))) // max 값보다 value 가 크면
         elem.value = max; // 최대값 설정
 }
 
 function toNumberToMoneyString(number) {
-    var inputNumber = number < 0 ? false : number;
+    var inputNumber = number &lt; 0 ? false : number;
     var unitWords = ["", "만", "억", "조", "경"];
     var splitUnit = 10000;
     var splitCount = unitWords.length;
     var resultArray = [];
     var resultString = "";
 
-    for (var i = 0; i < splitCount; i++) {
+    for (var i = 0; i &lt; splitCount; i++) {
         var unitResult =
             (inputNumber % Math.pow(splitUnit, i + 1)) / Math.pow(splitUnit, i);
         unitResult = Math.floor(unitResult);
@@ -263,7 +291,7 @@ function toNumberToMoneyString(number) {
             resultArray[i] = unitResult;
         }
     }
-    for (var i = 0; i < resultArray.length; i++) {
+    for (var i = 0; i &lt; resultArray.length; i++) {
         if (!resultArray[i]) continue;
         resultString = String(numberFormat(resultArray[i])) + unitWords[i] + resultString;
     }
@@ -278,14 +306,14 @@ function toNumberToMoneyString(number) {
 function autoDashPhoneNumber(value) {
     value = value.replace(/[\D]/g, '');
     let tmp = '';
-    if (value.length < 4) {
+    if (value.length &lt; 4) {
         return value;
-    } else if (value.length < 7) {
+    } else if (value.length &lt; 7) {
         tmp += value.substring(0, 3);
         tmp += '-';
         tmp += value.substring(3);
         return tmp;
-    } else if (value.length < 11) {
+    } else if (value.length &lt; 11) {
         tmp += value.substring(0, 3);
         tmp += '-';
         tmp += value.substring(3, 3);
@@ -305,7 +333,7 @@ function autoDashPhoneNumber(value) {
 
 const getURLParameter = (name) => {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    let regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+    let regex = new RegExp("[\\?&amp;]" + name + "=([^&amp;#]*)"),
         results = regex.exec(location.search);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
@@ -329,9 +357,9 @@ function mobilePlaceHolderChanger(name) {
 }
 
 const isResponseSize = (size) => {
-    let s = (size !== undefined && size !== null) ? size : 1200;
+    let s = (size !== undefined &amp;&amp; size !== null) ? size : 1200;
     let w = screen.width;
-    if (w <= s) {
+    if (w &lt;= s) {
         return true;
     }
     return false;
@@ -353,15 +381,26 @@ const toMaskingString = function (string) {
     }
 };
 
-/**
- * 자료형에 상관없이 빈값인지 확인하고 싶은때 사용
- */
-function isEmpty(value) {
-    if (value !== null && typeof value == "object") {
-        const attrs = [];
-        for (const attr in value)
-            attrs.push(attr);
-        return attrs.length === 0;
-    }
-    return value === null || value === undefined || (typeof value === 'string' && value.replace(/\s/g, '') === "");
-}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="FileUploadInfo.html">FileUploadInfo</a></li><li><a href="Time.html">Time</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addComma">addComma</a></li><li><a href="global.html#autoDashPhoneNumber">autoDashPhoneNumber</a></li><li><a href="global.html#awsMultipartUpload">awsMultipartUpload</a></li><li><a href="global.html#callBackURI2">callBackURI2</a></li><li><a href="global.html#cancelMultipartUpload">cancelMultipartUpload</a></li><li><a href="global.html#deleteChild">deleteChild</a></li><li><a href="global.html#deleteCookie">deleteCookie</a></li><li><a href="global.html#FetchGetURLBuilder">FetchGetURLBuilder</a></li><li><a href="global.html#focusInputLastCarret">focusInputLastCarret</a></li><li><a href="global.html#getCookie">getCookie</a></li><li><a href="global.html#getUUID">getUUID</a></li><li><a href="global.html#handleMultipartUploadCancel">handleMultipartUploadCancel</a></li><li><a href="global.html#handleMultipartUploadComplete">handleMultipartUploadComplete</a></li><li><a href="global.html#handleMultipartUploadFail">handleMultipartUploadFail</a></li><li><a href="global.html#handlePartUploadSuccess">handlePartUploadSuccess</a></li><li><a href="global.html#initializeAWSS3">initializeAWSS3</a></li><li><a href="global.html#inspection">inspection</a></li><li><a href="global.html#inspectNumberInput">inspectNumberInput</a></li><li><a href="global.html#kakaoKey">kakaoKey</a></li><li><a href="global.html#localMultipartUpload">localMultipartUpload</a></li><li><a href="global.html#mobilePlaceHolderChanger">mobilePlaceHolderChanger</a></li><li><a href="global.html#MODAL_PADDING">MODAL_PADDING</a></li><li><a href="global.html#moveToScroll">moveToScroll</a></li><li><a href="global.html#multipartUpload">multipartUpload</a></li><li><a href="global.html#observePageLeave">observePageLeave</a></li><li><a href="global.html#setCookie">setCookie</a></li><li><a href="global.html#tokenGenerator">tokenGenerator</a></li><li><a href="global.html#unobservePageLeave">unobservePageLeave</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Fri Aug 19 2022 13:49:27 GMT+0900 (대한민국 표준시)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
