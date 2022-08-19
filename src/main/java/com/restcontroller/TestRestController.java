@@ -40,7 +40,7 @@ public class TestRestController {
     public ResponseEntity<String> logInterceptor() {
         Message message = new Message();
         message.put("data", "success");
-        return new ResponseEntity(DefaultRes.res(200, message, true), HttpStatus.OK);
+        return new ResponseEntity(DefaultRes.res(HttpStatus.OK, message, true), HttpStatus.OK);
     }
 
     @RequestMapping("test/property")
@@ -52,7 +52,7 @@ public class TestRestController {
                 .setMailContent(new MailBuilder().getMailHTML(MailType.PASSWORD, new MailLogo(), new MailFooter(), "dsjfkdsjf"), MailType.PASSWORD).send();
         Message message = new Message()
                 .put("data", "success");
-        return new ResponseEntity(DefaultRes.res(200, message, true), HttpStatus.OK);
+        return new ResponseEntity(DefaultRes.res(HttpStatus.OK, message, true), HttpStatus.OK);
     }
 
     @Autowired
@@ -80,7 +80,7 @@ public class TestRestController {
         Message message = new Message()
                 .put("data", "success")
                 .put("queue", serverTokenService.toString());
-        return new ResponseEntity(DefaultRes.res(200, message, true), HttpStatus.OK);
+        return new ResponseEntity(DefaultRes.res(HttpStatus.OK, message, true), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/oauth/callback", method = RequestMethod.GET)
@@ -90,7 +90,7 @@ public class TestRestController {
         if (user != null) {
             response.sendRedirect("/test/login");
         }
-        return new ResponseEntity(DefaultRes.res(200), HttpStatus.OK);
+        return new ResponseEntity(DefaultRes.res(HttpStatus.OK), HttpStatus.OK);
     }
 
     /**
@@ -104,8 +104,8 @@ public class TestRestController {
         validator.validate(test, result);
         if (result.hasErrors()) {
             log.info("Error Accrued -> {}", result.toString());
-            return new ResponseEntity(DefaultRes.res(200), HttpStatus.OK);
+            return new ResponseEntity(DefaultRes.res(HttpStatus.OK), HttpStatus.OK);
         }
-        return new ResponseEntity(DefaultRes.res(200,new Message()), HttpStatus.OK);
+        return new ResponseEntity(DefaultRes.res(HttpStatus.OK), HttpStatus.OK);
     }
 }

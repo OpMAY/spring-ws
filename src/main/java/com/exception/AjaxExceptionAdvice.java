@@ -29,7 +29,7 @@ public class AjaxExceptionAdvice {
     @ExceptionHandler(JSONException.class)
     protected ResponseEntity handleJSONException(JSONException e) {
         e.printStackTrace();
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity(DefaultRes.res(HttpStatus.OK), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -47,7 +47,7 @@ public class AjaxExceptionAdvice {
     protected ResponseEntity handleNoHandlerFoundException(NoHandlerFoundException e) {
         e.printStackTrace();
         log.info("handleNoHandlerFoundException");
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK), HttpStatus.NOT_FOUND);
+        return new ResponseEntity(DefaultRes.res(HttpStatus.OK), HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -57,7 +57,7 @@ public class AjaxExceptionAdvice {
     protected ResponseEntity handleGrantAccessDeniedException(GrantAccessDeniedException e) {
         e.printStackTrace();
         log.info("handleGrantAccessDeniedException");
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK), HttpStatus.FORBIDDEN);
+        return new ResponseEntity(DefaultRes.res(HttpStatus.OK), HttpStatus.FORBIDDEN);
     }
 
     /**
@@ -69,7 +69,7 @@ public class AjaxExceptionAdvice {
     protected ResponseEntity handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         e.printStackTrace();
         log.info("handleMethodArgumentNotValidException");
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(DefaultRes.res(HttpStatus.OK), HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -80,7 +80,7 @@ public class AjaxExceptionAdvice {
     protected ResponseEntity handleBindException(BindException e) {
         e.printStackTrace();
         log.info("handleBindException");
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(DefaultRes.res(HttpStatus.OK), HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -91,7 +91,7 @@ public class AjaxExceptionAdvice {
     protected ResponseEntity handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         e.printStackTrace();
         log.info("handleMethodArgumentTypeMismatchException");
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(DefaultRes.res(HttpStatus.OK), HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -101,27 +101,27 @@ public class AjaxExceptionAdvice {
     protected ResponseEntity handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         e.printStackTrace();
         log.info("handleHttpRequestMethodNotSupportedException");
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(DefaultRes.res(HttpStatus.OK), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NullPointerException.class)
     protected ResponseEntity handleNullPointerException(Exception e) {
         e.printStackTrace();
         log.info("NullPointerException");
-        return new ResponseEntity(DefaultRes.res(StatusCode.NULL_POINTER), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity(DefaultRes.res(HttpStatus.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity handleException(Exception e) {
         e.printStackTrace();
         log.info("Global General Exception");
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity(DefaultRes.res(HttpStatus.OK), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(FileNotFoundException.class)
     protected ResponseEntity handleFileNotFoundException(FileNotFoundException e) {
         e.printStackTrace();
         log.info("handleFileNotFoundException");
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK), HttpStatus.NO_CONTENT);
+        return new ResponseEntity(DefaultRes.res(HttpStatus.OK), HttpStatus.NO_CONTENT);
     }
 }
