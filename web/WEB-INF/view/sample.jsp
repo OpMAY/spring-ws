@@ -117,23 +117,6 @@
      * */
     $(document).ready(function () {
         console.log('Static JS is ready');
-       /* let data = {
-            name: 'name test', age: 10
-        }
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;'
-            },
-            body: JSON.stringify(data)
-        }
-        fetch('/test/validator', options)
-            .then(res => res.json())
-            .then((result) => {
-                console.log(result);
-            }).catch(e => {
-            console.error(e);
-        });*/
     });
 </script>
 </body>

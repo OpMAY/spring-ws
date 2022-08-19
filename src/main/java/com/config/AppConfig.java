@@ -5,9 +5,7 @@ import com.filter.LogFilter;
 import com.filter.SessionFilter;
 import com.interceptor.BaseInterceptor;
 import com.interceptor.LogInterceptor;
-import com.interceptor.RecoverInterceptor;
 import com.util.Constant;
-import com.util.FileDownload;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -18,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.converter.xml.SourceHttpMessageConverter;
@@ -138,6 +137,7 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
         stringConverter.setSupportedMediaTypes(types);
         converters.add(stringConverter);
         converters.add(new SourceHttpMessageConverter<>());
+        converters.add(new ResourceHttpMessageConverter());
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         converter.setPrettyPrint(true);
         converters.add(converter);
@@ -160,11 +160,6 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
         resolver.setOrder(0);
         log.info("beanNameViewResolver : initialized");
         return resolver;
-    }
-
-    @Bean // 파일 다운로드 빈 등록
-    public FileDownload fileDownload() {
-        return new FileDownload();
     }
 
     @Bean // 파일 업로드 설정

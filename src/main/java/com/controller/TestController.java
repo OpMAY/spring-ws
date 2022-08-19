@@ -1,18 +1,18 @@
 package com.controller;
 
 import com.aws.file.FileUploadUtility;
+import com.transfer.DownloadBuilder;
 import com.util.Encryption.EncryptionService;
-import com.validator.test.Test;
-import com.validator.test.TestValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 
 @Slf4j
 @Controller
@@ -60,5 +60,27 @@ public class TestController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView home() {
         return new ModelAndView("sample");
+    }
+
+    /**
+     * <a href="/test/download.do?file_name=test.mp4"
+     * class="btn btn-primary _card-btn">Go somewhere</a>
+     */
+    @Value("${UPLOAD_PATH}")
+    private String UPLOAD_PATH;
+
+    @RequestMapping(value = "/test/download.do", method = RequestMethod.GET)
+    public void downloadTest(HttpServletResponse response, String file_name) {
+        /**
+         * Prepare AWS Download
+         * And Logic After
+         * */
+        File file = new File(UPLOAD_PATH + file_name);
+        try {
+            DownloadBuilder downloadBuilder = new DownloadBuilder().init(response, true).file(file).header();
+            downloadBuilder.send();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
