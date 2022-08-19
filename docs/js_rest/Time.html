@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: module/api/kakao/kakao-login.js</title>
+    <title>JSDoc: Class: Time</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,73 +17,268 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: module/api/kakao/kakao-login.js</h1>
+    <h1 class="page-title">Class: Time</h1>
 
     
 
 
 
+
+<section>
+
+<header>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>// KAKAO Module
+        <h2><span class="attribs"><span class="type-signature"></span></span>Time<span class="signature">()</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description"><p>$('#today').val(today());</p></div>
+        
+    
+</header>
 
-/**
- * Kakao Login JS
- * -> ### 표시 한 곳에 Element ID만 맞춰서 설정하시면 됩니다.
- * kakaoJSLoginFunction => 팝업 창으로 로그인 하여 프론트 단에 바로 로그인 정보 호출할 때
- * kakaoRestLoginFunction => oauth 로 Request 띄워서 call back url에 연동하여 로그인 정보 호출할 때
- * **/
+<article>
+    <div class="container-overview">
+    
+        
 
-const kakaoKey = $('#KAKAO_JAVASCRIPT').val();
-$(document).ready(function() {
-  if (typeof Kakao === 'undefined') {
-    // CALL naver login script
-    $.getScript('https://developers.kakao.com/sdk/js/kakao.js', function() {
-      // Stuff to do after someScript has loaded
-      kakaoInit();
-      document.getElementById('kakao-popup').addEventListener('click', function() {
-        kakaoJSLoginFunction();
-      });
-      $('#kakao').data('key', $('#KAKAO_KEY').val());
-      document.getElementById('kakao').addEventListener('click', function() {
-        kakaoRestLoginFunction($('#kakao').data().key);
-      });
-    });
-  }
-});
+    
+    <h2>Constructor</h2>
+    
 
-const kakaoInit = () => {
-  // Require Javascript Key
-  Kakao.init(kakaoKey);
-};
+    
+    <h4 class="name" id="Time"><span class="type-signature"></span>new Time<span class="signature">()</span><span class="type-signature"></span></h4>
+    
 
-const kakaoJSLoginFunction = () => {
-  // Javascript 단에서만 동작
-  Kakao.Auth.login({
-    success: function(authObj) {
-      console.log('success : ', authObj);
-      // DO Something..
-    },
-    fail: function(err) {
-      alert('failed to login: ' + JSON.stringify(err));
-    },
-  });
-};
+    
 
-const kakaoRestLoginFunction = (key) => {
-  // Back 단에서 동작
-  /** Kakao*/
-  /** href="https://kauth.kakao.com/oauth/authorize?client_id=###&amp;redirect_uri=http://###/auth/login.do&amp;response_type=code"*/
-  const h = 'https://kauth.kakao.com/oauth/authorize';
-  const c = key;
-  const r = window.location.protocol + '//' + window.location.host + '/oauth/callback';
-  const t = 'code';
-  location.href = h + '?' + 'client_id=' + c + '&amp;redirect_uri=' + r + '&amp;response_type=' + t;
-};
-</code></pre>
-        </article>
-    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="utility.js.html">utility.js</a>, <a href="utility.js.html#line93">line 93</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>Time<span class="signature">()</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description"><p>$('#today').val(today());</p></div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+    <h2>Constructor</h2>
+    
+
+    
+    <h4 class="name" id="Time"><span class="type-signature"></span>new Time<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="utility.js.html">utility.js</a>, <a href="utility.js.html#line93">line 93</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

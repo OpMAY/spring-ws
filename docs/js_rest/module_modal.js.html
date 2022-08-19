@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: module/modal.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: module/modal.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @dates 2022.03.23
+ * @author kimwoosik
+ * @description Modal Setting
+ * Case : in page, '&lt;div id="modal-container">&lt;/div>' must have exist
+ */
+/** Modal Lib Setting */
+/** General Modal*/
+const MODAL_PADDING = 17;
+const MODAL_CONTAINER = $('#modal-container');
+const ALERT_CONTAINER = $('#alert-container');
+$(document).ready(function () {
+    /**실행 코드*/
+    /*viewModal({
+        id: 'modal4', vCenter: true, btnCount: 2,
+        title: 'Title', desc: 'Desc',
+        confirm_text: 'Confirm Text', cancel_text: 'Cancel Text',
+        onConfirm: function (e) {
+            console.log('Confirm Button Click Callback', e.currentTarget);
+        },
+        onCancel: function (e) {
+            console.log('Cancel Button Click Callback', e.currentTarget);
+        },
+        onShown: function (e) {
+            console.log('Modal Show After Callback', e.currentTarget);
+        },
+        onHidden: function (e) {
+            console.log('Modal Hide After Callback', e.currentTarget);
+        },
+        onShow: function (e) {
+            console.log('Modal Show Before Callback', e.currentTarget);
+        },
+        onHide: function (e) {
+            console.log('Modal Hide Before Callback', e.currentTarget);
+        }
+    });*/
+    /*viewAlert({id: 'alert-1', type: 'failed', content: 'Login Failed'});*/
+});
+const viewAlert = ({
+                       id = tokenGenerator(8),
+                       type = 'success',
+                       content,
+                       fadeTimeOut = 400,
+                       timeOut = 2000
+                   }) => {
+    let alert = document.createElement('div');
+    alert.setAttribute('id', id);
+    alert.classList.add('alert');
+    alert.style.display = 'none';
+    if (type === 'success') {
+        alert.classList.add('alert-success');
+    } else if (type === 'failed') {
+        alert.classList.add('alert-failed');
+    } else if (type === 'info') {
+        alert.classList.add('alert-info');
+    }
+    alert.innerHTML = `${content}`;
+    ALERT_CONTAINER.append(alert);
+    $('#' + id).fadeIn(fadeTimeOut);
+    setTimeout(() => {
+        $('#' + id).fadeOut(fadeTimeOut, () => {
+            $('#' + id).remove();
+        });
+    }, timeOut);
+};
+
+const viewModal = ({
+                       id = tokenGenerator(8),
+                       ariaHidden = true,
+                       backDrop = false,
+                       tabindex = -1,
+                       zIndex = 1050,
+                       vCenter = false,
+                       btnCount = 1,
+                       title = '알림',
+                       desc = undefined,
+                       confirm_text = '확인',
+                       cancel_text = '취소',
+                       onConfirm = undefined,
+                       onCancel = undefined,
+                       onShown = undefined,
+                       onHidden = undefined,
+                       onShow = undefined,
+                       onHide = undefined
+                   }) => {
+
+    let modal = document.createElement('div');
+    const $modal = $(modal);
+
+    modal.classList.add('modal', 'fade', 'general-modal');
+    modal.style.zIndex = zIndex;
+    modal.setAttribute('id', id);
+    modal.setAttribute('tabindex', tabindex);
+    modal.setAttribute('aria-hidden', ariaHidden);
+
+    modal.innerHTML = `&lt;div class="modal-dialog">
+                          &lt;div class="modal-content radius-12">
+                              &lt;div class="modal-body">
+                                  &lt;div class="body-content my-auto mx-auto">
+                                      &lt;span class="title">${title}&lt;/span>
+                                      &lt;span class="desc">${desc}&lt;/span>
+                                  &lt;/div>
+                              &lt;/div>
+                              &lt;div class="modal-footer"
+                                   count="${btnCount}">
+                              &lt;/div>
+                          &lt;/div>
+                      &lt;/div>`;
+
+    if (desc === undefined)
+        modal.querySelector('.desc').remove();
+
+    if (backDrop !== false)
+        $modal.attr('data-backdrop', 'static');
+    if (backDrop !== false)
+        $modal.attr('data-keyboard', 'false');
+    if (vCenter !== false)
+        $modal.find('.modal-dialog').addClass('modal-dialog-centered');
+
+    if (btnCount === 0) {
+        /**Not Button*/
+    } else if (btnCount === 1) {
+        /**One Button*/
+        let button = document.createElement('button');
+        button.setAttribute('type', 'button');
+        button.setAttribute('aria-label', 'agree');
+        button.classList.add('btn', 'btn-lg', 'btn-red', 'modal-footer-radius', 'active');
+        button.innerText = `${confirm_text}`;
+        button.setAttribute('data-dismiss', 'modal');
+        if (!isEmpty(onConfirm))
+            button.addEventListener('click', onConfirm);
+        $modal.find('.modal-footer').append(button);
+    } else {
+        /**Two Button*/
+        let cancelBtn = document.createElement('button');
+        cancelBtn.setAttribute('type', 'button');
+        cancelBtn.setAttribute('aria-label', 'agree');
+        cancelBtn.classList.add('btn', 'btn-lg', 'btn-gray-white', 'modal-footer-radius');
+        cancelBtn.innerText = `${cancel_text}`;
+        cancelBtn.setAttribute('data-dismiss', 'modal');
+        if (!isEmpty(onCancel))
+            cancelBtn.addEventListener('click', onCancel);
+        $modal.find('.modal-footer').append(cancelBtn);
+
+        let confirmBtn = document.createElement('button');
+        confirmBtn.setAttribute('type', 'button');
+        confirmBtn.setAttribute('aria-label', 'agree');
+        confirmBtn.classList.add('btn', 'btn-lg', 'btn-red', 'modal-footer-radius', 'active');
+        confirmBtn.innerText = `${confirm_text}`;
+        confirmBtn.setAttribute('data-dismiss', 'modal');
+        if (!isEmpty(onConfirm))
+            confirmBtn.addEventListener('click', onConfirm);
+        $modal.find('.modal-footer').append(confirmBtn);
+    }
+
+    MODAL_CONTAINER.append(modal);
+    if (!isEmpty(onShown)) {
+        MODAL_CONTAINER.find('#' + id + '.general-modal').on('shown.bs.modal', onShown);
+    }
+    MODAL_CONTAINER.find('#' + id + '.general-modal').on('shown.bs.modal', modalShownEvent);
+    if (!isEmpty(onHidden)) {
+        MODAL_CONTAINER.find('#' + id + '.general-modal').on('hidden.bs.modal', onHidden);
+    }
+    MODAL_CONTAINER.find('#' + id + '.general-modal').on('hidden.bs.modal', modalHiddenEvent);
+    if (!isEmpty(onShow)) {
+        MODAL_CONTAINER.find('#' + id + '.general-modal').on('show.bs.modal', onShow);
+    }
+    if (!isEmpty(onHide)) {
+        MODAL_CONTAINER.find('#' + id + '.general-modal').on('hide.bs.modal', onHide);
+    }
+    $('#' + id).modal('show');
+}
+const modalHiddenEvent = (event) => {
+    if ($('#modal-container .general-modal.show').length === 0) {
+        if ($('body').hasClass('general-modal-open')) {
+            $('body').css('padding-right', 0);
+            $('body').removeClass('general-modal-open');
+        }
+    } else {
+        //$('body').css('padding-right', MODAL_PADDING);
+    }
+    event.currentTarget.remove();
+}
+
+const modalShownEvent = (event) => {
+    // do something...
+    if ($('body').hasClass('modal-open')) {
+        /** padding-right in scroll width */
+        //$('body').css('padding-right', MODAL_PADDING);
+        $('body').addClass('general-modal-open');
+    }
+}
+/** General Modal End*/
+/** Modal Lib Setting End */</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="FileUploadInfo.html">FileUploadInfo</a></li><li><a href="Time.html">Time</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addComma">addComma</a></li><li><a href="global.html#autoDashPhoneNumber">autoDashPhoneNumber</a></li><li><a href="global.html#awsMultipartUpload">awsMultipartUpload</a></li><li><a href="global.html#callBackURI2">callBackURI2</a></li><li><a href="global.html#cancelMultipartUpload">cancelMultipartUpload</a></li><li><a href="global.html#deleteChild">deleteChild</a></li><li><a href="global.html#deleteCookie">deleteCookie</a></li><li><a href="global.html#FetchGetURLBuilder">FetchGetURLBuilder</a></li><li><a href="global.html#focusInputLastCarret">focusInputLastCarret</a></li><li><a href="global.html#getCookie">getCookie</a></li><li><a href="global.html#getUUID">getUUID</a></li><li><a href="global.html#handleMultipartUploadCancel">handleMultipartUploadCancel</a></li><li><a href="global.html#handleMultipartUploadComplete">handleMultipartUploadComplete</a></li><li><a href="global.html#handleMultipartUploadFail">handleMultipartUploadFail</a></li><li><a href="global.html#handlePartUploadSuccess">handlePartUploadSuccess</a></li><li><a href="global.html#initializeAWSS3">initializeAWSS3</a></li><li><a href="global.html#inspection">inspection</a></li><li><a href="global.html#inspectNumberInput">inspectNumberInput</a></li><li><a href="global.html#kakaoKey">kakaoKey</a></li><li><a href="global.html#localMultipartUpload">localMultipartUpload</a></li><li><a href="global.html#mobilePlaceHolderChanger">mobilePlaceHolderChanger</a></li><li><a href="global.html#MODAL_PADDING">MODAL_PADDING</a></li><li><a href="global.html#moveToScroll">moveToScroll</a></li><li><a href="global.html#multipartUpload">multipartUpload</a></li><li><a href="global.html#observePageLeave">observePageLeave</a></li><li><a href="global.html#setCookie">setCookie</a></li><li><a href="global.html#tokenGenerator">tokenGenerator</a></li><li><a href="global.html#unobservePageLeave">unobservePageLeave</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Fri Aug 19 2022 13:49:27 GMT+0900 (대한민국 표준시)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
