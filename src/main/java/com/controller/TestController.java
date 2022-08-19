@@ -2,10 +2,15 @@ package com.controller;
 
 import com.aws.file.FileUploadUtility;
 import com.util.Encryption.EncryptionService;
+import com.validator.test.Test;
+import com.validator.test.TestValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -50,5 +55,10 @@ public class TestController {
         VIEW.addObject("GOOGLE_KEY", GOOGLE_KEY);
         VIEW.addObject("GOOGLE_SECRET", GOOGLE_SECRET);
         return VIEW;
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public ModelAndView home() {
+        return new ModelAndView("sample");
     }
 }

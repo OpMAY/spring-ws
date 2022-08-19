@@ -9,68 +9,69 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
-        crossorigin="anonymous">
-  <!-- Base -->
-  <link rel="stylesheet"
-        href="/resources/css/base/reset.css">
-  <link rel="stylesheet"
-        href="/resources/css/base/default.css">
-  <link rel="stylesheet"
-        href="/resources/css/base/common.css">
-  <!-- Theme -->
-  <link rel="stylesheet"
-        href="/resources/css/theme/theme.css">
-  <!-- Layout -->
-  <link rel="stylesheet"
-        href="/resources/css/layout/layout.css">
-  <link rel="stylesheet"
-        href="/resources/css/layout/res-layout.css">
-  <!-- Plugin -->
-  <link rel="stylesheet"
-        href="/resources/css/plugin/sample.css">
-  <!-- State -->
-  <link rel="stylesheet"
-        href="/resources/css/state/state.css">
-  <link rel="stylesheet"
-        href="/resources/css/state/res-state.css">
-  <!-- Module -->
-  <link rel="stylesheet"
-        href="/resources/css/module/module.css">
-  <link rel="stylesheet"
-        href="/resources/css/module/res-module.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+          integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+          crossorigin="anonymous">
+    <!-- Base -->
+    <link rel="stylesheet"
+          href="/resources/css/base/reset.css">
+    <link rel="stylesheet"
+          href="/resources/css/base/default.css">
+    <link rel="stylesheet"
+          href="/resources/css/base/common.css">
+    <!-- Theme -->
+    <link rel="stylesheet"
+          href="/resources/css/theme/theme.css">
+    <!-- Layout -->
+    <link rel="stylesheet"
+          href="/resources/css/layout/layout.css">
+    <link rel="stylesheet"
+          href="/resources/css/layout/res-layout.css">
+    <!-- Plugin -->
+    <link rel="stylesheet"
+          href="/resources/css/plugin/sample.css">
+    <!-- State -->
+    <link rel="stylesheet"
+          href="/resources/css/state/state.css">
+    <link rel="stylesheet"
+          href="/resources/css/state/res-state.css">
+    <!-- Module -->
+    <link rel="stylesheet"
+          href="/resources/css/module/module.css">
+    <link rel="stylesheet"
+          href="/resources/css/module/res-module.css">
 
-  <title>Hello, world!</title>
+    <title>Hello, world!</title>
 </head>
 <body>
 <header id="header"
         class="l-header-white"></header>
 <div id="content-wrapper"
      class="container-fluid l-content-wrapper">
-  <div class="row row-cols-4 card-main-container">
-    <div class="col card card-main">
-      <img src="https://via.placeholder.com/350x150"
-           class="card-img-top _img-top"
-           alt="card-img-alt">
-      <div class="card-body _card-body">
-        <h5 class="card-title light-h5 _title">Card title</h5>
-        <p class="card-text light-h6 _text">Some quick example text to build on the card title and make up the bulk
-          of the
-          card's
-          content.</p>
-        <a href="#"
-           class="btn btn-primary _card-btn">Go somewhere</a>
-      </div>
+    <div class="row row-cols-4 card-main-container">
+        <div class="col card card-main">
+            <img src="https://via.placeholder.com/350x150"
+                 class="card-img-top _img-top"
+                 alt="card-img-alt">
+            <div class="card-body _card-body">
+                <h5 class="card-title light-h5 _title">Card title</h5>
+                <p class="card-text light-h6 _text">Some quick example text to build on the card title and make up the
+                    bulk
+                    of the
+                    card's
+                    content.</p>
+                <a href="#"
+                   class="btn btn-primary _card-btn">Go somewhere</a>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 <footer id="footer"
         class="l-footer-fixed"></footer>
@@ -109,14 +110,31 @@
 <script src="/resources/js/validation.js"></script>
 
 <script>
-  /**
-   * Static JS
-   * Static JS는 특정 페이지 에서만 작동하는 부분으로 Event 및 Element 생성 및 화면에 진입했을 때의
-   * 해당 화면만의 특정 로직을 수행하는 Javascript를 Static JS라고 한다.
-   * */
-  $(document).ready(function () {
-    console.log('Static JS is ready');
-  });
+    /**
+     * Static JS
+     * Static JS는 특정 페이지 에서만 작동하는 부분으로 Event 및 Element 생성 및 화면에 진입했을 때의
+     * 해당 화면만의 특정 로직을 수행하는 Javascript를 Static JS라고 한다.
+     * */
+    $(document).ready(function () {
+        console.log('Static JS is ready');
+       /* let data = {
+            name: 'name test', age: 10
+        }
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;'
+            },
+            body: JSON.stringify(data)
+        }
+        fetch('/test/validator', options)
+            .then(res => res.json())
+            .then((result) => {
+                console.log(result);
+            }).catch(e => {
+            console.error(e);
+        });*/
+    });
 </script>
 </body>
 </html>

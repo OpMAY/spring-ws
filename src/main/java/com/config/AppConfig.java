@@ -1,6 +1,7 @@
 package com.config;
 
 import com.filter.GeneralFilter;
+import com.filter.LogFilter;
 import com.filter.SessionFilter;
 import com.interceptor.BaseInterceptor;
 import com.interceptor.LogInterceptor;
@@ -80,8 +81,12 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
         FilterRegistration.Dynamic generalFilter = container.addFilter("generalFilter", new GeneralFilter()); // general filter 등록
         generalFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.do");
 
+        FilterRegistration.Dynamic logFilter = container.addFilter("logFilter", new LogFilter()); // session filter 등록
+        logFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+
         FilterRegistration.Dynamic sessionFilter = container.addFilter("sessionFilter", new SessionFilter()); // session filter 등록
         sessionFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.do");
+
 
         /**
          * Clear Setting
