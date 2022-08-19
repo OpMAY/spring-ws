@@ -1,3 +1,9 @@
+/**
+ * FindRegex,
+ * regex 형태를 찾아주는 함수
+ *
+ * @param {string} type 찾을 regex 타입
+ * */
 function findRegex(type) {
   switch (type) {
     case 'email' :
@@ -73,19 +79,22 @@ function findRegex(type) {
 }
 
 /**
- * selector or element or value 중 하나로 검사할 값을 찾아서 검사한다.
- * @param selector - css selector
- * @param element - 지정 element 없으면 selector 로 element 지정
- * @param value - 지정 값이 없으면 selector 로 element 지정
- * @param regex_check - 정규식 체크 여부
- * @param regex_type - 정규식 타입 (string)
- * @param empty_text - 빈값일때 노출 텍스트
- * @param failed_text - 정규식 실패시 노출 텍스트
- * @param isFocus - 체크 후 focus 여부
- * @param empty_check - 빈값 체크 여부
- * @param empty - 빈값일때 callback
- * @param failed - 정규식 통과 실패시 callback
- * @param success - 모든 검사 통과 후 반환 직전 callback
+ * Inspection,
+ * validation을 해주는 함수,
+ * selector or element or value 중 하나로 검사할 값을 찾아서 검사하는 함수
+ * @requires [viewAlert, findRegex]
+ * @param {string} selector - css selector
+ * @param {HTMLElement | Element | Document} element - 지정 element 없으면 selector 로 element 지정
+ * @param {string | number | Object} value - 지정 값이 없으면 selector 로 element 지정
+ * @param {boolean} regex_check - 정규식 체크 여부, default = true
+ * @param {string} regex_type - 정규식 타입
+ * @param {string} empty_text - 빈값일때 노출 텍스트
+ * @param {string} failed_text - 정규식 실패시 노출 텍스트
+ * @param {boolean} isFocus - 체크 후 focus 여부, default = true
+ * @param {boolean} empty_check - 빈값 체크 여부, default = true
+ * @param {function} empty - 빈값일때 callback, default 정의되어있음
+ * @param {function} failed - 정규식 통과 실패시 callback
+ * @param {function} success - 모든 검사 통과 후 반환 직전 callback
  * @return {boolean} - 통과 여부
  */
 function inspection
