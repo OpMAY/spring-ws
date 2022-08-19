@@ -38,23 +38,7 @@ public class LogInterceptor extends HandlerInterceptorAdapter implements Logging
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.debug("Log Interceptor preHandle");
-        HttpServletRequest requestWrapper = new ContentCachingRequestWrapper(request);
-        HttpServletResponse responseWrapper = new ContentCachingResponseWrapper(response);
-        if (Constant.LogSetting.HEADER_LOG)
-            log.info("request header: {}", getHeaders(requestWrapper));
-        if (Constant.LogSetting.PARAMETER_LOG)
-            log.info("request parameter: {}", getParameterMap(((ContentCachingRequestWrapper) requestWrapper).getParameterMap()));
-
-        if (Constant.LogSetting.PAYLOAD_LOG)
-            log.info("request payload: {}", getPayload(requestWrapper.getContentType(), ((ContentCachingRequestWrapper) requestWrapper).getInputStream()));
-
-        if (Constant.LogSetting.REQUEST_BODY_LOG)
-            log.info("request body: {}", getRequestBody((ContentCachingRequestWrapper) requestWrapper));
-
-        if (Constant.LogSetting.RESPONSE_BODY_LOG)
-            log.info("response body: {}", getResponseBody(responseWrapper));
-
-        return super.preHandle(requestWrapper, responseWrapper, handler);
+        return super.preHandle(request, response, handler);
     }
 
     @Override
@@ -66,6 +50,21 @@ public class LogInterceptor extends HandlerInterceptorAdapter implements Logging
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         log.debug("Log Interceptor afterCompletion");
+        ContentCachingRequestWrapper requestWrapper = (ContentCachingRequestWrapper) request;
+        ContentCachingResponseWrapper responseWrapper =  (ContentCachingResponseWrapper) response;
+        if (Constant.LogSetting.HEADER_LOG)
+            log.info("request header: {}", getHeaders(requestWrapper));
+        if (Constant.LogSetting.PARAMETER_LOG)
+            log.info("request parameter: {}", getParameterMap(requestWrapper.getParameterMap()));
+
+        if (Constant.LogSetting.PAYLOAD_LOG)
+            log.info("request payload: {}", getPayload(requestWrapper.getContentType(), requestWrapper.getInputStream()));
+
+        if (Constant.LogSetting.REQUEST_BODY_LOG)
+            log.info("request body: {}", getRequestBody(requestWrapper));
+
+        if (Constant.LogSetting.RESPONSE_BODY_LOG)
+            log.info("response body: {}", getResponseBody(responseWrapper));
         super.afterCompletion(request, response, handler, ex);
     }
 
@@ -76,7 +75,7 @@ public class LogInterceptor extends HandlerInterceptorAdapter implements Logging
     }
 
     @Override
-    public Map<String, Object> getHeaders(HttpServletRequest request) {
+    public Map<String, Object> getHeaders(ContentCachingRequestWrapper request) {
         Map<String, Object> headerMap = new HashMap<>();
 
         Enumeration<String> headerArray = request.getHeaderNames();
@@ -111,12 +110,11 @@ public class LogInterceptor extends HandlerInterceptorAdapter implements Logging
 
     @Override
     public String getRequestBody(ContentCachingRequestWrapper request) {
-        ContentCachingRequestWrapper wrapper = WebUtils.getNativeRequest(request, ContentCachingRequestWrapper.class);
-        if (wrapper != null) {
-            byte[] buf = wrapper.getContentAsByteArray();
+        if (request != null) {
+            byte[] buf = request.getContentAsByteArray();
             if (buf.length > 0) {
                 try {
-                    String requestBodyStr = new String(buf, 0, buf.length, wrapper.getCharacterEncoding());
+                    String requestBodyStr = new String(buf, 0, buf.length, request.getCharacterEncoding());
                     return requestBodyStr;
                 } catch (UnsupportedEncodingException e) {
                     return " - ";
@@ -127,15 +125,14 @@ public class LogInterceptor extends HandlerInterceptorAdapter implements Logging
     }
 
     @Override
-    public String getResponseBody(final HttpServletResponse response) throws IOException {
+    public String getResponseBody(ContentCachingResponseWrapper response) throws IOException {
         String payload = null;
-        ContentCachingResponseWrapper wrapper = WebUtils.getNativeResponse(response, ContentCachingResponseWrapper.class);
-        if (wrapper != null) {
-            wrapper.setCharacterEncoding("UTF-8");
-            byte[] buf = wrapper.getContentAsByteArray();
+        if (response != null) {
+            response.setCharacterEncoding("UTF-8");
+            byte[] buf = response.getContentAsByteArray();
             if (buf.length > 0) {
-                payload = new String(buf, 0, buf.length, wrapper.getCharacterEncoding());
-                wrapper.copyBodyToResponse();
+                payload = new String(buf, 0, buf.length, response.getCharacterEncoding());
+                response.copyBodyToResponse();
             }
         }
         return null == payload ? " - " : payload;
