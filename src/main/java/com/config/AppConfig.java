@@ -5,9 +5,7 @@ import com.filter.LogFilter;
 import com.filter.SessionFilter;
 import com.interceptor.BaseInterceptor;
 import com.interceptor.LogInterceptor;
-import com.interceptor.RecoverInterceptor;
 import com.util.Constant;
-import com.util.FileDownload;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -162,11 +160,6 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
         resolver.setOrder(0);
         log.info("beanNameViewResolver : initialized");
         return resolver;
-    }
-
-    @Bean // 파일 다운로드 빈 등록
-    public FileDownload fileDownload() {
-        return new FileDownload();
     }
 
     @Bean // 파일 업로드 설정
