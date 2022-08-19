@@ -29,12 +29,13 @@
             <pre class="prettyprint source linenums"><code>/**
  * SetCookie,
  * 쿠키를 설정하는 함수
+ * @version a.2
  * @param {string} key 쿠키에서의 키 설정
  * @param {string | JSON} value 쿠키에서의 해당 키에대한 값 설정
  * @param {number} day 해당 쿠키를 얼마나 유지할건지에 대한 숫자 (DAY 기준)
  *
  * @example
- * setCookie({key,value,10});
+ * setCookie({key: key,value: value,day: 10});
  * */
 const setCookie = function ({key, value, day = 1}) {
     if ((key !== undefined &amp;&amp; key != null) &amp;&amp; (value !== undefined &amp;&amp; value !== null)) {
@@ -49,6 +50,7 @@ const setCookie = function ({key, value, day = 1}) {
 /**
  * GetCookie,
  * 설정한 쿠키를 가져오는 함수
+ * @version a.2
  * @param {string} key 가져올 쿠키의 키값
  *
  * @example
@@ -66,6 +68,7 @@ const getCookie = function (key) {
 /**
  * DeleteCookie,
  * 설정한 쿠키를 제거하는 함수
+ * @version a.2
  * @param {string} key 제거할 쿠키의 키값
  *
  * @example
@@ -89,13 +92,13 @@ const deleteCookie = function (key) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="FileUploadInfo.html">FileUploadInfo</a></li><li><a href="Time.html">Time</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addComma">addComma</a></li><li><a href="global.html#autoDashPhoneNumber">autoDashPhoneNumber</a></li><li><a href="global.html#awsMultipartUpload">awsMultipartUpload</a></li><li><a href="global.html#callBackURI2">callBackURI2</a></li><li><a href="global.html#cancelMultipartUpload">cancelMultipartUpload</a></li><li><a href="global.html#deleteChild">deleteChild</a></li><li><a href="global.html#deleteCookie">deleteCookie</a></li><li><a href="global.html#FetchGetURLBuilder">FetchGetURLBuilder</a></li><li><a href="global.html#focusInputLastCarret">focusInputLastCarret</a></li><li><a href="global.html#getCookie">getCookie</a></li><li><a href="global.html#getUUID">getUUID</a></li><li><a href="global.html#handleMultipartUploadCancel">handleMultipartUploadCancel</a></li><li><a href="global.html#handleMultipartUploadComplete">handleMultipartUploadComplete</a></li><li><a href="global.html#handleMultipartUploadFail">handleMultipartUploadFail</a></li><li><a href="global.html#handlePartUploadSuccess">handlePartUploadSuccess</a></li><li><a href="global.html#initializeAWSS3">initializeAWSS3</a></li><li><a href="global.html#inspection">inspection</a></li><li><a href="global.html#inspectNumberInput">inspectNumberInput</a></li><li><a href="global.html#kakaoKey">kakaoKey</a></li><li><a href="global.html#localMultipartUpload">localMultipartUpload</a></li><li><a href="global.html#mobilePlaceHolderChanger">mobilePlaceHolderChanger</a></li><li><a href="global.html#MODAL_PADDING">MODAL_PADDING</a></li><li><a href="global.html#moveToScroll">moveToScroll</a></li><li><a href="global.html#multipartUpload">multipartUpload</a></li><li><a href="global.html#observePageLeave">observePageLeave</a></li><li><a href="global.html#setCookie">setCookie</a></li><li><a href="global.html#tokenGenerator">tokenGenerator</a></li><li><a href="global.html#unobservePageLeave">unobservePageLeave</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Time.html">Time</a></li></ul><h3>Classes</h3><ul><li><a href="FileUploadInfo.html">FileUploadInfo</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addComma">addComma</a></li><li><a href="global.html#awsMultipartUpload">awsMultipartUpload</a></li><li><a href="global.html#callBackURI2">callBackURI2</a></li><li><a href="global.html#cancelMultipartUpload">cancelMultipartUpload</a></li><li><a href="global.html#checkImageType">checkImageType</a></li><li><a href="global.html#deleteCookie">deleteCookie</a></li><li><a href="global.html#fetchGetURLBuilder">fetchGetURLBuilder</a></li><li><a href="global.html#findIdSubmit">findIdSubmit</a></li><li><a href="global.html#findPsSubmit">findPsSubmit</a></li><li><a href="global.html#findRegex">findRegex</a></li><li><a href="global.html#getCookie">getCookie</a></li><li><a href="global.html#handleMultipartUploadCancel">handleMultipartUploadCancel</a></li><li><a href="global.html#handleMultipartUploadComplete">handleMultipartUploadComplete</a></li><li><a href="global.html#handleMultipartUploadFail">handleMultipartUploadFail</a></li><li><a href="global.html#handlePartUploadSuccess">handlePartUploadSuccess</a></li><li><a href="global.html#initializeAWSS3">initializeAWSS3</a></li><li><a href="global.html#inspection">inspection</a></li><li><a href="global.html#kakaoKey">kakaoKey</a></li><li><a href="global.html#localMultipartUpload">localMultipartUpload</a></li><li><a href="global.html#loginSubmit">loginSubmit</a></li><li><a href="global.html#modalHiddenEvent">modalHiddenEvent</a></li><li><a href="global.html#modalShownEvent">modalShownEvent</a></li><li><a href="global.html#moveToScroll">moveToScroll</a></li><li><a href="global.html#multipartUpload">multipartUpload</a></li><li><a href="global.html#observePageLeave">observePageLeave</a></li><li><a href="global.html#replaceAll">replaceAll</a></li><li><a href="global.html#setCookie">setCookie</a></li><li><a href="global.html#tokenGenerator">tokenGenerator</a></li><li><a href="global.html#unobservePageLeave">unobservePageLeave</a></li><li><a href="global.html#verifyMailSubmit">verifyMailSubmit</a></li><li><a href="global.html#verifyPhoneSubmit">verifyPhoneSubmit</a></li><li><a href="global.html#viewAlert">viewAlert</a></li><li><a href="global.html#viewModal">viewModal</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Fri Aug 19 2022 13:49:27 GMT+0900 (대한민국 표준시)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Fri Aug 19 2022 16:39:50 GMT+0900 (대한민국 표준시)
 </footer>
 
 <script> prettyPrint(); </script>
