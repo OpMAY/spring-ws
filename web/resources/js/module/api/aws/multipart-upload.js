@@ -67,7 +67,7 @@ window.onunload = () => {
  * @param {string} AWS_REGION AWS S3 지역
  * @param {string} IDENTITY_POOL_ID aws cognito 자격증명 풀 ID
  * */
-function initializeAWSS3(AWS_REGION='ap-northeast-2',IDENTITY_POOL_ID='ap-northeast-2:6ec05f63-7d98-4614-964b-dd77eb385337') {
+function initializeAWSS3(AWS_REGION = 'ap-northeast-2', IDENTITY_POOL_ID = 'ap-northeast-2:6ec05f63-7d98-4614-964b-dd77eb385337') {
     AWS.config.region = AWS_REGION;
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
         IdentityPoolId: IDENTITY_POOL_ID,
@@ -234,7 +234,7 @@ function awsMultipartUpload(path, file, completeCallback, progressCallback) {
          * CHUNK를 업로드하는 함수
          *
          * @requires [partUpload]
-         * @param {blob} blob 파일의 일부분 CHUNK(BLOB)
+         * @param {Blob} blob 파일의 일부분 CHUNK(BLOB)
          *  */
         function uploadBlob(blob) {
             const reader = new FileReader();
@@ -254,7 +254,14 @@ function awsMultipartUpload(path, file, completeCallback, progressCallback) {
         }
     }
 
-    //TODO ADD COMMENT
+    /**
+     * CompleteMultipartUpload,
+     * Multipart 파일 업로드가 성공적으로 업로드 됬을때 실행되는 함수
+     *
+     * @requires [completeMultipartUpload, completeCallback]
+     * @param {Object} err AWS가 돌려주는 Error 오브젝트
+     * @param {Object} data AWS가 돌려주는 Data 오브젝트
+     *  */
     function completeMultipartUpload(err, data) {
         if (err) { // an error occurred
             console.log(err, err.stack);
@@ -277,6 +284,21 @@ function awsMultipartUpload(path, file, completeCallback, progressCallback) {
         }
         */
 
+        /**
+         * CompleteCallback,
+         * completeMultipartUpload 가 성공적으로 수행됬을때의 콜백 함수
+         *
+         * @requires [handleMultipartUploadComplete, Self]
+         * @param {Object} err AWS가 돌려주는 Error 오브젝트
+         * @param {Object} data AWS가 돌려주는 Data 오브젝트
+         * ex)
+         * data = {
+         *  Bucket: "acexamplebucket",
+         *  ETag: "\"4d9031c7644d8081c2829f4ea23c55f7-2\"",
+         *  Key: "bigobject",
+         *  Location: "https://examplebucket.s3.<Region>.amazonaws.com/bigobject"
+         * }
+         *  */
         function completeCallback(err, data) {
             if (err) console.log(err, err.stack); // an error occurred
             else { // successful response
@@ -284,24 +306,21 @@ function awsMultipartUpload(path, file, completeCallback, progressCallback) {
                 handleMultipartUploadComplete();
                 completeCallback(data.Location);
             }
-            /* ex)
-            data = {
-             Bucket: "acexamplebucket",
-             ETag: "\"4d9031c7644d8081c2829f4ea23c55f7-2\"",
-             Key: "bigobject",
-             Location: "https://examplebucket.s3.<Region>.amazonaws.com/bigobject"
-            }
-            */
+
         }
     }
 
+    /**
+     * AbortMultipartUpload,
+     * Multipart Upload 전송을 취소할때의 실행되는 함수
+     * */
     function abortMultipartUpload() {
+        console.log('전송 취소');
         const abort_params = {
             Bucket: BUCKET_NAME,
             Key: Multipart_Object_Key,
             UploadId: upload_id
         };
-        console.log('전송 취소');
         s3.abortMultipartUpload(abort_params, (err, data) => {
             if (err) console.log(err, err.stack); // an error occurred
             else console.log(data);           // successful response
@@ -312,10 +331,19 @@ function awsMultipartUpload(path, file, completeCallback, progressCallback) {
     }
 }
 
-function localMultipartUpload(file, front_complete_callback, progress_callback) {
+/**
+ * LocalMultipartUpload,
+ * 파일을 CHUNK로 분할하여 로컬 서버에 업로드 시키는 함수,
+ *
+ * @requires [observePageLeave, deleteLocalFile, partUpload, sendEncodedByteData]
+ *
+ * @param {string} path 로컬에 업로드할 파일 경로
+ * @param {File} file 로컬에 업로드할 파일 오브젝트
+ * @param {function} completeCallback 성공시 UI를 수정하는 콜백 함수
+ * @param {function} progressCallback 파일 업로드 진행시 진행상황 UI를 수정하는 콜백 함수
+ * */
+function localMultipartUpload(path, file, completeCallback, progressCallback) {
     let fileUploadInfo = new FileUploadInfo(file);
-
-    const LOCAL_UPLOAD_PATH = '/files/';
     const file_name = fileUploadInfo.uuid + file.name;
 
     observePageLeave(() => {
@@ -323,6 +351,12 @@ function localMultipartUpload(file, front_complete_callback, progress_callback) 
     });
     partUpload();
 
+    /**
+     * PartUpload,
+     * 로컬서버에 CHUNK를 업로드한 이후에 콜백 함수
+     *
+     * @requires [handleMultipartUploadComplete, sendEncodedByteData, handlePartUploadSuccess, handleMultipartUploadCancel, deleteLocalFile, handleMultipartUploadFail]
+     *  */
     function partUpload() {
         const blob = file.slice(fileUploadInfo.byte_flag, Math.min(file.size, fileUploadInfo.byte_flag + CHUNK_SIZE));
         const reader = new FileReader();
@@ -330,7 +364,7 @@ function localMultipartUpload(file, front_complete_callback, progress_callback) 
         reader.onloadend = async () => {
             if (fileUploadInfo.byte_flag >= file.size) {
                 handleMultipartUploadComplete();
-                front_complete_callback(LOCAL_UPLOAD_PATH + file_name);
+                completeCallback(path + file_name);
                 return;
             }
 
@@ -353,6 +387,12 @@ function localMultipartUpload(file, front_complete_callback, progress_callback) 
         }
     }
 
+    /**
+     * DeleteLocalFile,
+     * 로컬서버에 업로드한 파일을 지우는 함수
+     *
+     * @param {string} file_name 로컬서버에서 지우려는 파일 이름
+     * */
     function deleteLocalFile(file_name) {
         const data = {file_name};
         const options = {
@@ -371,6 +411,12 @@ function localMultipartUpload(file, front_complete_callback, progress_callback) 
             });
     }
 
+    /**
+     * SendEncodedByteData,
+     * 로컬서버에 업로드 할려는 파일의 데이터를 보내는 함수
+     *
+     * @param {string | ArrayBuffer} byte_data 로컬 서버로 보내려는 파일의 데이터
+     * */
     function sendEncodedByteData(byte_data) {
         const data = {
             data: byte_data,
@@ -394,16 +440,31 @@ function localMultipartUpload(file, front_complete_callback, progress_callback) 
     }
 }
 
+/**
+ * MultipartUpload,
+ * 로컬 또는 AWS 파일을 업로드하는 함수,
+ * 로컬은 서버쪽 로직이 이미 존재하여하 한다.
+ *
+ * @requires [localMultipartUpload, awsMultipartUpload]
+ *
+ * @param {File | Blob} file 로컬 또는 AWS에 업로드할려는 파일
+ * @param {function} completeCallback 성공시 UI를 수정하는 콜백 함수
+ * @param {function} progressCallback 파일 업로드 진행시 진행상황 UI를 수정하는 콜백 함수
+ * @param {string} path 로컬 서버 또는 AWS에 파일을 업로드할 때 필요한 PATH
+ *
+ * @example
+ * multipartUpload({input.files[0],()=>{},()=>{},PATH});
+ * */
 function multipartUpload({
                              file,
                              completeCallback = () => {
                              },
                              progressCallback = () => {
                              },
-                             path
+                             path = '/files/'
                          }) {
     if (MULTIPART_UPLOAD_MODE === UPLOAD_MODE.LOCAL) {
-        localMultipartUpload(file, completeCallback, progressCallback);
+        localMultipartUpload(path, file, completeCallback, progressCallback);
     } else if (MULTIPART_UPLOAD_MODE === UPLOAD_MODE.AWS) {
         awsMultipartUpload(path, file, completeCallback, progressCallback);
     }
