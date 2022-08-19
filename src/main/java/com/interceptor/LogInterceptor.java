@@ -57,9 +57,6 @@ public class LogInterceptor extends HandlerInterceptorAdapter implements Logging
         if (Constant.LogSetting.PARAMETER_LOG)
             log.info("request parameter: {}", getParameterMap(requestWrapper.getParameterMap()));
 
-        if (Constant.LogSetting.PAYLOAD_LOG)
-            log.info("request payload: {}", getPayload(requestWrapper.getContentType(), requestWrapper.getInputStream()));
-
         if (Constant.LogSetting.REQUEST_BODY_LOG)
             log.info("request body: {}", getRequestBody(requestWrapper));
 

@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.converter.xml.SourceHttpMessageConverter;
@@ -138,6 +139,7 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
         stringConverter.setSupportedMediaTypes(types);
         converters.add(stringConverter);
         converters.add(new SourceHttpMessageConverter<>());
+        converters.add(new ResourceHttpMessageConverter());
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         converter.setPrettyPrint(true);
         converters.add(converter);
