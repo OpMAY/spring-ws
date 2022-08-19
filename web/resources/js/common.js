@@ -3,6 +3,12 @@ $(document).ready(function() {
   console.log('common.js execute');
 });
 
+/**
+ * LoginSubmit,
+ * 로그인폼 validation 함수
+ * @requires [inspection]
+ * @return {boolean}
+ * */
 const loginSubmit = () => {
   return inspection({
     selector: '[name="email"]',
@@ -17,6 +23,12 @@ const loginSubmit = () => {
   });
 };
 
+/**
+ * FindIdSubmit,
+ * 아이디찾기 폼 validation 함수
+ * @requires [inspection]
+ * @return {boolean}
+ * */
 const findIdSubmit = () => {
   return inspection({
     selector: '[name="name"]',
@@ -31,6 +43,12 @@ const findIdSubmit = () => {
   });
 };
 
+/**
+ * FindPsSubmit,
+ * 패스워드찾기 폼 validation 함수
+ * @requires [inspection]
+ * @return {boolean}
+ * */
 const findPsSubmit = () => {
   return inspection({
     selector: '[name="email"]',
@@ -46,6 +64,12 @@ const findPsSubmit = () => {
   });
 };
 
+/**
+ * VerifyMailSubmit,
+ * 이메일 인증 폼 validation 함수
+ * @requires [inspection]
+ * @return {boolean}
+ * */
 const verifyMailSubmit = () => {
   return inspection({
     selector: '[name="email"]',
@@ -55,6 +79,12 @@ const verifyMailSubmit = () => {
   });
 };
 
+/**
+ * VerifyPhoneSubmit,
+ * 휴대폰 인증 폼 validation 함수
+ * @requires [inspection]
+ * @return {boolean}
+ * */
 const verifyPhoneSubmit = () => {
   return inspection({
     selector: '[name="phone"]',

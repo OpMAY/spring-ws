@@ -3,15 +3,23 @@ $(document).ready(function () {
     console.log('utility.js execute');
 });
 
+/**
+ * CheckImageType,
+ * 파일 이름이 이미지인지 아닌지 파악하는 함수
+ *
+ * @return {boolean}
+ *
+ * @example
+ * checkImageType(FILE_NAME);
+ * */
 function checkImageType(file_name) {
-    var result = false;
-    var ext = file_name.substring(file_name.lastIndexOf('.') + 1);
+    let result = false;
+    let ext = file_name.substring(file_name.lastIndexOf('.') + 1);
     if (!ext) {
         return result;
     }
-    var imgs = ['gif', 'jpg', 'jpeg', 'png', 'bmp', 'ico', 'apng'];
     ext = ext.toLocaleLowerCase();
-    imgs.forEach(function (element) {
+    ['gif', 'jpg', 'jpeg', 'png', 'bmp', 'ico', 'apng'].forEach(function (element) {
         if (ext == element) {
             result = true;
         }
@@ -20,27 +28,41 @@ function checkImageType(file_name) {
 }
 
 /**
- * 1000 -> 1,000
+ * AddComma,
+ * 숫자에 콤마를 찍어주는 함수
+ *
+ * @param {number} number
+ * @return {boolean} 1000 -> 1,000
+ * @example
+ * addComma(1000);
  * */
-function addComma(num) {
+function addComma(number) {
     let len, point, str;
-    num = num + "";
-    point = num.length % 3;
-    len = num.length;
-    str = num.substring(0, point);
+    let number_string = number + '';
+    point = number_string.length % 3;
+    len = number_string.length;
+    str = number_string.substring(0, point);
     while (point < len) {
-        if (str !== "") str += ",";
-        str += num.substring(point, point + 3);
+        if (str !== '') str += ',';
+        str += number_string.substring(point, point + 3);
         point += 3;
     }
     return str;
 }
 
 /**
- * moveToScroll({move_id(id or class), top, speed(scroll speed), isClass(id is class?)});
+ * MoveToScroll,
+ * 종단 스크롤을 동적으로 특정 타겟까지 이동시켜주는 함수
+ *
+ * @param {string} move_id 타겟 아이디
+ * @param {number} top 특정 타겟에서 더 나아갈 값 (px), default = 0
+ * @param {number} speed 스크롤되는 속도 값 (ms), default = 400
+ * @param {boolean} isClass 특정 타겟을 클래스로 찾을지 결정하는 값, TRUE면 ID가 selector, default = false
+ * @example
+ * moveToScroll({move_id:SELECTOR, top:100, speed:800, isClass:true});
  * */
 function moveToScroll({move_id, top = 0, speed = 400, isClass = false}) {
-    if (move_id !== undefined && move_id !== null) {
+    if (move_id !== undefined && move_id != null) {
         var offset;
         if (!isClass) {
             offset = $('#' + move_id).offset();
@@ -54,6 +76,18 @@ function moveToScroll({move_id, top = 0, speed = 400, isClass = false}) {
     }
 }
 
+/**
+ * ReplaceAll,
+ * 스트링에서 특정 스트링을 찾아 타겟 스트링으로 바꿔는 함수
+ *
+ * @param {string} str 전체 스트링
+ * @param {string} search 찾고자 하는 특정 스트링
+ * @param {string} replace 바꾸고자 하는 타겟 스트링
+ * @return {string} {str}에서 {search}를 찾고 {replace}로 바꾼 전체 스트링
+ *
+ * @example
+ * replaceAll('str is search string and replace all in replace string', 'string', 'str');
+ * */
 function replaceAll(str, search, replace) {
     if (search !== undefined && replace !== undefined && str !== undefined)
         return str.split(search).join(replace);
@@ -66,20 +100,26 @@ function replaceAll(str, search, replace) {
  * 토큰을 생성해주는 함수
  * @param {number} length 만들려는 토큰의 자릿수, default = 10
  * @return {String} 자릿수 만큼의 String을 리턴, default = 10
+ *
+ * @sample
+ * tokenGenerator(10);
  * */
 const tokenGenerator = (length = 11) => {
     return Math.random().toString(36).substring(2, length); // "twozs5xfni"
 }
 
 /**
- * GetURLBuilder,
- * base url 에 json object 를 get 요청 url 로 변환해주는 함수
+ * FetchGetURLBuilder,
+ * URL에 Object를 GET 요청 url로 변환해주는 함수
  *
- * @param {string} baseUrl ex) url
- * @param {Object}  object ex) {key: 'value', k: 'v'}
- * @return {string} url?key=value&h&v
+ * @param {string} baseUrl URL
+ * @param {Object} object GET방식으로 요청할 데이터
+ * @return {string} URL + Object 변수가 포함된 통합 URL (http://localhost:8080?name=kimwoosik&type=test)
+ *
+ * @sample
+ * fetchGetURLBuilder('http://localhost:8080',{name:'kimwoosik',type:'test'});
  */
-function FetchGetURLBuilder(baseUrl, object) {
+function fetchGetURLBuilder(baseUrl, object) {
     let result = baseUrl + '?';
     Object.keys(object).forEach((key) => {
         result += key + '=' + object[key] + '&';
@@ -88,10 +128,16 @@ function FetchGetURLBuilder(baseUrl, object) {
 }
 
 /**
- * $('#today').val(today());
+ * @module Time
  * */
 class Time {
 
+    /**
+     * FormatLocalDatetime,
+     * yyyy-MM-dd hh:mm:ss 형식을 yyyy.MM.dd hh.mm 으로 바꿔주는 함수
+     *
+     * @param {Date} datetime
+     * */
     static formatLocalDatetime(datetime) {
         if (datetime === undefined) return this.get_yyyy_mm_dd();
         try {
@@ -167,7 +213,6 @@ class Time {
  * @param {string} id 엘리먼트의 아이디, default = undefined
  * @param {string} selector 엘리먼트의 셀렉터, default = undefined
  * @param {HTMLElement} root 부모 엘리먼트, default = document.getElementsByTagName('body')[0]
- */
 function focusInputLastCarret({id = undefined, selector = undefined, root = document.getElementsByTagName('body')[0]}) {
     const inputField = id !== undefined ? root.getElementById(id) : root.querySelector(selector);
     if (inputField != null && inputField.value.length != 0) {
