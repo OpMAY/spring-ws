@@ -5,7 +5,6 @@
 const MODAL_CONTAINER = $('#modal-container');
 // ALERT_CONTAINER
 const ALERT_CONTAINER = $('#alert-container');
-
 /**
  * ViewAlert,
  * Alert 메세지를 보여주는 함수

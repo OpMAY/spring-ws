@@ -131,126 +131,6 @@ function fetchGetURLBuilder(baseUrl, object) {
 }
 
 /**
- * @module Time
- * @example
- * Time.function(datetime);
- * */
-class Time {
-    /**
-     * FormatLocalDatetime,
-     * yyyy-MM-dd hh:mm:ss 형식을 yyyy.MM.dd hh.mm 으로 바꿔주는 함수
-     *
-     * @param {Date | Object} datetime
-     * @param {Date | Object} datetime.year
-     * @param {Date | Object} datetime.monthValue
-     * @param {Date | Object} datetime.dayOfMonth
-     * @param {Date | Object} datetime.hour
-     * @param {Date | Object} datetime.minute
-     * @param {Date | Object} datetime.second
-     * @return {string}
-     * */
-    static formatLocalDatetime(datetime) {
-        if (datetime === undefined) return this.get_yyyy_mm_dd();
-        try {
-            const year = datetime.year;
-            const month = datetime.monthValue > 9 ? datetime.monthValue : '0' + datetime.monthValue;
-            const day = datetime.dayOfMonth > 9 ? datetime.dayOfMonth : '0' + datetime.dayOfMonth;
-            const hour = datetime.hour > 9 ? datetime.hour : '0' + datetime.hour;
-            const minute = datetime.minute > 9 ? datetime.minute : '0' + datetime.minute;
-            const second = datetime.second > 9 ? datetime.second : '0' + datetime.second;
-
-            return `${year}.${month}.${day} ${hour}:${minute}`;
-        } catch (e) {
-            console.error(e);
-            return '';
-        }
-    }
-
-    /**
-     * FormatLocalDate,
-     * yyyy-MM-dd hh:mm:ss 형식을 yyyy.MM.dd로 바꿔주는 함수
-     *
-     * @param {Date | Object} datetime.year
-     * @param {Date | Object} datetime.monthValue
-     * @param {Date | Object} datetime.dayOfMonth
-     * @return {string}
-     * */
-    static formatLocalDate(datetime) {
-        if (datetime === undefined) return this.get_yyyy_mm_dd(undefined).toString();
-        try {
-            const year = datetime.year;
-            const month = datetime.monthValue > 9 ? datetime.monthValue : '0' + datetime.monthValue;
-            const day = datetime.dayOfMonth > 9 ? datetime.dayOfMonth : '0' + datetime.dayOfMonth;
-
-            return `${year}.${month}.${day}`;
-        } catch (e) {
-            console.error(e);
-            return '';
-        }
-    }
-
-    /**
-     * FormatChatDateTime,
-     * yyyy-MM-dd hh:mm:ss 형식을 현재 시간으로 부터 [방금전, 몇분전, 몇시간전]으로 바꿔주는 함수
-     *
-     * @param {Date} datetime
-     * @return {string}
-     * */
-    static formatChatDateTime(datetime) {
-        if (datetime === undefined || datetime === null) return '방금 전';
-        try {
-            const time_gap = new Date().getTime() - this.getLocalDateTime(datetime);
-            if (time_gap < 1000 * 60) { // 1분 이내
-                return '방금 전';
-            } else if (time_gap < 1000 * 60 * 60) { // 60분 이내
-                return Math.floor(time_gap / (1000 * 60)) + '분 전';
-            } else if (time_gap < 1000 * 60 * 60 * 12) { // 12시간 이내
-                return Math.floor(time_gap / (1000 * 60 * 60)) + '시간 전';
-            } else {
-                return this.formatLocalDatetime(datetime);
-            }
-        } catch (e) {
-            console.error(e);
-            return '';
-        }
-    }
-
-    /**
-     * GetLocalDateTime,
-     * Datetime 형식을 Number 데이터로 바꿔주는 함수
-     * @param {Date | Object} datetime
-     * @param {Date | Object} datetime.year
-     * @param {Date | Object} datetime.monthValue
-     * @param {Date | Object} datetime.dayOfMonth
-     * @return {number}
-     * */
-    static getLocalDateTime(datetime) {
-        const year = datetime.year;
-        const month = datetime.monthValue - 1;
-        const day = datetime.dayOfMonth;
-        const hour = datetime.hour;
-        const minute = datetime.minute;
-        const second = datetime.second;
-        return new Date(year, month, day, hour, minute, second).getTime();
-    }
-
-    /**
-     * GetLocalDateTime,
-     * Datetime 형식을 Number 데이터로 바꿔주는 함수
-     *
-     * @param {Date} datetime
-     * @return {string}
-     * */
-    static get_yyyy_mm_dd(target_date) {
-        if (!target_date) {
-            target_date = new Date();
-        }
-        const [year, month, date] = target_date.toLocaleDateString().replace(/\s/g, '').split('.');
-        return `${year}.${month > 9 ? month : '0' + month}.${date > 9 ? date : '0' + date}`;
-    }
-}
-
-/**
  * FocusInputLastCarret,
  * Input을 클릭시 생성되는 케럿을 맨 뒤로 이동시켜주는 함수
  *
@@ -511,7 +391,7 @@ const phoneValueFormatter = (value) => {
  * @sample
  * let name = getURLParameter('name');
  * */
-const getURLParameter = (name) => {
+const getParameter = (name) => {
     name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
     const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
     const results = regex.exec(location.search);
@@ -703,13 +583,6 @@ function copyText(target, callback) {
         document.execCommand('copy');
     }
     callback();
-}
-
-const getParameter = (name) => {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    let regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
 const getURLParamByPrevAndNext = (find_first_slash_string, find_last_slash_string) => {
