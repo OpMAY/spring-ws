@@ -262,7 +262,7 @@ public class MailBuilder {
                 "    <td style=\"font-size:12px;line-height:18px;font-family:Apple SD Gothic Neo,sans-serif,'맑은고딕',Malgun Gothic,'돋움',Dotum;color:#7F7F7F\">\n" +
                 "      본 메일은 발신전용입니다. 본 메일로 회신할 경우 답변이 되지 않습니다.<br>\n" +
                 "      서비스 이용 및 법적 의무 고지사항 안내메일로써 수신동의 여부와 관계없이 발송드립니다.<br/>\n" +
-                "      Copyrights ⓒ " + Time.TimeFormatter("yyyy") + " " + mailFooter.getCompanyEngName() + " INC. ALL RIGHTS RESERVED.\n" +
+                "      Copyrights ⓒ " + Time.TimeFormatCurrent("yyyy") + " " + mailFooter.getCompanyEngName() + " INC. ALL RIGHTS RESERVED.\n" +
                 "    </td>\n" +
                 "    <td width=\"5\"></td>\n" +
                 "  </tr>\n" +

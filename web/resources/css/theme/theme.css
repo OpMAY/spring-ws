@@ -15,11 +15,17 @@
     --shadow: 10px 5px 5px red;
     --shadow-black: 10px 5px 5px rgba(0, 0, 0, 0.5);
     --shadow-white: 10px 5px 5px rgba(255, 255, 255, 0.5);
-
+    /* Sample Transform */
+    --translate-center: translate(-50%, -50%);
+    --translate-tb-center: translate(0, -50%);
+    --translate-lr-center: translate(-50%, 0);
     /* Sample Border */
     --border-1px: 1px solid;
     --border-2px: 2px solid;
-
+    /* Sample Radius */
+    --input-radius: 5px;
+    --button-radius: 5px;
+    --plugin-radius: 5px;
     /* Sample Font Variables */
     --font-10: 10px;
     --font-12: 12px;
@@ -46,6 +52,7 @@
     --font-35: 35px;
     --font-36: 36px;
     --font-37: 37px;
+    --font-40: 40px;
     --font-48: 48px;
 
     /* Sample Font Line Height Variables */
@@ -58,7 +65,8 @@
     --line-36: 36px;
     --line-40: 40px;
     --line-48: 48px;
-    --line-48: 56px;
+    --line-52: 52px;
+    --line-56: 56px;
     --line-1x: 1;
     --line-1_5x: 1.5;
     --line-2x: 2;
@@ -132,15 +140,79 @@
     url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/Subset/SpoqaHanSansNeo/SpoqaHanSansNeo-Thin.ttf') format('truetype');
 }
 
+/*Pretendard*/
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Thin.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraLight.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraBold.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Black.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+}
+
 /* Accept Font Family */
 * {
-    font-family: Spoqa Han Sans Neo, 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Roboto', Roboto, 'sans-serif', sans-serif;
+    font-family: 'Pretendard', Spoqa Han Sans Neo, 'Spoqa Han Sans Neo', 'Noto Sans KR', 'Roboto', Roboto, 'sans-serif', sans-serif;
 }
 
 /* Accept Font Family in Text Writer */
 /* 입력부분은 텍스트가 무조건 있어야하기 때문에 폰트 지원 안되는 글자는 따로 Font Family를 지정해준다. */
 button, input, optgroup, select, textarea {
-    font-family: Spoqa Han Sans Neo, 'Spoqa Han Sans Neo', 'Roboto', Roboto, 'sans-serif', sans-serif;
+    font-family: 'Pretendard', Spoqa Han Sans Neo, 'Spoqa Han Sans Neo', 'Roboto', Roboto, 'sans-serif', sans-serif;
 }
 
 /* Common Tag And Class */
@@ -160,7 +232,7 @@ b {
 
 /* Font Set Class */
 /* light Set */
-.light-h1, .light-h2, .light-h3, .light-h4, .light-h5, light-h6 {
+.light-h1, .light-h2, .light-h3, .light-h4, .light-h5, .light-h6, .light-p1 {
     font-weight: 300;
 }
 
@@ -194,8 +266,13 @@ b {
     font-size: var(--font-14);
 }
 
+.light-p1 {
+    line-height: var(--line-16);
+    font-size: var(--font-12);
+}
+
 /* Regular Set */
-.regular-h1, .regular-h2, .regular-h3, .regular-h4, .regular-h5, regular-h6 {
+.regular-h1, .regular-h2, .regular-h3, .regular-h4, .regular-h5, .regular-h6, .regular-p1 {
     font-weight: 400;
 }
 
@@ -229,8 +306,13 @@ b {
     font-size: var(--font-14);
 }
 
+.regular-p1 {
+    line-height: var(--line-16);
+    font-size: var(--font-12);
+}
+
 /* Medium Set */
-.medium-h1, .medium-h2, .medium-h3, .medium-h4, .medium-h5, medium-h6 {
+.medium-h1, .medium-h2, .medium-h3, .medium-h4, .medium-h5, .medium-h6, .medium-p1 {
     font-weight: 500;
 }
 
@@ -264,9 +346,24 @@ b {
     font-size: var(--font-14);
 }
 
+.medium-p1 {
+    line-height: var(--line-16);
+    font-size: var(--font-12);
+}
+
 /* Bold Set */
-.bold-h1, .bold-h2, .bold-h3, .bold-h4, .bold-h5, bold-h6 {
+.bold-h1, .bold-h2, .bold-h3, .bold-h4, .bold-h5, .bold-h6, .bold-p1, .bold-d1, .bold-d2 {
     font-weight: 700;
+}
+
+.bold-d1 {
+    line-height: var(--line-52);
+    font-size: var(--font-48);
+}
+
+.bold-d2 {
+    line-height: var(--line-52);
+    font-size: var(--font-40);
 }
 
 .bold-h1 {
@@ -299,6 +396,11 @@ b {
     font-size: var(--font-14);
 }
 
+.bold-p1 {
+    line-height: var(--line-16);
+    font-size: var(--font-12);
+}
+
 /* Color Class */
 /* Suffix c- */
 .c-impact-primary {
@@ -317,23 +419,4 @@ b {
 
 .bg-brand-secondary {
     background-color: var(--brand-secondary);
-}
-
-/* Margin Class */
-.mt-48 {
-    margin-top: 48px;
-}
-
-.mt-24 {
-    margin-top: 24px;
-}
-
-/* Padding Class */
-
-.pt-48 {
-    padding-top: 48px;
-}
-
-.pt-24 {
-    padding-top: 24px;
 }

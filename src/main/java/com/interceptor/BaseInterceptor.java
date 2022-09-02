@@ -1,7 +1,9 @@
 package com.interceptor;
 
 import com.util.TokenGenerator;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -10,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
+@RequiredArgsConstructor
+@Component
 public class BaseInterceptor extends HandlerInterceptorAdapter {
     /**
      * Interceptor 사용할 경우

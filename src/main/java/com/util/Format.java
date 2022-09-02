@@ -111,7 +111,6 @@ public class Format {
         return Float.parseFloat(changed_str_float);
     }
 
-
     /**
      * @return maskedPhoneNumber (String)
      * <p>

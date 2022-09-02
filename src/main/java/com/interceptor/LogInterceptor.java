@@ -1,10 +1,12 @@
 package com.interceptor;
 
 import com.util.Constant;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -29,6 +31,8 @@ import java.util.*;
  * Post 및 Get URL 및 Method 및 Body 데이터 로깅
  */
 @Slf4j
+@RequiredArgsConstructor
+@Component
 public class LogInterceptor extends HandlerInterceptorAdapter implements LoggingInterceptor {
     @PostConstruct
     public void LogInterceptor() {
@@ -50,16 +54,19 @@ public class LogInterceptor extends HandlerInterceptorAdapter implements Logging
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         log.debug("Log Interceptor afterCompletion");
-        ContentCachingRequestWrapper requestWrapper = (ContentCachingRequestWrapper) request;
-        if (Constant.LogSetting.HEADER_LOG)
-            log.info("request header: {}", getHeaders(requestWrapper));
+        try {
+            ContentCachingRequestWrapper requestWrapper = (ContentCachingRequestWrapper) request;
+            if (Constant.LogSetting.HEADER_LOG)
+                log.info("request header: {}", getHeaders(requestWrapper));
 
-        if (Constant.LogSetting.PARAMETER_LOG)
-            log.info("request parameter: {}", getParameterMap(requestWrapper.getParameterMap()));
+            if (Constant.LogSetting.PARAMETER_LOG)
+                log.info("request parameter: {}", getParameterMap(requestWrapper.getParameterMap()));
 
-        if (Constant.LogSetting.REQUEST_BODY_LOG)
-            log.info("request body: {}", getRequestBody(requestWrapper));
-
+            if (Constant.LogSetting.REQUEST_BODY_LOG)
+                log.info("request body: {}", getRequestBody(requestWrapper));
+        } catch (Exception e) {
+            log.info("request body is multipart file type, so do not support log");
+        }
         super.afterCompletion(request, response, handler, ex);
     }
 

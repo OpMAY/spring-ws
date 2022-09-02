@@ -1,8 +1,10 @@
 package com.interceptor;
 
 import com.util.TokenGenerator;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -13,6 +15,8 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 @Slf4j
+@RequiredArgsConstructor
+@Component
 public class RecoverInterceptor extends HandlerInterceptorAdapter {
     @Value("${RECOVER.URLS}")
     private String recover_urls;
@@ -32,9 +36,9 @@ public class RecoverInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.debug("Recover Interceptor preHandle : {}" , recovers);
+        log.debug("Recover Interceptor preHandle : {}", recovers);
         if (recovers.contains(request.getRequestURI())) {
-            response.sendRedirect("/error/error.do");
+            response.sendRedirect("/test/recover");
             return false;
         }
         return super.preHandle(request, response, handler);

@@ -1,0 +1,18 @@
+.summernote-container ul {
+    padding-inline-start: 26px;
+}
+
+.summernote-container > img {
+    width: 100%;
+    height: auto;
+}
+
+.summernote-container span,
+.summernote-container p,
+.summernote-container div,
+.summernote-container b,
+.summernote-container ul,
+.summernote-container li,
+.summernote-container img {
+    margin-bottom: 0;
+}

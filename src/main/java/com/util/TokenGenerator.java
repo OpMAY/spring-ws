@@ -29,6 +29,24 @@ public class TokenGenerator {
         }
     }
 
+    public static String RandomStringToken(int tokenSize) {
+        if (tokenSize >= 1) {
+            Random rnd = new Random();
+            StringBuffer buf = new StringBuffer();
+            for (int i = 0; i < tokenSize; i++) {
+                // rnd.nextBoolean() 는 랜덤으로 true, false 를 리턴. true일 시 랜덤 한 소문자를, false 일 시 랜덤 한 숫자를 StringBuffer 에 append 한다.
+                if (rnd.nextBoolean()) {
+                    buf.append((char) ((int) (rnd.nextInt(26)) + 97));
+                } else {
+                    buf.append((char) ((int) (rnd.nextInt(26)) + 97));
+                }
+            }
+            return buf.toString();
+        } else {
+            return null;
+        }
+    }
+
     /**
      * @param tokenSize : Min : 1, Max : 16
      * @return : String Token(All Number)
@@ -58,5 +76,10 @@ public class TokenGenerator {
         } else {
             return null;
         }
+    }
+
+    public static Integer RandomInteger(int range) {
+        Random random = new Random();
+        return random.nextInt(range);
     }
 }

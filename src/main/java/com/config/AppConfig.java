@@ -1,12 +1,12 @@
 package com.config;
 
-import com.filter.GeneralFilter;
 import com.filter.LogFilter;
-import com.filter.SessionFilter;
 import com.interceptor.BaseInterceptor;
 import com.interceptor.LogInterceptor;
+import com.interceptor.RecoverInterceptor;
 import com.util.Constant;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
@@ -77,15 +77,8 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
         charaterEncodingFilter.setInitParameter("encoding", "UTF-8");
         charaterEncodingFilter.setInitParameter("forceEncoding", "true");
 
-        FilterRegistration.Dynamic generalFilter = container.addFilter("generalFilter", new GeneralFilter()); // general filter 등록
-        generalFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.do");
-
         FilterRegistration.Dynamic logFilter = container.addFilter("logFilter", new LogFilter()); // session filter 등록
         logFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
-
-        FilterRegistration.Dynamic sessionFilter = container.addFilter("sessionFilter", new SessionFilter()); // session filter 등록
-        sessionFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "*.do");
-
 
         /**
          * Clear Setting
@@ -192,17 +185,23 @@ public class AppConfig implements WebApplicationInitializer, SchedulingConfigure
      * -------------------------------
      * RecoverInterceptor Add
      */
+    @Autowired
+    private LogInterceptor logInterceptor;
+    @Autowired
+    private BaseInterceptor baseInterceptor;
+    @Autowired
+    private RecoverInterceptor recoverInterceptor;
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LogInterceptor()).order(0)
+        registry.addInterceptor(logInterceptor).order(0)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/resources/**")
                 .excludePathPatterns("/files/**");
-//        registry.addInterceptor(new RecoverInterceptor()).order(1)
-//                .addPathPatterns("/**")
-//                .excludePathPatterns("/resources/**")
-//                .excludePathPatterns("/files/**");
-        registry.addInterceptor(new BaseInterceptor()).order(2)
+        registry.addInterceptor(recoverInterceptor).order(1)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/resources/**")
+                .excludePathPatterns("/files/**");
+        registry.addInterceptor(baseInterceptor).order(2)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/resources/**")
                 .excludePathPatterns("/files/**");

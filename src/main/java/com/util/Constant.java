@@ -63,9 +63,4 @@ public class Constant {
     public static final int HOUR = 24;
     public static final int DAY = 30;
     public static final int MONTH = 12;
-
-    /* aws cdn path */
-    public static class CDN_PATH {
-        public static final String TEST = "test/";
-    }
 }

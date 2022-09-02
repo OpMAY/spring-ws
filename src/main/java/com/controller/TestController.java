@@ -69,7 +69,7 @@ public class TestController {
     @Value("${UPLOAD_PATH}")
     private String UPLOAD_PATH;
 
-    @RequestMapping(value = "/test/download.do", method = RequestMethod.GET)
+    @RequestMapping(value = "/test/download", method = RequestMethod.GET)
     public void downloadTest(HttpServletResponse response, String file_name) {
         /**
          * Prepare AWS Download
@@ -82,5 +82,17 @@ public class TestController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Recover Interceptor Active
+     */
+    @RequestMapping(value = "/test/recover", method = RequestMethod.GET)
+    public ModelAndView testRecover() {
+        return new ModelAndView("error/recover");
+    }
+    @RequestMapping(value = "/test/error", method = RequestMethod.GET)
+    public ModelAndView testError() {
+        return new ModelAndView("error/error");
     }
 }

@@ -8,4 +8,9 @@
         <setting name="callSettersOnNulls" value="true"/>
         <setting name="jdbcTypeForNull" value="NULL"/>
     </settings>
+    <typeAliases>
+        <typeAlias alias="JsonArrayObjectTypeHandler" type="com.middleware.JsonArrayObjectTypeHandler"/>
+        <typeAlias alias="JsonObjectTypeHandler" type="com.middleware.JsonObjectTypeHandler"/>
+        <typeAlias alias="StringArrayListTypeHandler" type="com.middleware.StringArrayListTypeHandler"/>
+    </typeAliases>
 </configuration>

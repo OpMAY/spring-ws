@@ -7,15 +7,6 @@ public enum ResponseEnum {
     ERROR,
     DUPLICATED,
     INVALID,
-    RESULT,
     INVALID_ADDRESS,
-    LOGIN,
-    USER,
-    CANCEL,
-    ALREADY,
-    PROCESS,
-    REFUND,
-    READY,
-    MESSAGE,
-    OWNER
+    CANCEL
 }

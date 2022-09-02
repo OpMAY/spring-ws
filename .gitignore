@@ -102,3 +102,4 @@ src/main/java/com/resources/log4j2.xml
 .idea
 *.iml
 /node_modules
+/package-lock.json

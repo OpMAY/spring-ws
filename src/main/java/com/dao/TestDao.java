@@ -1,5 +1,6 @@
 package com.dao;
 
+import com.mapper.TestMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
@@ -7,7 +8,9 @@ import org.springframework.stereotype.Repository;
 
 @Slf4j
 @Repository
-@RequiredArgsConstructor
 public class TestDao {
-    private final SqlSession sqlSession;
+    private TestMapper mapper;
+    private TestDao(SqlSession sqlSession) {
+        this.mapper = sqlSession.getMapper(TestMapper.class);
+    }
 }

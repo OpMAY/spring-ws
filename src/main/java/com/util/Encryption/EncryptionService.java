@@ -21,6 +21,7 @@ import java.util.HashMap;
 
 @Service
 public class EncryptionService implements Encrypt {
+    private final static String SECRET_KEY = "secret";
     @Override
     public <T> T getSessionParameter(String token, String key) {
         if (token != null) {
@@ -33,7 +34,7 @@ public class EncryptionService implements Encrypt {
 
     @Override
     public HashMap<String, Object> decryptJWT(String encryptedJWT) {
-        Algorithm algorithm = Algorithm.HMAC256(JWTEnum.SECRET.name());
+        Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
         JWTVerifier verifier = JWT.require(algorithm)
                 .withIssuer("auth0")
                 .build(); //Reusable verifier instance
@@ -65,16 +66,16 @@ public class EncryptionService implements Encrypt {
     @Override
     public String encryptJWT(RootUser user) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(JWTEnum.SECRET.name());
+            Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
             return JWT.create()
-                    .withExpiresAt(Time.LongTimeStamp())
+                    .withExpiresAt(Time.LongTimeStamp(1))
                     .withClaim(JWTEnum.VERSION.name(), Constant.VERSION)
-                    .withClaim(JWTEnum.GRANT.name(), user.getGrant())
+                    .withClaim(JWTEnum.GRANT.name(), user.getGrant().name())
                     .withClaim(JWTEnum.TOKEN.name(), user.getAccess_token())
                     .withClaim(JWTEnum.EMAIL.name(), user.getEmail())
                     .withClaim(JWTEnum.ID.name(), user.getId())
                     .withClaim(JWTEnum.NO.name(), user.getNo())
-                    .withClaim(JWTEnum.SIGNATURE.name(), encryptSHA256("secret"))
+                    .withClaim(JWTEnum.SIGNATURE.name(), encryptSHA256(SECRET_KEY))
                     .withIssuer("auth0")
                     .sign(algorithm);
         } catch (NoSuchAlgorithmException e) {
