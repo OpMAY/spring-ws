@@ -62,6 +62,11 @@ public class TestController {
         return new ModelAndView("sample");
     }
 
+
+    @RequestMapping(value = "/ws_sample", method = RequestMethod.GET)
+    public ModelAndView wsSample() {
+        return new ModelAndView("ws-sample");
+    }
     /**
      * <a href="/test/download.do?file_name=test.mp4"
      * class="btn btn-primary _card-btn">Go somewhere</a>
