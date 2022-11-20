@@ -29,13 +29,13 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         sessions.add(session);
-        log.info("{} 클라이언트 접속", session);
+        log.info("{} Client Connection Established", session);
     }
 
     /* Client가 접속 해제 시 호출되는 메서드드 */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        log.info("{} 클라이언트 접속 해제", session);
+        log.info("{} Client Connection Closed", session);
         sessions.remove(session);
     }
 }

@@ -51,26 +51,15 @@
     <title>Hello, world!</title>
 </head>
 <body>
-<header id="header"
-        class="l-header-white"></header>
-<div id="content-wrapper"
-     class="container-fluid l-content-wrapper">
-    <div class="row row-cols-4 card-main-container">
-        <div class="col card card-main">
-            <img src="https://via.placeholder.com/350x150"
-                 class="card-img-top _img-top"
-                 alt="card-img-alt">
-            <div class="card-body _card-body">
-                <h5 class="card-title light-h5 _title">Card title</h5>
-                <p class="card-text light-h6 _text">Some quick example text to build on the card title and make up the
-                    bulk
-                    of the
-                    card's
-                    content.</p>
-                <a href="#"
-                   class="btn btn-primary _card-btn">Go somewhere</a>
-            </div>
-        </div>
+<div class="row">
+    <div class="col-12">
+        <button class="btn btn-primary" id="test">send ws Data</button>
+        <span class="medium-h5" id="status">websocket not connected</span>
+        <span class="medium-h5" style="color: #950B02" id="count">0</span>
+    </div>
+    <div class="col-12 p-16 ml-16">
+        <label class="form-label" for="test-input">INPUT</label>
+        <textarea class="form-control" id="test-input" style="resize: none" rows="8"></textarea>
     </div>
 </div>
 <footer id="footer"
@@ -115,9 +104,94 @@
      * Static JS는 특정 페이지 에서만 작동하는 부분으로 Event 및 Element 생성 및 화면에 진입했을 때의
      * 해당 화면만의 특정 로직을 수행하는 Javascript를 Static JS라고 한다.
      * */
+        // TODO WS INPUT, ACTION 동기화 문제
+    let socket = null;
+    let i = 1;
+    let input_typing = false;
     $(document).ready(function () {
         console.log('Static JS is ready');
+        connect();
     });
+
+    function connect() {
+        const ws = new WebSocket('ws://localhost:8080/ws');
+        socket = ws;
+        let status = $('#status');
+
+        ws.onopen = (event) => {
+            // TODO INITIAL SETTINGS ON WS OPEN
+            console.log('websocket connected : ' + event);
+            status.text('WS CONNECTED');
+        }
+
+        ws.onmessage = (event) => {
+            console.log('websocket onmessage : ' + event);
+            console.log('data : ' + event.data);
+            // TODO CALLBACKS
+            try {
+                let obj = JSON.parse(event.data);
+                if (obj.type === 'input') {
+                    if (!input_typing)
+                        $('#test-input').val(obj.data);
+                } else if (obj.type === 'span') {
+                    i = obj.data;
+                    $('#count').text(obj.data);
+                } else {
+                    console.log('type or parse error');
+                }
+            } catch (e) {
+                console.log('parse error : ' + e);
+            }
+
+        }
+
+        // WebSocket Close 시 자동 WebSocket Connect
+        ws.onclose = (event) => {
+            // TODO INITIAL SETTINGS ON WS CLOSE
+            console.log('websocket closed : ' + event);
+            status.text('WS Disconnected');
+            setTimeout(function () {
+                connect();
+            }, 1000)
+        }
+
+        // WebSocket Error 시 WebSocket Close
+        ws.onerror = (error) => {
+            console.log('websocket error : ' + error);
+            ws.close();
+        }
+    }
+
+    $('#test').on('click', function () {
+        if (checkSocketReady()) {
+            let obj = {
+                'type': 'span',
+                'data': ++i
+            }
+            socket.send(JSON.stringify(obj));
+        }
+    })
+
+    $('#test-input').on('input', function () {
+        input_typing = true;
+        let value = $(this).val();
+        if (checkSocketReady()) {
+            let obj = {
+                'type': 'input',
+                'data': value
+            }
+            socket.send(JSON.stringify(obj));
+        }
+        input_typing = false;
+    })
+
+    function checkSocketReady() {
+        if (socket.readyState !== 1) {
+            console.log('socket not ready : ' + socket.readyState);
+        }
+        return socket.readyState === 1;
+    }
+
 </script>
 </body>
 </html>
