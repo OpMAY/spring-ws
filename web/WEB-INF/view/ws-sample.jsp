@@ -127,11 +127,12 @@
         ws.onmessage = (event) => {
             console.log('websocket onmessage : ' + event);
             console.log('data : ' + event.data);
+            console.log('log : ' + event.timeStamp);
             // TODO CALLBACKS
             try {
                 let obj = JSON.parse(event.data);
                 if (obj.type === 'input') {
-                    if (!input_typing)
+                    if (!obj.isMyData)
                         $('#test-input').val(obj.data);
                 } else if (obj.type === 'span') {
                     i = obj.data;
@@ -160,13 +161,15 @@
             console.log('websocket error : ' + error);
             ws.close();
         }
+
     }
 
     $('#test').on('click', function () {
         if (checkSocketReady()) {
             let obj = {
                 'type': 'span',
-                'data': ++i
+                'data': ++i,
+                'isMyData': false,
             }
             socket.send(JSON.stringify(obj));
         }
@@ -178,7 +181,8 @@
         if (checkSocketReady()) {
             let obj = {
                 'type': 'input',
-                'data': value
+                'data': value,
+                'isMyData': false,
             }
             socket.send(JSON.stringify(obj));
         }

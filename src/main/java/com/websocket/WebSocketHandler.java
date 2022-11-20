@@ -1,5 +1,8 @@
 package com.websocket;
 
+import com.google.gson.Gson;
+import com.model.ws.WebSocketSimpleObject;
+import com.validator.test.Test;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -17,11 +20,22 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
+        Gson gson = new Gson();
         String payload = message.getPayload();
         log.info("payload : {}", payload);
 
-        for(WebSocketSession sess: sessions) {
-            sess.sendMessage(message);
+        String sender_id = session.getId();
+
+        WebSocketSimpleObject object = gson.fromJson(payload, WebSocketSimpleObject.class);
+
+        for (WebSocketSession sess : sessions) {
+            if (sess.getId().equals(sender_id)) {
+                object.setMyData(true);
+                TextMessage textMessage = new TextMessage(gson.toJson(object));
+                sess.sendMessage(textMessage);
+            } else {
+                sess.sendMessage(message);
+            }
         }
     }
 
